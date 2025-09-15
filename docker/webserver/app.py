@@ -46,7 +46,8 @@ def index():
     <h1>hostnet Database Maintenance</h1>
     <ul>
       <li><a href='/upload'>Upload Image</a></li>
-        <li><a href='/images'>View Images</a></li>
+      <li><a href='/images'>View Images</a></li>
+      <li><a href='/images/lora_send'>LoRa Send Overview</a></li>
       <li><a href='/users'>Users</a></li>
       <li><a href='/teams'>Teams</a></li>
       <li><a href='/lora_nodes'>LoRa Nodes</a></li>

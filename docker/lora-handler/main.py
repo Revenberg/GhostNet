@@ -63,6 +63,17 @@ def create_tables(conn):
             timestamp DATETIME
         )
         """)
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS Lora_Send (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            node_id VARCHAR(64),
+            team VARCHAR(64),
+            object VARCHAR(64),
+            `function` VARCHAR(64),
+            parameters TEXT,
+            timestamp DATETIME
+        )
+        """)
 
 def parse_fields(msg):
     fields = {}
