@@ -8,14 +8,14 @@ set -e
 #sudo usermod -aG docker $USER
 #sudo pip3 install docker-compose
 cd ~
-sudo rm -rf ghostnet 2>/dev/null 
+sudo rm -rf GhostNet 2>/dev/null 
 cd ~
-git clone --branch release https://github.com/revenberg/ghostnet.git
+git clone --branch main https://github.com/Revenberg/GhostNet.git
 
-cd ~/ghostnet/docker
+cd ~/GhostNet/docker
 docker compose down
 
-cd ~/ghostnet
+cd ~/GhostNet
 cp update.sh ~/update.sh
 chmod +x ~/update.sh
 
