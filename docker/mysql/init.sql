@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS hostnet;
+USE hostnet;
+
+GRANT ALL PRIVILEGES ON hostnet.* TO 'admin'@'%';
+FLUSH PRIVILEGES;
+
