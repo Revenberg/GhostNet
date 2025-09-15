@@ -77,15 +77,15 @@ def process_lora_message(msg, conn):
     
     print(f"Received LoRa message: =={msg}==")
 
-    if msg.startswith("[RPI4") and not msg.startswith("[RPI4 Start]"):
+    if msg.startswith("[RPI4"):
         print(f"Received LoRa message: {msg}")
 
     if msg.startswith("[RPI4 Start]"):
         print("RPI4 LoRa Gateway started.")
         return
 
-    if msg.startswith("[RPI WIFI]"):
-        print("RPI WIFI started.")
+    if msg.startswith("[RPI4 WIFI]"):
+        print("RPI4 WIFI started.")
         return
 
     if msg.startswith("[LoRa RX]") or msg.startswith("[LoRa TX]"):
