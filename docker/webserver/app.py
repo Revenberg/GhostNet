@@ -9,6 +9,7 @@ from routes.lora_nodes import lora_nodes_bp
 from routes.messages import messages_bp
 from routes.messages import messages_bp
 from routes.upload import upload_bp
+from routes.images import images_bp
 
 app = Flask(__name__)
 app.register_blueprint(users_bp)
@@ -16,6 +17,7 @@ app.register_blueprint(teams_bp)
 app.register_blueprint(lora_nodes_bp)
 app.register_blueprint(messages_bp)
 app.register_blueprint(upload_bp)
+app.register_blueprint(images_bp)
 
 def get_db_connection():
     return pymysql.connect(
@@ -44,6 +46,7 @@ def index():
     <h1>hostnet Database Maintenance</h1>
     <ul>
       <li><a href='/upload'>Upload Image</a></li>
+        <li><a href='/images'>View Images</a></li>
       <li><a href='/users'>Users</a></li>
       <li><a href='/teams'>Teams</a></li>
       <li><a href='/lora_nodes'>LoRa Nodes</a></li>
