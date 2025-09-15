@@ -74,7 +74,17 @@ def parse_fields(msg):
 
 def process_lora_message(msg, conn):
     global rpibeaconid
-    print(f"Received LoRa message: {msg}")
+    
+    if msg.startswith("[RPI Start]"):
+            print(f"Received LoRa message: {msg}")
+
+    if msg.startswith("[RPI Start]"):
+        print("RPI LoRa Gateway started.")
+        return
+
+    if msg.startswith("[RPI WIFI]"):
+        print("RPI WIFI started.")
+        return
 
     if msg.startswith("[LoRa RX]") or msg.startswith("[LoRa TX]"):
         if (msg.startswith("[LoRa TX]") & (rpibeaconid is None)):
@@ -178,7 +188,6 @@ def main():
     while True:
         line = ser.readline().decode('utf-8', errors='replace').strip()
         if line:
-            print(f"Received LoRa message: {line}")
             try:
                 process_lora_message(line, conn)
             except Exception as e:
