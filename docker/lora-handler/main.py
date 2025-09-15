@@ -176,7 +176,7 @@ def main():
     threading.Thread(target=check_user_updates, args=(ser, conn), daemon=True).start()
 
     while True:
-        line = ser.readline().decode('utf-8').strip()
+        line = ser.readline().decode('utf-8', errors='replace').strip()
         if line:
             print(f"Received LoRa message: {line}")
             try:
