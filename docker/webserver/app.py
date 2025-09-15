@@ -7,12 +7,15 @@ from routes.users import users_bp
 from routes.teams import teams_bp
 from routes.lora_nodes import lora_nodes_bp
 from routes.messages import messages_bp
+from routes.messages import messages_bp
+from routes.upload import upload_bp
 
 app = Flask(__name__)
 app.register_blueprint(users_bp)
 app.register_blueprint(teams_bp)
 app.register_blueprint(lora_nodes_bp)
 app.register_blueprint(messages_bp)
+app.register_blueprint(upload_bp)
 
 def get_db_connection():
     return pymysql.connect(

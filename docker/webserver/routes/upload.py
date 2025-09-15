@@ -1,11 +1,11 @@
 from flask import Blueprint, request, render_template_string, send_file
 import os
 
-bp = Blueprint('upload_image', __name__)
+upload_bp = Blueprint('upload_image', __name__)
 UPLOAD_FOLDER = '/tmp/uploaded_images'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-@bp.route('/upload', methods=['GET', 'POST'])
+@upload_bp.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
         if 'image' not in request.files:
@@ -24,7 +24,7 @@ def upload():
         </form>
     ''')
 
-@bp.route('/uploaded.jpg', methods=['GET'])
+@upload_bp.route('/uploaded.jpg', methods=['GET'])
 def get_uploaded_image():
     filepath = os.path.join(UPLOAD_FOLDER, 'uploaded.jpg')
     if os.path.exists(filepath):
