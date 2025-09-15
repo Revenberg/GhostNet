@@ -19,6 +19,9 @@ cd ~/GhostNet
 cp update.sh ~/update.sh
 chmod +x ~/update.sh
 
+mkdir /tmp/uploaded_images 2>/dev/null || true
+
+
 TTY_DEV=$(ls /dev/ttyUSB* | head -n 1 || echo "/dev/ttyUSB0")
 echo "TTY_DEVICE=$TTY_DEV" > .env
 
