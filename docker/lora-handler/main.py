@@ -75,7 +75,7 @@ def parse_fields(msg):
 def process_lora_message(msg, conn):
     global rpibeaconid
     
-    print(f"Received LoRa message: =={msg}==")
+#    print(f"Received LoRa message: =={msg}==")
 
     if msg.startswith("[RPI4"):
         print(f"Received LoRa message: {msg}")
