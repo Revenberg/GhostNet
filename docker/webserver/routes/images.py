@@ -75,6 +75,9 @@ def send_image_to_lora(filename):
     image_b64 = base64.b64encode(image_bytes).decode('ascii')
     conn = get_db_connection()
     try:
+        print(f"Sending image {filename} to LoRa")
+        print(f"Image size (bytes): {len(image_bytes)}")
+        print(f"Base64 encoded image size (bytes): {len(image_b64)}")
         with conn.cursor() as cur:
             cur.execute("""
                 INSERT INTO Lora_Send (node_id, team, object, `function`, parameters)
