@@ -73,9 +73,9 @@ def send_image_to_lora(filename):
     with open(filepath, 'rb') as f:
         image_bytes = f.read()
     image_b64 = base64.b64encode(image_bytes).decode('ascii')
-    print(f"Sending image {filename} to LoRa")
-    print(f"Image size (bytes): {len(image_bytes)}")
-    print(f"Base64 encoded image size (bytes): {len(image_b64)}")
+    print(f"Sending image {filename} to LoRa", flush=True)
+    print(f"Image size (bytes): {len(image_bytes)}", flush=True)
+    print(f"Base64 encoded image size (bytes): {len(image_b64)}", flush=True)
 
     conn = get_db_connection()
     try:
