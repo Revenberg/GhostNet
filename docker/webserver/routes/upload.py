@@ -13,9 +13,9 @@ def upload():
         file = request.files['image']
         if file.filename == '':
             return 'No selected file', 400
-        filepath = os.path.join(UPLOAD_FOLDER, 'uploaded.jpg')
-        file.save(filepath)
-        return '<h2>Image upload complete!</h2><a href="/upload">Back</a>'
+    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(filepath)
+    return f'<h2>Image upload complete!</h2><a href="/upload">Back</a><br>Saved as: {file.filename}'
     return render_template_string('''
         <h2>Upload Image to RPI</h2>
         <form method="POST" enctype="multipart/form-data">
@@ -24,9 +24,9 @@ def upload():
         </form>
     ''')
 
-@upload_bp.route('/uploaded.jpg', methods=['GET'])
-def get_uploaded_image():
-    filepath = os.path.join(UPLOAD_FOLDER, 'uploaded.jpg')
+@upload_bp.route('/uploads/<filename>', methods=['GET'])
+def get_uploaded_image(filename):
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
     if os.path.exists(filepath):
-        return send_file(filepath, mimetype='image/jpeg')
+        return send_file(filepath)
     return 'No image uploaded', 404
