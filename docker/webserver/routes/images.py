@@ -1,4 +1,4 @@
-from flask import Blueprint, send_file
+from flask import Blueprint, send_file, request
 import os
 import pymysql
 from flask import render_template_string
@@ -17,8 +17,13 @@ def get_db_connection():
 
 @images_bp.route('/images', methods=['GET'])
 def list_images():
-    # Dummy team list, replace with DB query if needed
-    teams = ['Red', 'Blue', 'Green', 'Yellow']
+    # Fetch teams from database
+    conn = get_db_connection()
+    with conn.cursor() as cur:
+        cur.execute("SELECT teamname FROM teams")
+        teams = [row[0] for row in cur.fetchall()]
+    if not teams:
+        teams = ['No teams found']
     files = [f for f in os.listdir(UPLOAD_FOLDER) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))]
     html = '<h2>Available Images</h2>'
     html += '<form method="GET" action="/images">'
