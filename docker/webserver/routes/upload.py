@@ -13,16 +13,17 @@ def upload():
         file = request.files['image']
         if file.filename == '':
             return 'No selected file', 400
-    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
-    file.save(filepath)
-    return f'<h2>Image upload complete!</h2><a href="/upload">Back</a><br>Saved as: {file.filename}'
-    return render_template_string('''
-        <h2>Upload Image to RPI</h2>
-        <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="image"><br>
-            <input type="submit" value="Upload">
-        </form>
-    ''')
+        filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+        file.save(filepath)
+        return f'<h2>Image upload complete!</h2><a href="/upload">Back</a><br>Saved as: {file.filename}'
+    else:
+        return render_template_string('''
+            <h2>Upload Image to RPI</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="file" name="image"><br>
+                <input type="submit" value="Upload">
+            </form>
+        ''')
 
 @upload_bp.route('/uploads/<filename>', methods=['GET'])
 def get_uploaded_image(filename):
