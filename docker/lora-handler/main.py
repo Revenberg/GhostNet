@@ -59,7 +59,7 @@ def create_tables(conn):
             team VARCHAR(64),
             object VARCHAR(64),
             `function` VARCHAR(64),
-            parameters TEXT,
+            parameters MEDIUMTEXT,
             timestamp DATETIME
         )
         """)
@@ -70,7 +70,7 @@ def create_tables(conn):
             team VARCHAR(64),
             object VARCHAR(64),
             `function` VARCHAR(64),
-            parameters TEXT,
+            parameters MEDIUMTEXT,
             timestamp DATETIME
         )
         """)
