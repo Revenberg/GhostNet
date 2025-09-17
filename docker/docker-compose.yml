@@ -15,11 +15,9 @@ services:
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   ghostnet-dev:
-    build:
-      context: .
-      dockerfile: ~/GhostNet/docker/ghostnet-web/Dockerfile.dev
+    build: ./ghostnet-web
     volumes:
-      - ./app:/app          # Mount local source code
+      - ./ghostnet-web/app:/app          # Mount local source code
       - /app/node_modules # Node modules persistent in container
     ports:
       - "3000:3000"
