@@ -167,11 +167,6 @@ def loraSend(ser, nodeMessage):
 
 def check_lora_send(ser):
     print("Starting LoRa send checker thread.", flush=True)
-    print("Starting LoRa send checker thread.", flush=True)
-    print("Starting LoRa send checker thread.", flush=True)
-    print("Starting LoRa send checker thread.", flush=True)
-    print("Starting LoRa send checker thread.", flush=True)
-    print("Starting LoRa send checker thread.", flush=True)
     
     conn = get_db_connection()
 
@@ -192,6 +187,8 @@ def check_lora_send(ser):
 
                 # Delete the entry after sending
                 cur.execute("DELETE FROM Lora_Send WHERE id = %s", (lora_id,))
+                cur.execute("COMMIT")
+                
                 print(f"Lora_Send entry {lora_id} sent and deleted from database.", flush=True)
                 time.sleep(60)  # Wait 60 seconds
             else:
@@ -201,19 +198,6 @@ def check_lora_send(ser):
         
 def check_user_updates(ser):
     print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-    print("Starting user update checker thread.", flush=True)
-
     conn = get_db_connection()
 
     import datetime
@@ -252,7 +236,7 @@ def main():
     conn = get_db_connection()
     print(f"connection established")
     conn.close()
-    
+
     create_tables()
     print(f"Tables created")
     usb_port = os.environ.get('USB_PORT', '/dev/ttyUSB0')
