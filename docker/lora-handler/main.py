@@ -26,7 +26,8 @@ def get_db_connection(retries=10, delay=3):
             time.sleep(delay)
     raise Exception("Could not connect to MySQL after several attempts.")
 
-def create_tables(conn):
+def create_tables():
+    conn = get_db_connection()
     with conn.cursor() as cur:
         cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
@@ -77,6 +78,7 @@ def create_tables(conn):
             timestamp DATETIME
         )
         """)
+    conn.close()
 
 def parse_fields(msg):
     fields = {}
@@ -86,7 +88,8 @@ def parse_fields(msg):
             fields[key.strip()] = value.strip()
     return fields
 
-def process_lora_message(msg, conn):
+def process_lora_message(msg):
+    
     global rpibeaconid
     
 #    print(f"Received LoRa message: =={msg}==")
@@ -123,6 +126,8 @@ def process_lora_message(msg, conn):
             if (rpibeaconid == "rpi"):
                 rpibeaconid = node_id
             try:
+                conn = get_db_connection()
+    
                 with conn.cursor() as cur:
                     cur.execute("""
                     INSERT INTO lora_nodes (node_id, last_seen, rssi, snr, version)
@@ -130,6 +135,7 @@ def process_lora_message(msg, conn):
                     ON DUPLICATE KEY UPDATE last_seen=NOW(), rssi=%s, snr=%s, version=%s
                     """, (node_id, rssi, snr, nodeversion, rssi, snr, nodeversion))
                 print("LoRa node info updated in database.", flush=True)
+                conn.close()
             except Exception as e:
                 print(f"Failed to update LoRa node info: {e}", flush=True)
             return
@@ -140,12 +146,14 @@ def process_lora_message(msg, conn):
             parts = msg.split(';')
             node_id, user_id, team_id, obj, func, params, timestamp = parts
             try:
+                conn = get_db_connection()
                 with conn.cursor() as cur:
                     cur.execute("""
                     INSERT INTO messages (node_id, user_id, team_id, object, `function`, parameters, timestamp)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """, (node_id, user_id, team_id, obj, func, params, timestamp))
                 print("Message inserted into database.")
+                conn.close()
             except Exception as e:
                 print(f"Failed to insert message: {e}")
 
@@ -157,7 +165,7 @@ def loraSend(ser, nodeMessage):
     msg = "MSG;" + str(msgID) + ";RPI;" + str(3) + ";" + nodeMessage
     ser.write((msg + "\n").encode('utf-8'))
 
-def check_lora_send(ser, conn):
+def check_lora_send(ser):
     print("Starting LoRa send checker thread.", flush=True)
     print("Starting LoRa send checker thread.", flush=True)
     print("Starting LoRa send checker thread.", flush=True)
@@ -165,6 +173,8 @@ def check_lora_send(ser, conn):
     print("Starting LoRa send checker thread.", flush=True)
     print("Starting LoRa send checker thread.", flush=True)
     
+    conn = get_db_connection()
+
     while True:
         print("Check LoRa send checker thread.", flush=True)
         with conn.cursor() as cur:
@@ -189,7 +199,7 @@ def check_lora_send(ser, conn):
 
         time.sleep(60)  # Wait 60 seconds
         
-def check_user_updates(ser, conn):
+def check_user_updates(ser):
     print("Starting user update checker thread.", flush=True)
     print("Starting user update checker thread.", flush=True)
     print("Starting user update checker thread.", flush=True)
@@ -203,7 +213,9 @@ def check_user_updates(ser, conn):
     print("Starting user update checker thread.", flush=True)
     print("Starting user update checker thread.", flush=True)
     print("Starting user update checker thread.", flush=True)
-    
+
+    conn = get_db_connection()
+
     import datetime
     last_user_update = datetime.datetime(2025, 1, 1)
     while True:
@@ -226,27 +238,27 @@ def check_user_updates(ser, conn):
 
         time.sleep(60)  # Wait 60 seconds
 
-def loop():
-    global ser, conn
+def lora_reader():
     while True:
         line = ser.readline().decode('utf-8', errors='replace').strip()
         if line:
-                try:
-                        process_lora_message(line, conn)
-                except Exception as e:
-                        print(f"Error processing LoRa message: {e}", flush=True)
+            try:
+                process_lora_message(line)
+            except Exception as e:
+                print(f"Error processing LoRa message: {e}", flush=True)
 
 def main():
     print(f"main")
     conn = get_db_connection()
     print(f"connection established")
-    create_tables(conn)
+    conn.close()
+    
+    create_tables()
     print(f"Tables created")
     usb_port = os.environ.get('USB_PORT', '/dev/ttyUSB0')
     baudrate = int(os.environ.get('USB_BAUDRATE', '115200'))
     print(f"Using USB port: {usb_port} at baudrate: {baudrate}", flush=True)
     connection = False
-    global ser
     ser = None
     while not connection:
         try:
@@ -256,11 +268,14 @@ def main():
         except Exception as e:
             print(f"Failed to open USB port: {e}", flush=True)
 
-    # Start the background thread for checking user updates
-    threading.Thread(target=check_user_updates, args=(ser, conn), daemon=True).start()
-    threading.Thread(target=check_lora_send, args=(ser, conn), daemon=True).start()
+    # Start background threads
+    threading.Thread(target=lora_reader, daemon=True).start()
+    threading.Thread(target=check_user_updates, args=(ser,), daemon=True).start()
+    threading.Thread(target=check_lora_send, args=(ser,), daemon=True).start()
 
-    loop()
+    # Keep main thread alive
+    while True:
+        time.sleep(60)
 
 if __name__ == "__main__":
     main()
