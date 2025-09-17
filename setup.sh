@@ -8,6 +8,20 @@ set -e
 #sudo usermod -aG docker $USER
 #sudo pip3 install docker-compose
 
+# docker kill $(docker ps -q)
+
+# Delete all stopped containers
+# docker rm $(docker ps -a -q)
+
+# Delete all images
+# docker rmi $(docker images -q)
+
+# Remove unused data
+# docker system prune
+
+# And some more
+# docker system prune -af
+
 cd ~
 sudo rm -rf GhostNet 2>/dev/null 
 cd ~

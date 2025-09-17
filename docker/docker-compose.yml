@@ -25,10 +25,6 @@ services:
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=admin
       - MYSQL_DATABASE=ghostnet
-    volumes:
-      - ./backend:/app
-    working_dir: /app
-    command: ["node", "server.js"]
 
   ghostnet-dev:
     build: ./ghostnet-web
