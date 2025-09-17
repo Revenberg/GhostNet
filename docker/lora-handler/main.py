@@ -1,3 +1,4 @@
+from random import random
 from tokenize import String
 from attr import fields
 import pymysql
@@ -159,7 +160,7 @@ def process_lora_message(msg):
 
 def loraSend(ser, nodeMessage):
     # Send the LoRa message
-    print(f"Sending LoRa message: {nodeMessage}", flush=True)
+    print(f"Sending LoRa message: {nodeMessage[:40]}", flush=True)
     # Use Python's time.time() for millis equivalent
     msgID = int(time.time() * 1000)
     msg = "MSG;" + str(msgID) + ";RPI;" + str(3) + ";" + nodeMessage
@@ -176,7 +177,8 @@ def check_lora_send(ser):
             cur.execute("SELECT id, node_id, team, object, `function`, parameters FROM Lora_Send ORDER BY id ASC LIMIT 1")
             row = cur.fetchone()
             if row:
-                lora_id = row[0]
+                lora_id = random.randint(100000, 999999)
+                id = row[0]
                 node_id = row[1]
                 team = row[2]
                 obj = row[3]
@@ -186,10 +188,10 @@ def check_lora_send(ser):
                 loraSend(ser, f"SEND; node:{node_id},team:{team},object:{obj},function:{func},parameters:{params}")
 
                 # Delete the entry after sending
-                cur.execute("DELETE FROM Lora_Send WHERE id = %s", (lora_id,))
+                cur.execute("DELETE FROM Lora_Send WHERE id = %s", (id,))
                 cur.execute("COMMIT")
                 
-                print(f"Lora_Send entry {lora_id} sent and deleted from database.", flush=True)
+                print(f"Lora_Send entry {id} sent and deleted from database.", flush=True)
                 time.sleep(60)  # Wait 60 seconds
             else:
                 print("No Lora_Send entries to process.", flush=True)
