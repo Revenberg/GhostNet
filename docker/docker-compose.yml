@@ -29,12 +29,12 @@ services:
     tty: true
 
 # docker-compose build ghostnet-prod
-  ghostnet-prod:
-    build:
-      context: .
-      dockerfile: ~/GhostNet/docker/ghostnet-web/Dockerfile.prod
-    ports:
-      - "3001:3000"
+#  ghostnet-prod:
+#    build:
+#      context: .
+#      dockerfile: ~/GhostNet/docker/ghostnet-web/Dockerfile.prod
+#    ports:
+#      - "3001:3000"
 
   lora-handler:
     build: ./lora-handler
