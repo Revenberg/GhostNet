@@ -3,6 +3,7 @@ import mysql from "mysql2/promise";
 import bcrypt from "bcrypt";
 import cors from "cors";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const app = express();
 const PORT = 4000;
@@ -11,13 +12,37 @@ const PORT = 4000;
 app.use(cors());
 app.use(express.json());
 
-// MySQL connectie
-const pool = mysql.createPool({
+// Config
+const dbConfig = {
   host: process.env.MYSQL_HOST || "mysql",
   user: process.env.MYSQL_USER || "root",
   password: process.env.MYSQL_PASSWORD || "rootpassword",
   database: process.env.MYSQL_DATABASE || "ghostnet",
-});
+};
+
+let pool;
+
+// Retry connectie met MySQL
+async function initMySQL(retries = 10, delay = 5000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      pool = await mysql.createPool(dbConfig);
+      await pool.query("SELECT 1");
+      console.log("✅ MySQL connected");
+      return;
+    } catch (err) {
+      console.error(
+        `❌ MySQL connection failed (attempt ${i + 1}/${retries}):`,
+        err.message
+      );
+      if (i < retries - 1) {
+        await new Promise((res) => setTimeout(res, delay));
+      } else {
+        throw err;
+      }
+    }
+  }
+}
 
 // API: Registratie
 app.post("/api/register", async (req, res) => {
@@ -27,13 +52,9 @@ app.post("/api/register", async (req, res) => {
       return res.status(400).json({ error: "Username and password required" });
     }
 
-    // Hash password
     const password_hash = await bcrypt.hash(password, 10);
+    const token = crypto.randomBytes(32).toString("hex");
 
-    // Generate a random token (simple example)
-    const token = require('crypto').randomBytes(32).toString('hex');
-
-    // Insert user with token
     const [result] = await pool.query(
       "INSERT INTO users (username, teamname, password_hash, token) VALUES (?, ?, ?, ?)",
       [username, teamname, password_hash, token]
@@ -65,20 +86,17 @@ app.post("/api/login", async (req, res) => {
     }
 
     const user = rows[0];
-
     const match = await bcrypt.compare(password, user.password_hash);
     if (!match) {
       return res.status(401).json({ error: "Invalid password" });
     }
 
-    // JWT token maken
     const token = jwt.sign(
       { id: user.id, username: user.username },
       process.env.JWT_SECRET || "supersecret",
       { expiresIn: "1h" }
     );
 
-    // token ook in DB opslaan (optioneel)
     await pool.query("UPDATE users SET token = ? WHERE id = ?", [
       token,
       user.id,
@@ -91,7 +109,14 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ Backend running on port ${PORT}`);
-});
-
+// Server pas starten na succesvolle DB connectie
+initMySQL()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`✅ Backend running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Could not connect to MySQL after retries:", err);
+    process.exit(1);
+  });
