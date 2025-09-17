@@ -14,20 +14,27 @@ services:
       - mysql_data:/var/lib/mysql
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  ghostnet-web:
-    build: ./ghostnet-web
-    container_name: ghostnet_web
-    depends_on:
-      - mysql
+  ghostnet-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./app:/app          # Mount local source code
+      - /app/node_modules # Node modules persistent in container
     ports:
       - "3000:3000"
     environment:
-      DB_HOST: mysql
-      DB_USER: admin
-      DB_PASSWORD: admin
-      DB_NAME: ghostnet
-    volumes:
-      - ./ghostnet-web:/app
+      - CHOKIDAR_USEPOLLING=true # Hot reload op RPi
+    stdin_open: true
+    tty: true
+
+# docker-compose build ghostnet-prod
+  ghostnet-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - "3001:3000"
 
   lora-handler:
     build: ./lora-handler
