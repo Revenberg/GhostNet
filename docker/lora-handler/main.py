@@ -223,7 +223,7 @@ def check_user_updates(ser):
 
         time.sleep(60)  # Wait 60 seconds
 
-def lora_reader():
+def lora_reader(ser):
     while True:
         line = ser.readline().decode('utf-8', errors='replace').strip()
         if line:
@@ -254,7 +254,7 @@ def main():
             print(f"Failed to open USB port: {e}", flush=True)
 
     # Start background threads
-    threading.Thread(target=lora_reader, daemon=True).start()
+    threading.Thread(target=lora_reader, args=(ser,), daemon=True).start()
     threading.Thread(target=check_user_updates, args=(ser,), daemon=True).start()
     threading.Thread(target=check_lora_send, args=(ser,), daemon=True).start()
 
