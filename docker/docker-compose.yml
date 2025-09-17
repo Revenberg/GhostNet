@@ -14,6 +14,22 @@ services:
       - mysql_data:/var/lib/mysql
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
 
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mysql
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=rootpassword
+      - MYSQL_DATABASE=ghostnet
+    volumes:
+      - ./backend:/app
+    working_dir: /app
+    command: ["node", "server.js"]
+    
   ghostnet-dev:
     build: ./ghostnet-web
     volumes:
