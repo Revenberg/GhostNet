@@ -14,6 +14,21 @@ services:
       - mysql_data:/var/lib/mysql
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
 
+  ghostnet-web:
+    build: ./ghostnet-web
+    container_name: ghostnet_web
+    depends_on:
+      - mysql
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: mysql
+      DB_USER: admin
+      DB_PASSWORD: admin
+      DB_NAME: ghostnet
+    volumes:
+      - ./ghostnet-web:/app
+
   lora-handler:
     build: ./lora-handler
     container_name: lora_handler

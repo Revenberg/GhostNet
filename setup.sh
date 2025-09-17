@@ -7,6 +7,15 @@ set -e
 #curl -fsSL https://get.docker.com | sudo sh
 #sudo usermod -aG docker $USER
 #sudo pip3 install docker-compose
+
+node -v
+npm -v
+npx -v
+
+chmod +x ghostnet-web.sh
+# ./ghostnet-web.sh
+
+
 cd ~
 sudo rm -rf GhostNet 2>/dev/null 
 cd ~
