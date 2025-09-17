@@ -100,6 +100,25 @@ def process_lora_message(msg):
 
     if msg.startswith("[RPI4 Start]"):
         print("RPI4 LoRa Gateway started.", flush=True)
+        # Extract node and version if present
+        import re
+        match = re.search(r'Node:\s*([\w_]+),\s*Version:\s*([\d.]+)', msg)
+        if match:
+            node = match.group(1)
+            version = match.group(2)
+            print(f"Node: {node}, Version: {version}", flush=True)
+            try:
+                conn = get_db_connection()
+                with conn.cursor() as cur:
+                    cur.execute("""
+                        INSERT INTO lora_nodes (node_id, last_seen, rssi, snr, version)
+                        VALUES (%s, NOW(), NULL, NULL, %s)
+                        ON DUPLICATE KEY UPDATE last_seen=NOW(), version=%s
+                    """, (node, version, version))
+                print("lora_nodes table updated for RPI4 Start.", flush=True)
+                conn.close()
+            except Exception as e:
+                print(f"Failed to update lora_nodes for RPI4 Start: {e}", flush=True)
         return
 
     if msg.startswith("[RPI4 WIFI]"):
