@@ -17,7 +17,7 @@ services:
   ghostnet-dev:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: ~/GhostNet/docker/ghostnet-web/Dockerfile.dev
     volumes:
       - ./app:/app          # Mount local source code
       - /app/node_modules # Node modules persistent in container
@@ -32,7 +32,7 @@ services:
   ghostnet-prod:
     build:
       context: .
-      dockerfile: Dockerfile.prod
+      dockerfile: ~/GhostNet/docker/ghostnet-web/Dockerfile.prod
     ports:
       - "3001:3000"
 
