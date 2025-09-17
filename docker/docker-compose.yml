@@ -29,7 +29,7 @@ services:
   ghostnet-dev:
     build: ./ghostnet-web
     volumes:
-      - ./ghostnet-web/app:/app          # Mount local source code
+      - ./ghostnet-web:/app          # Mount local source code
       - /app/node_modules # Node modules persistent in container
     ports:
       - "3000:3000"
