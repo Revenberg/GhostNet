@@ -1,9 +1,9 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./src/components/Navbar";
-import Home from "./src/pages/Home";
-import About from "./src/pages/About";
-import Contact from "./src/pages/Contact";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 
 export default function App() {
   return (
