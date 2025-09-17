@@ -177,7 +177,6 @@ def check_lora_send(ser):
             cur.execute("SELECT id, node_id, team, object, `function`, parameters FROM Lora_Send ORDER BY id ASC LIMIT 1")
             row = cur.fetchone()
             if row:
-                lora_id = random.randint(100000, 999999)
                 id = row[0]
                 node_id = row[1]
                 team = row[2]
