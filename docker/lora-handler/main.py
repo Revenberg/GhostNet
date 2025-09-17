@@ -158,7 +158,15 @@ def loraSend(ser, nodeMessage):
     ser.write((msg + "\n").encode('utf-8'))
 
 def check_lora_send(ser, conn):
+    print("Starting LoRa send checker thread.", flush=True)
+    print("Starting LoRa send checker thread.", flush=True)
+    print("Starting LoRa send checker thread.", flush=True)
+    print("Starting LoRa send checker thread.", flush=True)
+    print("Starting LoRa send checker thread.", flush=True)
+    print("Starting LoRa send checker thread.", flush=True)
+    
     while True:
+        print("Check LoRa send checker thread.", flush=True)
         with conn.cursor() as cur:
             cur.execute("SELECT id, node_id, team, object, `function`, parameters FROM Lora_Send ORDER BY id ASC LIMIT 1")
             row = cur.fetchone()
@@ -182,9 +190,24 @@ def check_lora_send(ser, conn):
         time.sleep(60)  # Wait 60 seconds
         
 def check_user_updates(ser, conn):
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    print("Starting user update checker thread.", flush=True)
+    
     import datetime
     last_user_update = datetime.datetime(2025, 1, 1)
     while True:
+        print("Check user update checker thread.", flush=True)
         with conn.cursor() as cur:
             cur.execute("SELECT username, password_hash, token, teamname, last_update FROM users WHERE last_update > %s", (last_user_update,))
             rows = cur.fetchall()
