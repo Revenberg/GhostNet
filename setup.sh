@@ -32,3 +32,4 @@ HOST_IP=$(hostname -I | awk '{print $1}')
 # cd docker && docker compose up -d --build --remove-orphans
 cd docker && docker compose up --build --remove-orphans
 echo "✅ Installatie voltooid"
+
