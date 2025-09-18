@@ -15,7 +15,7 @@ export default function UsersLogin() {
     try {
       // Use the docker-compose service name as the backend host
       // If running in Docker, use "backend" as the hostname (see docker-compose.yml)
-      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://192.168.1.14:4000";
       const res = await fetch(`${backendHost}/api/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

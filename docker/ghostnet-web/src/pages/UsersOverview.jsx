@@ -10,7 +10,7 @@ export default function UsersOverview() {
       setLoading(true);
       setError("");
       try {
-        const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+        const backendHost = process.env.REACT_APP_BACKEND_URL || "http://192.168.1.14:4000";
         const res = await fetch(`${backendHost}/api/users`);
         const data = await res.json();
         if (data.success) {

@@ -12,7 +12,7 @@ export default function AddTeam() {
     e.preventDefault();
     setMessage("...sending");
     try {
-      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://192.168.1.14:4000";
       const res = await fetch(`${backendHost}/api/teams`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

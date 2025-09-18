@@ -12,7 +12,7 @@ export default function UpdateTeam() {
 
   async function fetchTeams() {
     try {
-      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://192.168.1.14:4000";
       const res = await fetch(`${backendHost}/api/teams`);
       const data = await res.json();
       if (data.success) setTeams(data.teams);
@@ -33,7 +33,7 @@ export default function UpdateTeam() {
     e.preventDefault();
     setMessage("...updating");
     try {
-      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://192.168.1.14:4000";
       const res = await fetch(`${backendHost}/api/teams/${selected}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
