@@ -1,3 +1,79 @@
+// API: Get all teams
+app.get("/api/teams", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT id, teamname, teamcode FROM teams");
+    res.json({ success: true, teams: rows });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// API: Add team
+app.post("/api/teams", async (req, res) => {
+  try {
+    const { teamname, teamcode } = req.body;
+    if (!teamname || !teamcode) {
+      return res.status(400).json({ error: "Team name and code required" });
+    }
+    const [result] = await pool.query(
+      "INSERT INTO teams (teamname, teamcode) VALUES (?, ?)",
+      [teamname, teamcode]
+    );
+    res.json({ success: true, id: result.insertId });
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY") {
+      res.status(400).json({ error: "Team name or code already exists" });
+    } else {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  }
+});
+
+// API: Update team
+app.put("/api/teams/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { teamname, teamcode } = req.body;
+    if (!teamname || !teamcode) {
+      return res.status(400).json({ error: "Team name and code required" });
+    }
+    const [result] = await pool.query(
+      "UPDATE teams SET teamname = ?, teamcode = ? WHERE id = ?",
+      [teamname, teamcode, id]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Team not found" });
+    }
+    res.json({ success: true });
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY") {
+      res.status(400).json({ error: "Team name or code already exists" });
+    } else {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  }
+});
+
+// API: Delete team
+app.delete("/api/teams/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [result] = await pool.query(
+      "DELETE FROM teams WHERE id = ?",
+      [id]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Team not found" });
+    }
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
 // API: Get all users (excluding password_hash and token)
 app.get("/api/users", async (req, res) => {
   try {

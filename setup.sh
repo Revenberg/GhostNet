@@ -3,17 +3,17 @@ set -e
 
 
 echo "[DEBUG] Updating apt package lists..."
-sudo apt update 
+# sudo apt update 
 echo "[DEBUG] Upgrading packages..."
-sudo apt upgrade -y 
+# sudo apt upgrade -y 
 echo "[DEBUG] Installing dependencies..."
-sudo apt install -y git curl python3-pip python3-venv ca-certificates gnupg lsb-release
+# sudo apt install -y git curl python3-pip python3-venv ca-certificates gnupg lsb-release
 echo "[DEBUG] Installing Docker..."
-curl -fsSL https://get.docker.com | sudo sh
+# curl -fsSL https://get.docker.com | sudo sh
 echo "[DEBUG] Adding user to docker group..."
-sudo usermod -aG docker $USER
+# sudo usermod -aG docker $USER
 echo "[DEBUG] Installing docker-compose..."
-sudo pip3 install docker-compose
+# sudo pip3 install docker-compose
 
 # docker kill $(docker ps -q)
 
