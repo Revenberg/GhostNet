@@ -5,6 +5,8 @@ import { NavbarGuest, NavbarUser, NavbarAdmin } from "./Navbars";
 const getUserRole = () => {
 
   const user = JSON.parse(localStorage.getItem("user"));
+  console.log("Navbar - Current user:", user);
+  
   if (!user) return "guest";
   if (user.role === "admin") return "admin";
   return "user";
