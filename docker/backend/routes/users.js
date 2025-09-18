@@ -16,7 +16,7 @@ export default function createUsersRouter(pool) {
   // Get all users (excluding password_hash and token)
   router.get("/", async (req, res) => {
     try {
-      const [rows] = await pool.query("SELECT id, username, teamname FROM users");
+      const [rows] = await pool.query("SELECT id, username, teamname, role FROM users");
       res.json({ success: true, users: rows });
     } catch (err) {
       console.error(err);
