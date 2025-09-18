@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-#sudo apt update 
-#sudo apt upgrade -y 
-#sudo apt install -y git curl python3-pip python3-venv ca-certificates gnupg lsb-release
-#curl -fsSL https://get.docker.com | sudo sh
-#sudo usermod -aG docker $USER
-#sudo pip3 install docker-compose
+sudo apt update 
+sudo apt upgrade -y 
+sudo apt install -y git curl python3-pip python3-venv ca-certificates gnupg lsb-release
+curl -fsSL https://get.docker.com | sudo sh
+sudo usermod -aG docker $USER
+sudo pip3 install docker-compose
 
 # docker kill $(docker ps -q)
 
