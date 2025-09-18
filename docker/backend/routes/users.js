@@ -38,7 +38,7 @@ export default function createUsersRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-  
+
   // Register
   router.post("/", async (req, res) => {
     try {
@@ -57,7 +57,7 @@ export default function createUsersRouter(pool) {
       }
       const token = simpleToken(50);
       const [result] = await pool.query(
-        "INSERT INTO users (username, teamname, role, password_hash, token) VALUES (?, ?, ?, ?)",
+        "INSERT INTO users (username, teamname, role, password_hash, token) VALUES (?, ?, ?, ?, ?)",
         [username, teamname, "user", password_hash, token]
       );
       res.json({ success: true, id: result.insertId, token });
