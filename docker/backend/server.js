@@ -61,8 +61,18 @@ app.post("/api/register", async (req, res) => {
       return res.status(400).json({ error: "Username and password required" });
     }
 
+
     const password_hash = hashPassword(password);
-    const token = crypto.randomBytes(32).toString("hex");
+    // Generate a simple random alphanumeric token of max 50 chars
+    function simpleToken(length = 50) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; ++i) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+    const token = simpleToken(50);
 
     const [result] = await pool.query(
       "INSERT INTO users (username, teamname, password_hash, token) VALUES (?, ?, ?, ?)",
@@ -100,11 +110,17 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid password" });
     }
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username },
-      process.env.JWT_SECRET || "supersecret",
-      { expiresIn: "1h" }
-    );
+
+    // Generate a simple random alphanumeric token of max 50 chars
+    function simpleToken(length = 50) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; ++i) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+    const token = simpleToken(50);
 
     await pool.query("UPDATE users SET token = ? WHERE id = ?", [
       token,
