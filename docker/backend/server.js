@@ -1,3 +1,13 @@
+// API: Get all users (excluding password_hash and token)
+app.get("/api/users", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT id, username, teamname FROM users");
+    res.json({ success: true, users: rows });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
 // DJB2 hash function (matches C++ version)
 function hashPassword(password) {
   let hash = 5381;
@@ -60,7 +70,6 @@ app.post("/api/register", async (req, res) => {
     if (!username || !password) {
       return res.status(400).json({ error: "Username and password required" });
     }
-
 
     const password_hash = hashPassword(password);
     // Generate a simple random alphanumeric token of max 50 chars

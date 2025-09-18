@@ -43,7 +43,8 @@ def create_tables():
         cur.execute("""
         CREATE TABLE IF NOT EXISTS teams (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            teamname VARCHAR(64) UNIQUE
+            teamname VARCHAR(64) UNIQUE,
+            teamcode VARCHAR(64) UNIQUE
         )
         """)
         cur.execute("""
