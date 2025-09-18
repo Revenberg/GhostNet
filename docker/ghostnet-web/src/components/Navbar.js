@@ -1,56 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavbarGuest, NavbarUser, NavbarAdmin } from "./Navbars";
 
-const getUserRole = () => {
-  console.log("Navbar - Checking user role...");
-
+function getTokenFromCookie() {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; token=`);
-  if (parts.length !== 2) return "guest";
-
-  const token = parts.pop().split(';').shift();
-
-  console.log("Navbar - Retrieved token from cookie:", token);
-
-  const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-  const res = fetch(`${backendHost}/api/users/by-token/${token}`);
-
-  console.log("Navbar - Fetch response:", res);
-
-  console.log("Navbar - Fetch response:", res.ok);
-
-  if (!res.ok) throw new Error("User not found");
-
-  const userData = res.json();
-
-  if (!userData || userData === "undefined") return "guest";
-
-  const user = userData.user;
-  console.log("Navbar - User data from cookie:", user);
-  console.log("Navbar - User data from cookie:", userData);
-
-  let parsedUser;
-  try {
-    parsedUser = JSON.parse(decodeURIComponent(userData));
-    console.log("Navbar - Parsed user data:", parsedUser);
-  } catch (e) {
-    console.warn("Navbar - Invalid user data in cookie, treating as guest.", e);
-    return "guest";
-  }
-
-  console.log("Navbar - User role:", parsedUser.role);
-  if (!parsedUser.role) return "guest";
-
-  if (parsedUser.name === "admin") parsedUser.role = "admin";
-  
-  console.log("Navbar - Detected user role:", parsedUser.role);
-  
-  return parsedUser.role;
-};
+  if (parts.length !== 2) return null;
+  return parts.pop().split(';').shift();
+}
 
 export default function Navbar() {
-  const role = getUserRole();
-  console.log("Navbar - Current user role:", role);
+  const [role, setRole] = useState("guest");
+
+  useEffect(() => {
+    const token = getTokenFromCookie();
+    console.log("Token from cookie:", token);
+
+    if (!token) return setRole("guest");
+
+    const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+    fetch(`${backendHost}/api/users/by-token/${token}`)
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data && data.user && data.user.role) {
+          console.log("User role from backend:", data.user.role);
+          setRole(data.user.role === "admin" ? "admin" : "user");
+        } else {
+          setRole("guest");
+        }
+      })
+      .catch(() => setRole("guest"));
+  }, []);
 
   if (role === "admin") return <NavbarAdmin />;
   if (role === "user") return <NavbarUser />;
