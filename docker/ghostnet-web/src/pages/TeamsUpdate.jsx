@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-export default function UpdateTeam() {
+export default function TeamsUpdate() {
   const [teams, setTeams] = useState([]);
   const [selected, setSelected] = useState(null);
   const [form, setForm] = useState({ teamname: "", teamcode: "" });
@@ -12,7 +12,7 @@ export default function UpdateTeam() {
 
   async function fetchTeams() {
     try {
-      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://192.168.1.14:4000";
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
       const res = await fetch(`${backendHost}/api/teams`);
       const data = await res.json();
       if (data.success) setTeams(data.teams);
@@ -33,7 +33,7 @@ export default function UpdateTeam() {
     e.preventDefault();
     setMessage("...updating");
     try {
-      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://192.168.1.14:4000";
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
       const res = await fetch(`${backendHost}/api/teams/${selected}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -63,31 +63,29 @@ export default function UpdateTeam() {
           ))}
         </select>
       </div>
-      {selected && (
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="teamname"
-            placeholder="Team Name"
-            value={form.teamname}
-            onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
-            required
-          />
-          <input
-            type="text"
-            name="teamcode"
-            placeholder="Team Code"
-            value={form.teamcode}
-            onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
-            required
-          />
-          <button type="submit" className="w-full btn-primary">
-            Update Team
-          </button>
-        </form>
-      )}
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="teamname"
+          placeholder="Team Name"
+          value={form.teamname}
+          onChange={handleChange}
+          className="w-full border px-3 py-2 rounded"
+          required
+        />
+        <input
+          type="text"
+          name="teamcode"
+          placeholder="Team Code"
+          value={form.teamcode}
+          onChange={handleChange}
+          className="w-full border px-3 py-2 rounded"
+          required
+        />
+        <button type="submit" className="w-full btn-primary">
+          Update Team
+        </button>
+      </form>
       {message && <p className="mt-4 text-sm">{message}</p>}
     </div>
   );

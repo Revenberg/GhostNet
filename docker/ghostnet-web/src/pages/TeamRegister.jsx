@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function AddTeam() {
+export default function TeamRegister() {
   const [form, setForm] = useState({ teamname: "" });
   const [message, setMessage] = useState("");
 
@@ -12,7 +12,7 @@ export default function AddTeam() {
     e.preventDefault();
     setMessage("...sending");
     try {
-      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://192.168.1.14:4000";
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
       const res = await fetch(`${backendHost}/api/teams`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -32,7 +32,7 @@ export default function AddTeam() {
 
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow">
-      <h2 className="text-xl font-bold mb-4">Add Team</h2>
+      <h2 className="text-xl font-bold mb-4">Team registreren</h2>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -44,7 +44,7 @@ export default function AddTeam() {
           required
         />
         <button type="submit" className="w-full btn-primary">
-          Add Team
+          Team registreren
         </button>
       </form>
       {message && <p className="mt-4 text-sm">{message}</p>}
