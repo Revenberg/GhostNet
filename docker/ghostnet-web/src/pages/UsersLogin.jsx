@@ -19,8 +19,7 @@ export default function UsersLogin() {
       const res = await fetch(`${backendHost}/api/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-        credentials: "include", // allow cookies from backend
+        body: JSON.stringify(form)
       });
 
       // Try to get Set-Cookie header (note: not accessible in browsers due to CORS, but credentials: 'include' will store it if backend sets it)
