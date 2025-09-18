@@ -26,8 +26,16 @@ export default function UsersLogin() {
       const data = await res.json();
       if (res.ok) {
         setMessage("✅ Login successful!");
+        console.log("Login response data:", data);
+        
         localStorage.setItem("token", data.token); // opslaan JWT
         localStorage.setItem("user", JSON.stringify(data.user)); // opslaan gebruikersgegevens
+        
+        console.log("Logged in user:", data.user);
+
+        const user = JSON.parse(localStorage.getItem("user"));
+        console.log("Logged in user:", user);
+
         // Session cookie is set by browser if backend sends Set-Cookie with proper CORS headers
       } else {
         setMessage(`❌ ${data.error}`);

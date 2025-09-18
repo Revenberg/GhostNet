@@ -3,11 +3,15 @@ import { NavbarGuest, NavbarUser, NavbarAdmin } from "./Navbars";
 
 // Dummy authentication/role logic for demonstration. Replace with real auth logic.
 const getUserRole = () => {
+  console.log("Navbar - Checking user role...");
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  if (!localStorage.getItem("user")) return "guest";
+  
   console.log("Navbar - Current user:", user);
 
-  if (!user) return "guest";
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log("Navbar - Parsed user:", user);
+
   if (user.role === "admin") return "admin";
   return "user";
 };
