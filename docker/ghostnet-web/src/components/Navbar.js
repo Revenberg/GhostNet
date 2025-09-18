@@ -11,8 +11,8 @@ export default function Navbar() {
       <div className="relative group">
         <button className="hover:underline focus:outline-none">Users ▾</button>
         <div className="absolute left-0 mt-2 w-40 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
-          <Link to="/user-login" className="block px-4 py-2 hover:bg-purple-100">Login</Link>
-          <Link to="/user-register" className="block px-4 py-2 hover:bg-purple-100">Register</Link>
+          <Link to="/users-login" className="block px-4 py-2 hover:bg-purple-100">Login</Link>
+          <Link to="/users-register" className="block px-4 py-2 hover:bg-purple-100">Register</Link>
           <Link to="/users-overview" className="block px-4 py-2 hover:bg-purple-100">Users overview</Link>
         </div>
       </div>

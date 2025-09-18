@@ -36,6 +36,7 @@ def create_tables():
             username VARCHAR(64) UNIQUE,
             teamname VARCHAR(64),
             token VARCHAR(128),
+            role VARCHAR(32) DEFAULT 'user',
             password_hash VARCHAR(225),
             last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )
