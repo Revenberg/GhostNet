@@ -57,8 +57,8 @@ async function initMySQL(retries = 10, delay = 5000) {
 // Server will start after successful DB connection
 initMySQL()
   .then(() => {
-    // Mount routers with pool and hashPassword
-    app.use("/api/users", usersRouter(pool, hashPassword));
+    // Mount routers with pool
+    app.use("/api/users", usersRouter(pool));
     app.use("/api/teams", teamsRouter(pool));
     app.listen(PORT, () => {
       console.log(`✅ Backend running on port ${PORT}`);
