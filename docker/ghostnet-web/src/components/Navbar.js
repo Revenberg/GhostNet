@@ -19,11 +19,11 @@ const getUserRole = () => {
   const token = getCookie("token");
 
   const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-  const res = await fetch(`${backendHost}/api/users/by-token/${encodeURIComponent(token)}`);
+  const res = fetch(`${backendHost}/api/users/by-token/${encodeURIComponent(token)}`);
   
   if (!res.ok) throw new Error("User not found");
 
-  const userData = await res.json();
+  const userData = res.json();
 
   if (!userData || userData === "undefined") return "guest";
 
