@@ -6,13 +6,16 @@ const getUserRole = () => {
   console.log("Navbar - Checking user role...");
 
   const data = localStorage.getItem("user");
-  if (!data) return "guest";
+  if (!data || data === "undefined") return "guest";
 
-  console.log("Navbar - Retrieved user data from localStorage:", data);
-
-  const user = JSON.parse(data);
-  console.log("Navbar - Parsed user:", user);
-
+  let user;
+  try {
+    user = JSON.parse(data);
+  } catch (e) {
+    console.warn("Navbar - Invalid user data in localStorage, treating as guest.", e);
+    return "guest";
+  }
+  if (!user || !user.role) return "guest";
   if (user.role === "admin") return "admin";
   return "user";
 };
