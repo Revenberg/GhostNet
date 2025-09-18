@@ -1,0 +1,84 @@
+import express from "express";
+
+export default function createTeamsRouter(pool) {
+  const router = express.Router();
+
+  // Get all teams
+  router.get("/", async (req, res) => {
+    try {
+      const [rows] = await pool.query("SELECT id, teamname, teamcode FROM teams");
+      res.json({ success: true, teams: rows });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  // Add team
+  router.post("/", async (req, res) => {
+    try {
+      const { teamname, teamcode } = req.body;
+      if (!teamname || !teamcode) {
+        return res.status(400).json({ error: "Team name and code required" });
+      }
+      const [result] = await pool.query(
+        "INSERT INTO teams (teamname, teamcode) VALUES (?, ?)",
+        [teamname, teamcode]
+      );
+      res.json({ success: true, id: result.insertId });
+    } catch (err) {
+      if (err.code === "ER_DUP_ENTRY") {
+        res.status(400).json({ error: "Team name or code already exists" });
+      } else {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+      }
+    }
+  });
+
+  // Update team
+  router.put("/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { teamname, teamcode } = req.body;
+      if (!teamname || !teamcode) {
+        return res.status(400).json({ error: "Team name and code required" });
+      }
+      const [result] = await pool.query(
+        "UPDATE teams SET teamname = ?, teamcode = ? WHERE id = ?",
+        [teamname, teamcode, id]
+      );
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Team not found" });
+      }
+      res.json({ success: true });
+    } catch (err) {
+      if (err.code === "ER_DUP_ENTRY") {
+        res.status(400).json({ error: "Team name or code already exists" });
+      } else {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+      }
+    }
+  });
+
+  // Delete team
+  router.delete("/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const [result] = await pool.query(
+        "DELETE FROM teams WHERE id = ?",
+        [id]
+      );
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Team not found" });
+      }
+      res.json({ success: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  return router;
+}
