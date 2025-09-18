@@ -16,7 +16,13 @@ const getCookie = (name) => {
 const getUserRole = () => {
   console.log("Navbar - Checking user role...");
 
-  const token = getCookie("token");
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; token=`);
+  if (parts.length !== 2) return "guest";
+
+  const token = parts.pop().split(';').shift();
+
+  console.log("Navbar - Retrieved token from cookie:", token);
 
   const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
   const res = fetch(`${backendHost}/api/users/by-token/${encodeURIComponent(token)}`);
