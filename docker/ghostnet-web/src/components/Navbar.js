@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <nav className="bg-purple-700 text-white p-4 flex justify-center space-x-6">
       <Link to="/" className="hover:underline">Home</Link>
-      <Link to="/about" className="hover:underline">About</Link>
+  <Link to="/speluitleg" className="hover:underline">Speluitleg</Link>
       <Link to="/contact" className="hover:underline">Contact</Link>
       
       <div className="relative group">

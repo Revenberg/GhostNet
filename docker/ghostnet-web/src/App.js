@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import About from "./pages/About";
+import Speluitleg from "./pages/Speluitleg";
 import Contact from "./pages/Contact";
 import UsersLogin from "./pages/UsersLogin";
 import UsersRegister from "./pages/UsersRegister";
@@ -20,7 +20,7 @@ export default function App() {
       <div className="p-6">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/speluitleg" element={<Speluitleg />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/users-login" element={<UsersLogin />} />
           <Route path="/users-register" element={<UsersRegister />} />
