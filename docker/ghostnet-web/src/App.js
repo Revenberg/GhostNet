@@ -1,3 +1,5 @@
+import Logout from "./pages/Logout";
+          <Route path="/logout" element={<Logout />} />
 import UsersUpdate from "./pages/UsersUpdate";
 import React from "react";
 import { Routes, Route } from "react-router-dom";

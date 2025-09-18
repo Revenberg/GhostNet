@@ -19,12 +19,6 @@ export function NavbarUser() {
       <Link to="/" className="hover:underline">Home</Link>
       <Link to="/speluitleg" className="hover:underline">Speluitleg</Link>
       <Link to="/contact" className="hover:underline">Contact</Link>
-      <Link to="/users-overview" className="hover:underline">Mijn Profiel</Link>
-      <Link to="/update-user" className="hover:underline">Profiel bijwerken</Link>
-      <Link to="/teams-overview" className="hover:underline">Teams</Link>
-      <Link to="/add-team" className="hover:underline">Team registreren</Link>
-      <Link to="/update-team" className="hover:underline">Team bijwerken</Link>
-      <Link to="/delete-team" className="hover:underline">Team verwijderen</Link>
       <Link to="/users-login" className="hover:underline">Logout</Link>
     </nav>
   );
@@ -36,12 +30,23 @@ export function NavbarAdmin() {
       <Link to="/" className="hover:underline">Home</Link>
       <Link to="/speluitleg" className="hover:underline">Speluitleg</Link>
       <Link to="/contact" className="hover:underline">Contact</Link>
-      <Link to="/users-overview" className="hover:underline">Gebruikers</Link>
-      <Link to="/update-user" className="hover:underline">Profiel bijwerken</Link>
-      <Link to="/teams-overview" className="hover:underline">Teams</Link>
-      <Link to="/add-team" className="hover:underline">Team registreren</Link>
-      <Link to="/update-team" className="hover:underline">Team bijwerken</Link>
-      <Link to="/delete-team" className="hover:underline">Team verwijderen</Link>
+      <div className="relative group">
+        <button className="hover:underline focus:outline-none">Gebruikers ▾</button>
+        <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
+          <Link to="/users-register" className="hover:underline">Register</Link>
+          <Link to="/users-overview" className="block px-4 py-2 hover:bg-purple-100">Gebruikers overzicht</Link>
+          <Link to="/update-user" className="block px-4 py-2 hover:bg-purple-100">Profiel bijwerken</Link>
+        </div>
+      </div>
+      <div className="relative group">
+        <button className="hover:underline focus:outline-none">Teams ▾</button>
+        <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
+          <Link to="/teams-overview" className="block px-4 py-2 hover:bg-purple-100">Teams overzicht</Link>
+          <Link to="/add-team" className="block px-4 py-2 hover:bg-purple-100">Team registreren</Link>
+          <Link to="/update-team" className="block px-4 py-2 hover:bg-purple-100">Team bijwerken</Link>
+          <Link to="/delete-team" className="block px-4 py-2 hover:bg-purple-100">Team verwijderen</Link>
+        </div>
+      </div>
       <Link to="/users-login" className="hover:underline">Logout</Link>
     </nav>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function UsersRegister() {
   const [form, setForm] = useState({
@@ -7,6 +8,7 @@ export default function UsersRegister() {
     password: "",
   });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,7 +30,10 @@ export default function UsersRegister() {
 
       const data = await res.json();
       if (res.ok) {
-        setMessage("✅ Registration successful!");
+        setMessage("✅ Registration successful! Je wordt doorgestuurd naar de login pagina...");
+        setTimeout(() => {
+          navigate("/users-login");
+        }, 5000);
       } else {
         setMessage(`❌ Error: ${data.error}`);
       }
