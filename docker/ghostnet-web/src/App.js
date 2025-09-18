@@ -1,11 +1,17 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import UsersOverview from "./pages/UsersOverview";
+import AddTeam from "./pages/AddTeam";
+import UpdateTeam from "./pages/UpdateTeam";
+import DeleteTeam from "./pages/DeleteTeam";
+import TeamsOverview from "./pages/TeamsOverview";
 
 export default function App() {
   return (
@@ -18,6 +24,11 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/users" element={<UsersOverview />} />
+          <Route path="/add-team" element={<AddTeam />} />
+          <Route path="/update-team" element={<UpdateTeam />} />
+          <Route path="/delete-team" element={<DeleteTeam />} />
+          <Route path="/teams-overview" element={<TeamsOverview />} />
         </Routes>
       </div>
     </div>
