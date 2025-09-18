@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function UsersLogin() {
   const [form, setForm] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -25,14 +27,12 @@ export default function UsersLogin() {
       // Try to get Set-Cookie header (note: not accessible in browsers due to CORS, but credentials: 'include' will store it if backend sets it)
       const data = await res.json();
       if (res.ok) {
-        setMessage("✅ Login successful!");
-        
+        setMessage("✅ Login successful! Je wordt doorgestuurd...");
         localStorage.setItem("token", data.token); // opslaan JWT
         localStorage.setItem("user", JSON.stringify(data.user)); // opslaan gebruikersgegevens
-        
-        const user = JSON.parse(localStorage.getItem("user"));
-        
-        // Session cookie is set by browser if backend sends Set-Cookie with proper CORS headers
+        setTimeout(() => {
+          navigate("/");
+        }, 5000);
       } else {
         setMessage(`❌ ${data.error}`);
       }
