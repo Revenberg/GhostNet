@@ -42,8 +42,8 @@ export default function createUsersRouter(pool) {
       }
       const token = simpleToken(50);
       const [result] = await pool.query(
-        "INSERT INTO users (username, teamname, password_hash, token) VALUES (?, ?, ?, ?)",
-        [username, teamname, password_hash, token]
+        "INSERT INTO users (username, teamname, role, password_hash, token) VALUES (?, ?, ?, ?)",
+        [username, teamname, "user", password_hash, token]
       );
       res.json({ success: true, id: result.insertId, token });
     } catch (err) {
