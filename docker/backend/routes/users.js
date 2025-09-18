@@ -46,7 +46,6 @@ export default function createUsersRouter(pool, hashPassword) {
     }
   });
 
-  // Login
   router.post("/login", async (req, res) => {
     try {
       const { username, password } = req.body;
