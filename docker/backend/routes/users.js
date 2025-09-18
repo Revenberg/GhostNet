@@ -1,6 +1,16 @@
 import express from "express";
 
-export default function createUsersRouter(pool, hashPassword) {
+// DJB2 hash function for password hashing (matches C++ implementation)
+export function hashPassword(password) {
+  let hash = 5381;
+  for (let i = 0; i < password.length; ++i) {
+    hash = ((hash << 5) + hash) + password.charCodeAt(i);
+    hash = hash >>> 0; // force unsigned 32-bit
+  }
+  return hash.toString(16);
+}
+
+export default function createUsersRouter(pool) {
   const router = express.Router();
 
   // Get all users (excluding password_hash and token)

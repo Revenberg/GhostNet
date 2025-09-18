@@ -50,10 +50,6 @@ async function initMySQL(retries = 10, delay = 5000) {
   }
 }
 
-// All API endpoints removed
-
-// All API endpoints removed
-
 // Server will start after successful DB connection
 initMySQL()
   .then(() => {
