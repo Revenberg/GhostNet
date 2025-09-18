@@ -36,6 +36,8 @@ services:
     environment:
       CHOKIDAR_USEPOLLING: "true" # Hot reload op RPi
       REACT_APP_BACKEND_URL: "http://192.168.1.14:4000"
+      REACT_APP_DEBUG_LEVEL: "true"
+      REACT_APP_DEBUG: true
     stdin_open: true
     tty: true
 
