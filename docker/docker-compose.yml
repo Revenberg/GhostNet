@@ -20,6 +20,7 @@ services:
       - "4000:4000"
     depends_on:
       - mysql
+    restart: always
     environment:
       - MYSQL_HOST=mysql
       - MYSQL_USER=admin
@@ -38,6 +39,7 @@ services:
       - REACT_APP_BACKEND_URL=http://192.168.1.14:4000
       - REACT_APP_DEBUG_LEVEL=true
       - REACT_APP_DEBUG=true
+    restart: always
     stdin_open: true
     tty: true
 
