@@ -16,7 +16,9 @@ const getUserRole = () => {
   const res = fetch(`${backendHost}/api/users/by-token/${token}`);
 
   console.log("Navbar - Fetch response:", res);
-  
+
+  console.log("Navbar - Fetch response:", res.ok);
+
   if (!res.ok) throw new Error("User not found");
 
   const userData = res.json();
