@@ -1,14 +1,17 @@
 import React from "react";
 import { NavbarGuest, NavbarUser, NavbarAdmin } from "./Navbars";
 
-// Dummy authentication/role logic for demonstration. Replace with real auth logic.
 const getUserRole = () => {
   console.log("Navbar - Checking user role...");
 
   // Read 'user' cookie
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
+    
+    console.log("Navbar - Current cookies:", document.cookie);
+
     const parts = value.split(`; ${name}=`);
+    console.log(`Navbar - Cookie parts for ${name}:`, parts);
     if (parts.length === 2) return parts.pop().split(';').shift();
     return null;
   };
