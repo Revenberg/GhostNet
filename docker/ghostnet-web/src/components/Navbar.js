@@ -7,8 +7,6 @@ const getUserRole = () => {
 
   if (!localStorage.getItem("user")) return "guest";
   
-  console.log("Navbar - Current user:", user);
-
   const user = JSON.parse(localStorage.getItem("user"));
   console.log("Navbar - Parsed user:", user);
 
