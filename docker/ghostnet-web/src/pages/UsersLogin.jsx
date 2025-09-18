@@ -29,11 +29,12 @@ export default function UsersLogin() {
 
       console.log("Login response:", res);
       console.log("Login data:", data); 
-      
+
       if (res.ok) {
         setMessage("✅ Login successful! Je wordt doorgestuurd...");
 
         document.cookie = `token=${encodeURIComponent(data.user.token)}; Path=/; Max-Age=604800`;
+        document.cookie = `username=${encodeURIComponent(JSON.stringify(data.user.username))}; Path=/; Max-Age=604800`;
         document.cookie = `user=${encodeURIComponent(JSON.stringify(data.user))}; Path=/; Max-Age=604800`;
       
         setTimeout(() => {
