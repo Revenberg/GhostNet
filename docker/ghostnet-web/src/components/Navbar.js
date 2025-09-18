@@ -25,8 +25,8 @@ const getUserRole = () => {
   console.log("Navbar - Retrieved token from cookie:", token);
 
   const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-  const res = fetch(`${backendHost}/api/users/by-token/${encodeURIComponent(token)}`);
-  
+  const res = fetch(`${backendHost}/api/users/by-token/${token}`);
+
   if (!res.ok) throw new Error("User not found");
 
   const userData = res.json();
