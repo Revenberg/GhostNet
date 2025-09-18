@@ -19,7 +19,7 @@ export function NavbarUser() {
       <Link to="/" className="hover:underline">Home</Link>
       <Link to="/speluitleg" className="hover:underline">Speluitleg</Link>
       <Link to="/contact" className="hover:underline">Contact</Link>
-      <Link to="/users-login" className="hover:underline">Logout</Link>
+      <Link to="/users-logout" className="hover:underline">Logout</Link>
     </nav>
   );
 }
@@ -47,7 +47,7 @@ export function NavbarAdmin() {
           <Link to="/delete-team" className="block px-4 py-2 hover:bg-purple-100">Team verwijderen</Link>
         </div>
       </div>
-      <Link to="/users-login" className="hover:underline">Logout</Link>
+      <Link to="/users-logout" className="hover:underline">Logout</Link>
     </nav>
   );
 }

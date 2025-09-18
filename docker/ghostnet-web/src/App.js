@@ -1,6 +1,3 @@
-import Logout from "./pages/Logout";
-          <Route path="/logout" element={<Logout />} />
-import UsersUpdate from "./pages/UsersUpdate";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
@@ -8,9 +5,13 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Speluitleg from "./pages/Speluitleg";
 import Contact from "./pages/Contact";
+
 import UsersLogin from "./pages/UsersLogin";
 import UsersRegister from "./pages/UsersRegister";
 import UsersOverview from "./pages/UsersOverview";
+import UsersLogout from "./pages/UsersLogout";
+import UsersUpdate from "./pages/UsersUpdate";
+
 import TeamRegister from "./pages/TeamRegister";
 import TeamsUpdate from "./pages/TeamsUpdate";
 import TeamDelete from "./pages/TeamDelete";
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/update-user" element={<UsersUpdate />} />
           <Route path="/delete-team" element={<TeamDelete />} />
           <Route path="/teams-overview" element={<TeamsOverview />} />
+          <Route path="/users-logout" element={<UsersLogout />} />
         </Routes>
       </div>
     </div>
