@@ -16,28 +16,38 @@ const getCookie = (name) => {
 const getUserRole = () => {
   console.log("Navbar - Checking user role...");
 
-  const data = getCookie("user");
-  if (!data || data === "undefined") return "guest";
+  const token = getCookie("token");
 
-  console.log("Navbar - User data from cookie:", data);
+  const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+  const res = await fetch(`${backendHost}/api/users/by-token/${encodeURIComponent(token)}`);
+  
+  if (!res.ok) throw new Error("User not found");
 
-  let user;
+  const userData = await res.json();
+
+  if (!userData || userData === "undefined") return "guest";
+
+  const user = userData.user;
+  console.log("Navbar - User data from cookie:", user);
+  console.log("Navbar - User data from cookie:", userData);
+
+  let parsedUser;
   try {
-    user = JSON.parse(decodeURIComponent(data));
-    console.log("Navbar - Parsed user data:", user);
+    parsedUser = JSON.parse(decodeURIComponent(userData));
+    console.log("Navbar - Parsed user data:", parsedUser);
   } catch (e) {
     console.warn("Navbar - Invalid user data in cookie, treating as guest.", e);
     return "guest";
   }
 
-  console.log("Navbar - User role:", user.role);
-  if (!user.role) return "guest";
+  console.log("Navbar - User role:", parsedUser.role);
+  if (!parsedUser.role) return "guest";
 
-  if (user.name === "admin") user.role = "admin";
+  if (parsedUser.name === "admin") parsedUser.role = "admin";
   
-  console.log("Navbar - Detected user role:", user.role);
+  console.log("Navbar - Detected user role:", parsedUser.role);
   
-  return user.role;
+  return parsedUser.role;
 };
 
 export default function Navbar() {
