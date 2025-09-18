@@ -28,8 +28,10 @@ export default function UsersLogin() {
       const data = await res.json();
       if (res.ok) {
         setMessage("✅ Login successful! Je wordt doorgestuurd...");
-        localStorage.setItem("token", data.token); // opslaan JWT
-        localStorage.setItem("user", JSON.stringify(data.user)); // opslaan gebruikersgegevens
+
+        document.cookie = `token=${encodeURIComponent(data.user.token)}; Path=/; Max-Age=604800`;
+        document.cookie = `user=${encodeURIComponent(JSON.stringify(data.user))}; Path=/; Max-Age=604800`;
+      
         setTimeout(() => {
           navigate("/");
         }, 5000);
