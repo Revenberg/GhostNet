@@ -1,3 +1,12 @@
+// DJB2 hash function (matches C++ version)
+function hashPassword(password) {
+  let hash = 5381;
+  for (let i = 0; i < password.length; ++i) {
+    hash = ((hash << 5) + hash) + password.charCodeAt(i);
+    hash = hash >>> 0; // force unsigned 32-bit
+  }
+  return hash.toString(16);
+}
 import express from "express";
 import mysql from "mysql2/promise";
 import bcrypt from "bcrypt";
@@ -52,7 +61,7 @@ app.post("/api/register", async (req, res) => {
       return res.status(400).json({ error: "Username and password required" });
     }
 
-    const password_hash = await bcrypt.hash(password, 10);
+    const password_hash = hashPassword(password);
     const token = crypto.randomBytes(32).toString("hex");
 
     const [result] = await pool.query(
@@ -86,8 +95,8 @@ app.post("/api/login", async (req, res) => {
     }
 
     const user = rows[0];
-    const match = await bcrypt.compare(password, user.password_hash);
-    if (!match) {
+    const password_hash = hashPassword(password);
+    if (user.password_hash !== password_hash) {
       return res.status(401).json({ error: "Invalid password" });
     }
 
