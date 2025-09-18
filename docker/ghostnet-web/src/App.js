@@ -24,7 +24,7 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/users" element={<UsersOverview />} />
+          <Route path="/users-overview" element={<UsersOverview />} />
           <Route path="/add-team" element={<AddTeam />} />
           <Route path="/update-team" element={<UpdateTeam />} />
           <Route path="/delete-team" element={<DeleteTeam />} />
