@@ -6,7 +6,7 @@ const getUserRole = () => {
   console.log("Navbar - Checking user role...");
 
   const data = localStorage.getItem("user");
-  if (data == "undefined") return "guest";
+  if (!data) return "guest";
 
   console.log("Navbar - Retrieved user data from localStorage:", data);
 
