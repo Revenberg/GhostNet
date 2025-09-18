@@ -13,7 +13,10 @@ export default function Login() {
     setMessage("...checking");
 
     try {
-      const res = await fetch("http://localhost:4000/api/login", {
+      // Use the docker-compose service name as the backend host
+      // If running in Docker, use "backend" as the hostname (see docker-compose.yml)
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      const res = await fetch(`${backendHost}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
