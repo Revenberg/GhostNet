@@ -40,6 +40,8 @@ export default function UsersOverview() {
               <th className="border-b p-2 text-left">ID</th>
               <th className="border-b p-2 text-left">Username</th>
               <th className="border-b p-2 text-left">Team</th>
+              <th className="border-b p-2 text-left">Role</th>
+              <th className="border-b p-2 text-left">Token</th>
             </tr>
           </thead>
           <tbody>
@@ -48,6 +50,8 @@ export default function UsersOverview() {
                 <td className="border-b p-2">{user.id}</td>
                 <td className="border-b p-2">{user.username}</td>
                 <td className="border-b p-2">{user.teamname}</td>
+                <td className="border-b p-2">{user.role}</td>
+                <td className="border-b p-2">{user.token}</td>
               </tr>
             ))}
           </tbody>
