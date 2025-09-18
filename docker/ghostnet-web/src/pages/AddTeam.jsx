@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export default function AddTeam() {
-  const [form, setForm] = useState({ teamname: "", teamcode: "" });
+  const [form, setForm] = useState({ teamname: "" });
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
@@ -21,7 +21,7 @@ export default function AddTeam() {
       const data = await res.json();
       if (res.ok) {
         setMessage("✅ Team added!");
-        setForm({ teamname: "", teamcode: "" });
+        setForm({ teamname: "" });
       } else {
         setMessage(`❌ ${data.error}`);
       }
@@ -39,15 +39,6 @@ export default function AddTeam() {
           name="teamname"
           placeholder="Team Name"
           value={form.teamname}
-          onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
-        <input
-          type="text"
-          name="teamcode"
-          placeholder="Team Code"
-          value={form.teamcode}
           onChange={handleChange}
           className="w-full border px-3 py-2 rounded"
           required

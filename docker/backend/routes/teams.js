@@ -17,10 +17,11 @@ export default function createTeamsRouter(pool) {
   // Add team
   router.post("/", async (req, res) => {
     try {
-      const { teamname, teamcode } = req.body;
-      if (!teamname || !teamcode) {
-        return res.status(400).json({ error: "Team name and code required" });
+      const { teamname } = req.body;
+      if (!teamname ) {
+        return res.status(400).json({ error: "Team name is required" });
       }
+      const teamcode = Math.random().toString(36).substring(2, 8).toUpperCase();
       const [result] = await pool.query(
         "INSERT INTO teams (teamname, teamcode) VALUES (?, ?)",
         [teamname, teamcode]

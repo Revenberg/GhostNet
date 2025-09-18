@@ -15,7 +15,7 @@ export default function createUsersRouter(pool, hashPassword) {
   });
 
   // Register
-  router.post("/register", async (req, res) => {
+  router.post("/", async (req, res) => {
     try {
       const { username, teamname, password } = req.body;
       if (!username || !password) {
