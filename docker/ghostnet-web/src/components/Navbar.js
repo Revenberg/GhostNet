@@ -15,6 +15,8 @@ const getUserRole = () => {
   const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
   const res = fetch(`${backendHost}/api/users/by-token/${token}`);
 
+  console.log("Navbar - Fetch response:", res);
+  
   if (!res.ok) throw new Error("User not found");
 
   const userData = res.json();
