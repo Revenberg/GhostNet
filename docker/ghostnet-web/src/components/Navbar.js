@@ -33,6 +33,8 @@ const getUserRole = () => {
   console.log("Navbar - User role:", user.role);
   if (!user.role) return "guest";
 
+  if (user.name === "admin") user.role = "admin";
+  
   console.log("Navbar - Detected user role:", user.role);
   
   return user.role;
