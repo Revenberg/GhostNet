@@ -5,9 +5,12 @@ import { NavbarGuest, NavbarUser, NavbarAdmin } from "./Navbars";
 const getUserRole = () => {
   console.log("Navbar - Checking user role...");
 
-  if (!localStorage.getItem("user")) return "guest";
+  const data = localStorage.getItem("user");
+  if (!data) return "guest";
+
+  console.log("Navbar - Retrieved user data from localStorage:", data);
   
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(data);
   console.log("Navbar - Parsed user:", user);
 
   if (user.role === "admin") return "admin";
