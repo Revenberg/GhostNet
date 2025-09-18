@@ -7,9 +7,16 @@ export default function Navbar() {
       <Link to="/" className="hover:underline">Home</Link>
       <Link to="/about" className="hover:underline">About</Link>
       <Link to="/contact" className="hover:underline">Contact</Link>
-      <Link to="/login" className="hover:underline">Login</Link>
-      <Link to="/register" className="hover:underline">Register</Link>
-      <Link to="/users" className="hover:underline">Users</Link>
+      
+      <div className="relative group">
+        <button className="hover:underline focus:outline-none">Users ▾</button>
+        <div className="absolute left-0 mt-2 w-40 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
+          <Link to="/user-login" className="hover:underline">Login</Link>
+          <Link to="/user-register" className="hover:underline">Register</Link>
+          <Link to="/users-overview" className="hover:underline">Users overview</Link>
+        </div>
+      </div>
+
       <div className="relative group">
         <button className="hover:underline focus:outline-none">Teams ▾</button>
         <div className="absolute left-0 mt-2 w-40 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
