@@ -71,17 +71,7 @@ export default function createUsersRouter(pool) {
       if (user.password_hash !== password_hash) {
         return res.status(401).json({ error: "Invalid password" });
       }
-      function simpleToken(length = 50) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let result = '';
-        for (let i = 0; i < length; ++i) {
-          result += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return result;
-      }
-      const token = simpleToken(50);
-      await pool.query("UPDATE users SET token = ? WHERE id = ?", [token, user.id]);
-      res.json({ success: true, token });
+      res.json({ success: true, user: {username: user.username, role: user.role, teamname: user.teamname, token: user.token } });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });
