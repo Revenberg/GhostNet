@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import RequireRole from "../../components/RequireRole";
 
 export default function GamesUpdate() {
+  const selectedGame = games.find(g => String(g.id) === String(form.id));
   const [form, setForm] = useState({ id: "", status: "" });
   const [message, setMessage] = useState("");
   const [games, setGames] = useState([]);
@@ -64,6 +65,9 @@ export default function GamesUpdate() {
               </option>
             ))}
           </select>
+          {selectedGame && (
+            <div className="text-sm text-gray-600 mb-2">Huidige status: <span className="font-mono">{selectedGame.status}</span></div>
+          )}
           <input
             type="text"
             name="status"
