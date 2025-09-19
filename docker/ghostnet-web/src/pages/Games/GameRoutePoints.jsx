@@ -19,12 +19,10 @@ export default function GameRoutePoints() {
         async function fetchAllPoints() {
             const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
             try {
-                const resPoints = await fetch(`${backendHost}/api/games/route-points`);
-                const dataPoints = await resPoints.json();
-                if (resPoints.ok && dataPoints.success) {
-                    points.push(...dataPoints.points.map(p => ({ ...p, route_id: route.id, route_location: route.location })));
-                }                
-                setPoints(points);
+                const res = await fetch(`${backendHost}/api/games/route-points`);
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.error || "Fout bij laden");
+                setPoints(data.points);
             } catch { }
         }
         fetchAllPoints();
