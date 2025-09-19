@@ -23,7 +23,7 @@ export function NavbarUser() {
       <Link to="/speluitleg" className="hover:underline">Speluitleg</Link>
       <Link to="/contact" className="hover:underline">Contact</Link>
       <div className="relative group">
-        <button className="hover:underline focus:outline-none text-purple-900">{user.username} ▾</button>
+        <button className="hover:underline focus:outline-none">{user.username} ▾</button>
         <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
           <Link to="//users-logout" className="block px-4 py-2 hover:bg-purple-100">Logout</Link>
         </div>
@@ -44,7 +44,7 @@ export function NavbarAdmin() {
       <div className="relative group">
         <button className="hover:underline focus:outline-none">Gebruikers ▾</button>
         <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
-          <Link to="/users-register" className="hover:underline">Register</Link>
+          <Link to="/users-register" className="block px-4 py-2 hover:bg-purple-100">Register</Link>
           <Link to="/users-overview" className="block px-4 py-2 hover:bg-purple-100">Gebruikers overzicht</Link>
           <Link to="/update-user" className="block px-4 py-2 hover:bg-purple-100">Profiel bijwerken</Link>
         </div>
@@ -60,7 +60,7 @@ export function NavbarAdmin() {
       </div>
 
       <div className="relative group">
-        <button className="hover:underline focus:outline-none text-purple-900">{user.username} ▾</button>
+        <button className="hover:underline focus:outline-none">{user.username} ▾</button>
         <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
           <Link to="//users-logout" className="block px-4 py-2 hover:bg-purple-100">Logout</Link>
         </div>
