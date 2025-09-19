@@ -40,8 +40,10 @@ export async function ensureTables(pool) {
     )
   `);
   await conn.query(`
-    DROP TABLE IF EXISTS game_progress;
-    DROP TABLE IF EXISTS game;
+    DROP TABLE IF EXISTS game_progress
+    `);  
+  await conn.query(`
+    DROP TABLE IF EXISTS game
     `);  
   
   await conn.query(`
