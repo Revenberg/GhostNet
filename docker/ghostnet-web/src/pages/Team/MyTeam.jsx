@@ -22,7 +22,7 @@ export default function MyTeam() {
         }
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
         // Fetch team info by teamname
-        const res = await fetch(`${backendHost}/api/teams/by-teamname/${encodeURIComponent(user.teamname)}`);
+        const res = await fetch(`${backendHost}/api/teams/by-name/${encodeURIComponent(user.teamname)}`);
         const data = await res.json();
         if (!res.ok || !data.team) {
           setError("Team niet gevonden.");
