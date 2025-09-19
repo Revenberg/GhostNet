@@ -37,7 +37,6 @@ export default function createTeamsRouter(pool) {
     }
   });
 
-
   // Get team by teamname
   router.get("/by-name/:teamname", async (req, res) => {
     try {
