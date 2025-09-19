@@ -16,6 +16,7 @@ import TeamRegister from "./pages/Teams/TeamRegister";
 import TeamsUpdate from "./pages/Teams/TeamsUpdate";
 import TeamDelete from "./pages/Teams/TeamDelete";
 import TeamsOverview from "./pages/Teams/TeamsOverview";
+import MyTeam from "./pages/Team/MyTeam";
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="/delete-team" element={<TeamDelete />} />
           <Route path="/teams-overview" element={<TeamsOverview />} />
           <Route path="/users-logout" element={<UsersLogout />} />
+          <Route path="/my-team" element={<MyTeam />} />
         </Routes>
       </div>
     </div>

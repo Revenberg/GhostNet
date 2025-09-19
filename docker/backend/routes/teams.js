@@ -1,6 +1,21 @@
 import express from "express";
 
 export default function createTeamsRouter(pool) {
+
+  // Get team by teamname
+  router.get("/by-name/:teamname", async (req, res) => {
+    try {
+      const { teamname } = req.params;
+      const [rows] = await pool.query("SELECT id, teamname, teamcode FROM teams WHERE teamname = ?", [teamname]);
+      if (rows.length === 0) {
+        return res.status(404).json({ error: "Team not found" });
+      }
+      res.json({ success: true, team: rows[0] });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
   const router = express.Router();
 
   // Get all teams
