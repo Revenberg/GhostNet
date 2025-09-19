@@ -42,7 +42,9 @@ export default function createUsersRouter(pool) {
     try {
       const { teamname } = req.params;
       const [rows] = await pool.query(
-        "SELECT id, username, teamname, role FROM users WHERE teamname = ?",
+        `SELECT users.id, users.username, users.teamname, users.role, teams.id AS team_id
+         FROM users LEFT JOIN teams ON users.teamname = teams.teamname
+         WHERE users.teamname = ?`,
         [teamname]
       );
       res.json({ success: true, users: rows });
@@ -55,7 +57,10 @@ export default function createUsersRouter(pool) {
   // Get all users (excluding password_hash and token)
   router.get("/", async (req, res) => {
     try {
-      const [rows] = await pool.query("SELECT id, username, teamname, role FROM users");
+      const [rows] = await pool.query(`
+        SELECT users.id, users.username, users.teamname, users.role, teams.id AS team_id
+        FROM users LEFT JOIN teams ON users.teamname = teams.teamname
+      `);
       res.json({ success: true, users: rows });
     } catch (err) {
       console.error(err);
@@ -67,7 +72,11 @@ export default function createUsersRouter(pool) {
   router.get("/by-token/:token", async (req, res) => {
     try {
       const { token } = req.params;
-      const [rows] = await pool.query("SELECT id, username, teamname, role FROM users WHERE token = ?", [token]);
+      const [rows] = await pool.query(`
+        SELECT users.id, users.username, users.teamname, users.role, teams.id AS team_id
+        FROM users LEFT JOIN teams ON users.teamname = teams.teamname
+        WHERE users.token = ?
+      `, [token]);
       if (rows.length === 0) {
         return res.status(404).json({ error: "User not found" });
       }
