@@ -1,22 +1,15 @@
-  // --- GAME ROUTES ENDPOINTS ---
-import express from "express";
-
-export default function createGamesRouter(pool) {
-  // List latest game_progress per team for a game
-// Create a new game (status = 'new')
-  const router = express.Router();
-
-    // Create a new game_route
-  router.post("/routes", async (req, res) => {
+  // --- GAME ROUTE POINTS ENDPOINTS ---
+  // Create a new game_route_point
+  router.post("/route-points", async (req, res) => {
     try {
-      const { game_id, order_id, location, latitude, longitude, description, images, hints } = req.body;
-      if (!game_id || order_id == null) {
-        return res.status(400).json({ error: "game_id and order_id required" });
+      const { route_id, latitude, longitude, description, images, hints } = req.body;
+      if (!route_id || latitude == null || longitude == null) {
+        return res.status(400).json({ error: "route_id, latitude, and longitude required" });
       }
       const [result] = await pool.query(
-        `INSERT INTO game_routes (game_id, order_id, location, latitude, longitude, description, images, hints)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [game_id, order_id, location, latitude, longitude, description, images, hints]
+        `INSERT INTO game_route_points (route_id, latitude, longitude, description, images, hints)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [route_id, latitude, longitude, description, images, hints]
       );
       res.json({ success: true, id: result.insertId });
     } catch (err) {
@@ -25,26 +18,24 @@ export default function createGamesRouter(pool) {
     }
   });
 
-  // Update a game_route by id
-  router.put("/routes/:id", async (req, res) => {
+  // Update a game_route_point by id
+  router.put("/route-points/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const { game_id, order_id, location, latitude, longitude, description, images, hints } = req.body;
+      const { route_id, latitude, longitude, description, images, hints } = req.body;
       const [result] = await pool.query(
-        `UPDATE game_routes SET
-          game_id = COALESCE(?, game_id),
-          order_id = COALESCE(?, order_id),
-          location = COALESCE(?, location),
+        `UPDATE game_route_points SET
+          route_id = COALESCE(?, route_id),
           latitude = COALESCE(?, latitude),
           longitude = COALESCE(?, longitude),
           description = COALESCE(?, description),
           images = COALESCE(?, images),
           hints = COALESCE(?, hints)
          WHERE id = ?`,
-        [game_id, order_id, location, latitude, longitude, description, images, hints, id]
+        [route_id, latitude, longitude, description, images, hints, id]
       );
       if (result.affectedRows === 0) {
-        return res.status(404).json({ error: "Route not found" });
+        return res.status(404).json({ error: "Route point not found" });
       }
       res.json({ success: true });
     } catch (err) {
@@ -53,16 +44,16 @@ export default function createGamesRouter(pool) {
     }
   });
 
-  // Delete a game_route by id
-  router.delete("/routes/:id", async (req, res) => {
+  // Delete a game_route_point by id
+  router.delete("/route-points/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const [result] = await pool.query(
-        `DELETE FROM game_routes WHERE id = ?`,
+        `DELETE FROM game_route_points WHERE id = ?`,
         [id]
       );
       if (result.affectedRows === 0) {
-        return res.status(404).json({ error: "Route not found" });
+        return res.status(404).json({ error: "Route point not found" });
       }
       res.json({ success: true });
     } catch (err) {
@@ -70,6 +61,51 @@ export default function createGamesRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
+
+  // Get all route points for a route
+  router.get("/route-points/by-route/:route_id", async (req, res) => {
+    try {
+      const { route_id } = req.params;
+      const [rows] = await pool.query(
+        `SELECT * FROM game_route_points WHERE route_id = ? ORDER BY id ASC`,
+        [route_id]
+      );
+      res.json({ success: true, points: rows });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  // --- GAME ROUTES MAINTAIN ENDPOINTS ---
+  // Get all routes for a game
+  router.get("/routes", async (req, res) => {
+    try {
+      const { game_id } = req.query;
+      let query = `SELECT * FROM game_routes`;
+      let params = [];
+      if (game_id) {
+        query += ` WHERE game_id = ?`;
+        params.push(game_id);
+      }
+      query += ` ORDER BY order_id ASC`;
+      const [rows] = await pool.query(query, params);
+      res.json({ success: true, routes: rows });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+  // --- GAME ROUTES ENDPOINTS ---
+import express from "express";
+
+export default function createGamesRouter(pool) {
+  // List latest game_progress per team for a game
+// Create a new game (status = 'new')
+  const router = express.Router();
+
+  
+
   
   router.get("/progress/by-game-latest/:game_id", async (req, res) => {
     try {

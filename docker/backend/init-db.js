@@ -63,14 +63,21 @@ export async function ensureTables(pool) {
         id INT AUTO_INCREMENT PRIMARY KEY,
         game_id INT,
         order_id INT,
+        game_route_points_id INT,
+        FOREIGN KEY (game_route_points_id) REFERENCES game_route_points(id),
+        FOREIGN KEY (game_id) REFERENCES game(id),
+        lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS game_route_points (
+        id INT AUTO_INCREMENT PRIMARY KEY,
         location VARCHAR(64),
         latitude DOUBLE,
         longitude DOUBLE,
         description TEXT,
         images TEXT,
-        hints TEXT,
-        FOREIGN KEY (game_id) REFERENCES game(id),
-        lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        hints TEXT
     )
   `);
 
