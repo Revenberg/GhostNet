@@ -25,7 +25,6 @@ import GamesUpdate from "./pages/Games/GamesUpdate";
 import GamesList from "./pages/Games/GamesList";
 import GamesSetStatus from "./pages/Games/GamesSetStatus";
 import GamesProgressOverview from "./pages/Games/GamesProgressOverview";
-import GamesRoutesMaintain from "./pages/Games/GamesRoutesMaintain";
 
 export default function App() {
   return (

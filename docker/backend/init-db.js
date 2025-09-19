@@ -58,17 +58,6 @@ export async function ensureTables(pool) {
         lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
-    await conn.query(`
-    CREATE TABLE IF NOT EXISTS game_routes (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        game_id INT,
-        order_id INT,
-        game_route_points_id INT,
-        FOREIGN KEY (game_route_points_id) REFERENCES game_route_points(id),
-        FOREIGN KEY (game_id) REFERENCES game(id),
-        lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
   await conn.query(`
     CREATE TABLE IF NOT EXISTS game_route_points (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -80,7 +69,17 @@ export async function ensureTables(pool) {
         hints TEXT
     )
   `);
-
+    await conn.query(`
+    CREATE TABLE IF NOT EXISTS game_routes (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        game_id INT,
+        order_id INT,
+        game_route_points_id INT,
+        FOREIGN KEY (game_route_points_id) REFERENCES game_route_points(id),
+        FOREIGN KEY (game_id) REFERENCES game(id),
+        lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
   await conn.query(`
     CREATE TABLE IF NOT EXISTS lora_nodes (
         id INT AUTO_INCREMENT PRIMARY KEY,
