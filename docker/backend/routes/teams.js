@@ -1,8 +1,6 @@
 import express from "express";
 
 export default function createTeamsRouter(pool) {
-
-
   const router = express.Router();
   // Create a new team event
   router.post("/events", async (req, res) => {
