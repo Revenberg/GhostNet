@@ -5,6 +5,7 @@ import { getUserFromCookie } from "../../utils/auth";
 export default function TeamDetails() {
   const [team, setTeam] = useState(null);
   const [members, setMembers] = useState([]);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -20,8 +21,8 @@ export default function TeamDetails() {
           return;
         }
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-        // Fetch team info by teamname or teamcode
-        const res = await fetch(`${backendHost}/api/teams/by-name/${encodeURIComponent(user.teamname || user.teamname)}`);
+        // Fetch team info by teamname
+        const res = await fetch(`${backendHost}/api/teams/by-name/${encodeURIComponent(user.teamname)}`);
         const data = await res.json();
         if (!res.ok || !data.team) {
           setError("Team niet gevonden.");
@@ -33,6 +34,10 @@ export default function TeamDetails() {
         const resMembers = await fetch(`${backendHost}/api/users/by-team/${encodeURIComponent(data.team.teamname)}`);
         const dataMembers = await resMembers.json();
         setMembers(dataMembers.users || []);
+        // Fetch all team events
+        const resEvents = await fetch(`${backendHost}/api/teams/events/${data.team.id}`);
+        const dataEvents = await resEvents.json();
+        setEvents(dataEvents.events || []);
       } catch (err) {
         setError("Serverfout bij ophalen team.");
       }
@@ -53,9 +58,19 @@ export default function TeamDetails() {
           <div><span className="font-semibold">Teamcode:</span> {team.teamcode}</div>
         </div>
         <h3 className="font-semibold mb-2">Teamleden:</h3>
-        <ul className="list-disc list-inside">
+        <ul className="list-disc list-inside mb-6">
           {members.map(member => (
             <li key={member.id}>{member.username}</li>
+          ))}
+        </ul>
+        <h3 className="font-semibold mb-2">Team Events:</h3>
+        <ul className="list-disc list-inside">
+          {events.length === 0 && <li className="text-gray-500">Geen events gevonden.</li>}
+          {events.map(event => (
+            <li key={event.id}>
+              <span className="font-mono text-xs text-gray-600">[{new Date(event.event_timestamp).toLocaleString()}]</span>
+              {" "}{event.event_type}
+            </li>
           ))}
         </ul>
       </div>

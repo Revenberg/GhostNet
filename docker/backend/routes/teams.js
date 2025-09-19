@@ -1,6 +1,39 @@
 import express from "express";
 
 export default function createTeamsRouter(pool) {
+
+  // Create a new team event
+  router.post("/events", async (req, res) => {
+    try {
+      const { team_id, event_type } = req.body;
+      if (!team_id || !event_type) {
+        return res.status(400).json({ error: "team_id and event_type required" });
+      }
+      const [result] = await pool.query(
+        "INSERT INTO team_events (team_id, event_type) VALUES (?, ?)",
+        [team_id, event_type]
+      );
+      res.json({ success: true, id: result.insertId });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  // Get all team_events for a team, sorted by event_timestamp
+  router.get("/events/:team_id", async (req, res) => {
+    try {
+      const { team_id } = req.params;
+      const [rows] = await pool.query(
+        "SELECT * FROM team_events WHERE team_id = ? or team_id = 0 ORDER BY event_timestamp DESC",
+        [team_id]
+      );
+      res.json({ success: true, events: rows });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
   const router = express.Router();
 
   // Get team by teamname
@@ -17,7 +50,7 @@ export default function createTeamsRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-  
+
   // Get all teams
   router.get("/", async (req, res) => {
     try {
@@ -56,7 +89,13 @@ export default function createTeamsRouter(pool) {
         "INSERT INTO teams (teamname, teamcode) VALUES (?, ?)",
         [teamname, teamcode]
       );
-      res.json({ success: true, id: result.insertId });
+      // Create a team event for creation
+      const team_id = result.insertId;
+      await pool.query(
+        "INSERT INTO team_events (team_id, event_type) VALUES (?, ?)",
+        [team_id, 'created']
+      );
+      res.json({ success: true, id: team_id });
     } catch (err) {
       if (err.code === "ER_DUP_ENTRY") {
         res.status(400).json({ error: "Team name or code already exists" });

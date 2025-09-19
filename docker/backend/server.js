@@ -11,8 +11,10 @@ function hashPassword(password) {
 import express from "express";
 import mysql from "mysql2/promise";
 import cors from "cors";
+
 import usersRouter from "./routes/users.js";
 import teamsRouter from "./routes/teams.js";
+import { ensureTables } from "./init-db.js";
 
 const app = express();
 const PORT = 4000;
@@ -37,8 +39,10 @@ async function initMySQL(retries = 10, delay = 5000) {
     try {
       pool = await mysql.createPool(dbConfig);
       await pool.query("SELECT 1");
-      console.log("✅ MySQL connected");
-      return;
+  // Ensure tables using external module
+  await ensureTables(pool);
+  console.log("✅ MySQL connected and tables ensured");
+  return;
     } catch (err) {
       console.error(`❌ MySQL connection failed (attempt ${i + 1}/${retries}):`, err.message);
       if (i < retries - 1) {
