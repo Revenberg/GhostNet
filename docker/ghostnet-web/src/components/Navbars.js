@@ -80,6 +80,8 @@ export function NavbarAdmin() {
           <Link to="/games-progress-overview" className="block px-4 py-2 hover:bg-purple-100">Voortgang overzicht</Link>
           <Link to="/games-routes-maintain" className="block px-4 py-2 hover:bg-purple-100">Routes beheren</Link>
           <Link to="/games-route-points-maintain" className="block px-4 py-2 hover:bg-purple-100">Route punten beheren</Link>
+          <Link to="/games-routes-with-points-maintain" className="block px-4 py-2 hover:bg-purple-100">Routes & punten beheren</Link>
+          <Link to="/games-route-points-maintain" className="block px-4 py-2 hover:bg-purple-100">Route punten beheren</Link>
         </div>
       </div>
 

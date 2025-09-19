@@ -1,3 +1,4 @@
+import GameRoutesWithPointsMaintain from "./pages/Games/GameRoutesWithPointsMaintain";
 import GameRoutePointsMaintain from "./pages/Games/GameRoutePointsMaintain";
 import UpdatePassword from "./pages/Users/UpdatePassword";
 import React from "react";
@@ -53,6 +54,7 @@ export default function App() {
               <Route path="/games-progress-overview" element={<GamesProgressOverview />} />
               <Route path="/games-set-status" element={<GamesSetStatus />} />
               <Route path="/games-list" element={<GamesList />} />
+              <Route path="/games-routes-with-points-maintain" element={<GameRoutesWithPointsMaintain />} />
               <Route path="/games-route-points-maintain" element={<GameRoutePointsMaintain />} />
             </>
         </Routes>
