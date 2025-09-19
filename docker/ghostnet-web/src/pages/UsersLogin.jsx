@@ -36,7 +36,7 @@ export default function UsersLogin() {
         document.cookie = `token=${encodeURIComponent(data.user.token)}; Path=/; Max-Age=604800`;
         document.cookie = `username=${encodeURIComponent(JSON.stringify(data.user.username))}; Path=/; Max-Age=604800`;
         document.cookie = `user=${encodeURIComponent(JSON.stringify(data.user))}; Path=/; Max-Age=604800`;
-      
+
         setTimeout(() => {
           navigate("/");
         }, 5000);

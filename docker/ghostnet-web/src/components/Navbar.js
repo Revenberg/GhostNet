@@ -8,10 +8,21 @@ function getTokenFromCookie() {
   return parts.pop().split(';').shift();
 }
 
+function getUserFromCookie() {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; user=`);
+  if (parts.length !== 2) return null;
+  return JSON.parse(decodeURIComponent(parts.pop().split(';').shift()));
+}
+
+
 export default function Navbar() {
   const [role, setRole] = useState("guest");
 
   useEffect(() => {
+    const user = getUserFromCookie();
+    console.log("User from cookie:", user);
+    
     const token = getTokenFromCookie();
     console.log("Token from cookie:", token);
 
