@@ -16,6 +16,7 @@ export async function checkUserGranted(requiredRole = null) {
 
   let role = user.role;
   let granted = false;
+  console.log("User role:", role, "Required role:", requiredRole);
     
   if (role === "admin") granted = true;
   if (role === requiredRole) granted = true;
