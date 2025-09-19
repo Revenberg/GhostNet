@@ -54,6 +54,21 @@ export default function UsersRegister() {
       });
       const data = await res.json();
       if (res.ok) {
+
+        // Send event: user added to team
+        const teamData = await resTeam.json();
+        const team_id = teamData.team.id;
+        const now = new Date();
+        const pad = n => n.toString().padStart(2, '0');
+        const dateStr = `${pad(now.getDate())}-${pad(now.getMonth() + 1)}-${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+        const eventMsg = `Gebruiker ${form.username} toegevoegd aan team op ${dateStr}`;
+        await fetch(`${backendHost}/api/games/events/${team_id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ event_type: "Info", event_message: eventMsg })
+        });
+
+
         setMessage("✅ Registration successful! Je wordt doorgestuurd naar de login pagina...");
         setTimeout(() => {
           navigate("/users-login");
