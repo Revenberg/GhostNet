@@ -14,6 +14,21 @@ export default function createTeamsRouter(pool) {
     }
   });
 
+// Get team by teamcode
+  router.get("/by-code/:teamcode", async (req, res) => {
+    try {
+      const { teamcode } = req.params;
+      const [rows] = await pool.query("SELECT id, teamname, teamcode FROM teams WHERE teamcode = ?", [teamcode]);
+      if (rows.length === 0) {
+        return res.status(404).json({ error: "Team not found" });
+      }
+      res.json({ success: true, team: rows[0] });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
   // Add team
   router.post("/", async (req, res) => {
     try {

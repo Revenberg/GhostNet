@@ -254,13 +254,51 @@ def lora_reader(ser):
                 print(f"Error processing LoRa message: {e}", flush=True)
 
 def main():
+
     print(f"main")
     conn = get_db_connection()
     print(f"connection established")
-    conn.close()
-
     create_tables()
     print(f"Tables created")
+
+    # --- Ensure admin team and user exist ---
+    try:
+        with conn.cursor() as cur:
+            # Check if any teams exist
+            cur.execute("SELECT COUNT(*) FROM teams")
+            team_count = cur.fetchone()[0]
+            if team_count == 0:
+                # Create admin team
+                admin_teamname = 'admin'
+                admin_teamcode = 'admin'
+                cur.execute("INSERT INTO teams (teamname, teamcode) VALUES (%s, %s)", (admin_teamname, admin_teamcode))
+                print("Admin team created.", flush=True)
+
+            # Check if any users exist
+            cur.execute("SELECT COUNT(*) FROM users")
+            user_count = cur.fetchone()[0]
+            if user_count == 0:
+                # Create admin user with default password 'admin' (hashed)
+                import hashlib
+                def djb2_hash(s):
+                    hash = 5381
+                    for c in s:
+                        hash = ((hash << 5) + hash) + ord(c)
+                    return str(hash & 0xFFFFFFFF)
+                admin_username = 'admin'
+                admin_password = 'admin'
+                admin_teamname = 'admin'
+                admin_role = 'admin'
+                password_hash = djb2_hash(admin_password)
+                cur.execute("INSERT INTO users (username, teamname, role, password_hash) VALUES (%s, %s, %s, %s)",
+                            (admin_username, admin_teamname, admin_role, password_hash))
+                print("Admin user created.", flush=True)
+        conn.commit()
+    except Exception as e:
+        print(f"Error ensuring admin team/user: {e}", flush=True)
+    finally:
+        conn.close()
+
     usb_port = os.environ.get('USB_PORT', '/dev/ttyUSB0')
     baudrate = int(os.environ.get('USB_BAUDRATE', '115200'))
     print(f"Using USB port: {usb_port} at baudrate: {baudrate}", flush=True)

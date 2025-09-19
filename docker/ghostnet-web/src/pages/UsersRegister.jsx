@@ -4,30 +4,54 @@ import { useNavigate } from "react-router-dom";
 export default function UsersRegister() {
   const [form, setForm] = useState({
     username: "",
-    teamname: "",
+    teamcode: "",
     password: "",
   });
+  const [teamValid, setTeamValid] = useState(null);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+    if (name === "teamcode" && value.length > 0) {
+      // Valideer teamcode
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      try {
+        const res = await fetch(`${backendHost}/api/teams/by-code/${encodeURIComponent(value)}`);
+        if (res.ok) {
+          setTeamValid(true);
+        } else {
+          setTeamValid(false);
+        }
+      } catch {
+        setTeamValid(false);
+      }
+    } else if (name === "teamcode") {
+      setTeamValid(null);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("...sending");
 
+    // Valideer teamcode nogmaals voor submit
+    const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
     try {
-  // Use the docker-compose service name as the backend host
-  // If running in Docker, use "backend" as the hostname (see docker-compose.yml)
-  const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-  const res = await fetch(`${backendHost}/api/users/`, {
+      const resTeam = await fetch(`${backendHost}/api/teams/by-code/${encodeURIComponent(form.teamcode)}`);
+      if (!resTeam.ok) {
+        setMessage("❌ Ongeldige teamcode. Voer een bestaande code in.");
+        setTeamValid(false);
+        return;
+      }
+      setTeamValid(true);
+      // Registreer gebruiker
+      const res = await fetch(`${backendHost}/api/users/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, teamname: form.teamcode }),
       });
-
       const data = await res.json();
       if (res.ok) {
         setMessage("✅ Registration successful! Je wordt doorgestuurd naar de login pagina...");
@@ -57,12 +81,16 @@ export default function UsersRegister() {
         />
         <input
           type="text"
-          name="teamname"
-          placeholder="Team name"
-          value={form.teamname}
+          name="teamcode"
+          placeholder="Team code"
+          value={form.teamcode}
           onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
+          className={`w-full border px-3 py-2 rounded ${teamValid === false ? 'border-red-500' : ''}`}
+          required
         />
+        {teamValid === false && (
+          <p className="text-red-600 text-sm">Teamcode bestaat niet.</p>
+        )}
         <input
           type="password"
           name="password"
