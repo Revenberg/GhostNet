@@ -36,11 +36,30 @@ export async function ensureTables(pool) {
         FOREIGN KEY (team_id) REFERENCES teams(id)
     )
   `);
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS spelprogress (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        game_id INT,
+        team_id INT,
+        status VARCHAR(64),
+        FOREIGN KEY (team_id) REFERENCES teams(id)
+    )
+  `);
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS lora_nodes (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        lora_node_id VARCHAR(64) UNIQUE,
+        location VARCHAR(128),
+        images TEXT,
+        name VARCHAR(64),
+        description TEXT
+    )
+  `);
   conn.release();
 }
 
-// Standalone run (for CLI usage)
-if (require.main === module) {
+// Standalone run (for CLI usage, ES module compatible)
+if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
     const pool = await mysql.createPool(dbConfig);
     await ensureTables(pool);
