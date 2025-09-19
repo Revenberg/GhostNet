@@ -6,16 +6,16 @@ import Home from "./pages/Home";
 import Speluitleg from "./pages/Speluitleg";
 import Contact from "./pages/Contact";
 
-import UsersLogin from "./pages/UsersLogin";
-import UsersRegister from "./pages/UsersRegister";
-import UsersOverview from "./pages/UsersOverview";
-import UsersLogout from "./pages/UsersLogout";
-import UsersUpdate from "./pages/UsersUpdate";
+import UsersLogin from "./pages/User/UsersLogin";
+import UsersRegister from "./pages/User/UsersRegister";
+import UsersOverview from "./pages/User/UsersOverview";
+import UsersLogout from "./pages/User/UsersLogout";
+import UsersUpdate from "./pages/User/UsersUpdate";
 
-import TeamRegister from "./pages/TeamRegister";
-import TeamsUpdate from "./pages/TeamsUpdate";
-import TeamDelete from "./pages/TeamDelete";
-import TeamsOverview from "./pages/TeamsOverview";
+import TeamRegister from "./pages/Team/TeamRegister";
+import TeamsUpdate from "./pages/Team/TeamsUpdate";
+import TeamDelete from "./pages/Team/TeamDelete";
+import TeamsOverview from "./pages/Team/TeamsOverview";
 
 export default function App() {
   return (
