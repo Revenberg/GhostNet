@@ -1,7 +1,10 @@
 import express from "express";
 
 export default function createTeamsRouter(pool) {
-  // Get team by id
+  const router = express.Router();
+  // ...existing code...
+
+  // Get team by id (must be last)
   router.get("/:id", async (req, res) => {
     try {
       const { id } = req.params;
@@ -15,7 +18,6 @@ export default function createTeamsRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-  const router = express.Router();
   
   // Get team by teamname
   router.get("/by-name/:teamname", async (req, res) => {
