@@ -72,9 +72,6 @@ export default function GameRoutePoints() {
         setForm({ id: "", latitude: "", longitude: "", location: "", description: "", images: "", hints: "" });
     };
 
-    // Unieke routes extraheren (optioneel, kan blijven voor overzicht)
-    const uniqueRoutes = Array.from(new Set(points.map(p => p.route_id)));
-
     return (
         <RequireRole role="admin">
             <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow">
