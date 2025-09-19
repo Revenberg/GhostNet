@@ -48,7 +48,7 @@ export async function ensureTables(pool) {
   await conn.query(`
     CREATE TABLE IF NOT EXISTS game (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(64),
+        name VARCHAR(64) UNIQUE,
         status VARCHAR(64)
     )
   `);
