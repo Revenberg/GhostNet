@@ -29,7 +29,7 @@ export default function createGamesRouter(pool) {
     }
   });
 
-  router.post("/events:team_id", async (req, res) => {
+  router.post("/events/:team_id", async (req, res) => {
     try {
       const { team_id } = req.params;
       const { event_type, event_message } = req.body;
@@ -37,8 +37,8 @@ export default function createGamesRouter(pool) {
         return res.status(400).json({ error: "team_id, event_type and event_message required" });
       }
       const [result] = await pool.query(
-        "INSERT INTO team_events (team_id, event_type, event_message) VALUES (?, ?)",
-        [team_id, event_type]
+        "INSERT INTO team_events (team_id, event_type, event_message) VALUES (?, ?, ?)",
+        [team_id, event_type, event_message]
       );
       res.json({ success: true, id: result.insertId });
     } catch (err) {

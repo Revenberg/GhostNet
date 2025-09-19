@@ -27,10 +27,10 @@ export default function TeamRegister() {
 					const pad = n => n.toString().padStart(2, '0');
 					const dateStr = `${pad(now.getDate())}-${pad(now.getMonth()+1)}-${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
 					const eventMsg = `Team ${form.teamname} aangemaakt op ${dateStr}`;
-					await fetch(`${backendHost}/api/games/events`, {
+					await fetch(`${backendHost}/api/games/events/${team_id}`, {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({ team_id: team_id, event_type: "Info", event_message: eventMsg })
+						body: JSON.stringify({ event_type: "Info", event_message: eventMsg })
 					});
 					setMessage("✅ Team added!");
 					setForm({ teamname: "" });
