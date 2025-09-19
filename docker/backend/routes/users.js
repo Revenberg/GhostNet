@@ -11,6 +11,7 @@ export function hashPassword(password) {
 }
 
 export default function createUsersRouter(pool) {
+  const router = express.Router();
   // Get all users by team name
   router.get("/by-team/:teamname", async (req, res) => {
     try {
@@ -25,7 +26,6 @@ export default function createUsersRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-  const router = express.Router();
 
   // Get all users (excluding password_hash and token)
   router.get("/", async (req, res) => {
