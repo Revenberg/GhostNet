@@ -9,27 +9,38 @@ export default function TeamRegister() {
 		setForm({ ...form, [e.target.name]: e.target.value });
 	};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		setMessage("...sending");
-		try {
-			const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-			const res = await fetch(`${backendHost}/api/teams`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(form),
-			});
-			const data = await res.json();
-			if (res.ok) {
-				setMessage("✅ Team added!");
-				setForm({ teamname: "" });
-			} else {
-				setMessage(`❌ ${data.error}`);
+		const handleSubmit = async (e) => {
+			e.preventDefault();
+			setMessage("...sending");
+			try {
+				const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+				const res = await fetch(`${backendHost}/api/teams`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(form),
+				});
+				const data = await res.json();
+				if (res.ok) {
+					// Create event in frontend
+					const team_id = data.id;
+					const now = new Date();
+					const pad = n => n.toString().padStart(2, '0');
+					const dateStr = `${pad(now.getDate())}-${pad(now.getMonth()+1)}-${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+					const eventMsg = `Team ${form.teamname} aangemaakt op ${dateStr}`;
+					await fetch(`${backendHost}/api/teams/events`, {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({ team_id, event_type: eventMsg })
+					});
+					setMessage("✅ Team added!");
+					setForm({ teamname: "" });
+				} else {
+					setMessage(`❌ ${data.error}`);
+				}
+			} catch (err) {
+				setMessage("❌ Server error");
 			}
-		} catch (err) {
-			setMessage("❌ Server error");
-		}
-	};
+		};
 
 	return (
 		<RequireRole role="admin">
