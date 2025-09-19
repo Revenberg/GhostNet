@@ -2,6 +2,8 @@ import express from "express";
 
 export default function createTeamsRouter(pool) {
 
+
+  const router = express.Router();
   // Create a new team event
   router.post("/events", async (req, res) => {
     try {
@@ -34,7 +36,7 @@ export default function createTeamsRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-  const router = express.Router();
+
 
   // Get team by teamname
   router.get("/by-name/:teamname", async (req, res) => {
