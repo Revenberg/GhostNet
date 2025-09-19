@@ -22,8 +22,11 @@ export default function TeamRegister() {
 			const data = await res.json();
 			if (res.ok) {
 				// Create event in frontend (matches working curl)
-				const team_id = data.team.id;
+				console.log("data", data);
 
+				const team_id = data.team.id;
+				console.log("team_id", team_id);
+				
 				const now = new Date();
 				const pad = n => n.toString().padStart(2, '0');
 				const dateStr = `${pad(now.getDate())}-${pad(now.getMonth() + 1)}-${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
