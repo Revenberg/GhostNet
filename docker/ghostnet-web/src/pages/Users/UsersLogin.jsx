@@ -27,9 +27,6 @@ export default function UsersLogin() {
       // Try to get Set-Cookie header (note: not accessible in browsers due to CORS, but credentials: 'include' will store it if backend sets it)
       const data = await res.json();
 
-      console.log("Login response:", res);
-      console.log("Login data:", data); 
-
       if (res.ok) {
         setMessage("✅ Login successful! Je wordt doorgestuurd...");
 

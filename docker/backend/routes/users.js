@@ -123,7 +123,9 @@ export default function createUsersRouter(pool) {
     try {
       const { username, password } = req.body;
       const [rows] = await pool.query(
-        "SELECT * FROM users WHERE username = ?",
+        `SELECT users.*, teams.id AS teamId
+         FROM users LEFT JOIN teams ON users.teamname = teams.teamname
+         WHERE users.username = ?`,
         [username]
       );
       if (rows.length === 0) {
@@ -134,7 +136,7 @@ export default function createUsersRouter(pool) {
       if (user.password_hash !==  password_hash || password_hash === '') {
         return res.status(401).json({ error: "Invalid password" });
       }
-      res.json({ success: true, user: {username: user.username, role: user.role, teamname: user.teamname, token: user.token } });
+  res.json({ success: true, user: {username: user.username, role: user.role, teamname: user.teamname, teamId: user.teamId, token: user.token } });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });
