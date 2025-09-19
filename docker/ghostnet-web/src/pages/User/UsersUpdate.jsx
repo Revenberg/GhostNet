@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RequireRole from "../components/RequireRole";
+import RequireRole from "../../components/RequireRole";
 
 export default function UsersUpdate() {
   const [form, setForm] = useState({ username: "", email: "" });

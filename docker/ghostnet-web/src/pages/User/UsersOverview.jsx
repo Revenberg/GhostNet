@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import RequireRole from "../components/RequireRole";
+import RequireRole from "../../components/RequireRole";
 
 export default function UsersOverview() {
   const [users, setUsers] = useState([]);

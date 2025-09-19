@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RequireRole from "../components/RequireRole";
+import RequireRole from "../../components/RequireRole";
 
 export default function TeamRegister() {
 	const [form, setForm] = useState({ teamname: "" });
