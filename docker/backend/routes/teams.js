@@ -58,10 +58,6 @@ export default function createTeamsRouter(pool) {
       );
       // Create a team event for creation
       const team_id = result.insertId;
-      await pool.query(
-        "INSERT INTO team_events (team_id, event_type) VALUES (?, ?)",
-        [team_id, 'created']
-      );
       res.json({ success: true, id: team_id });
     } catch (err) {
       if (err.code === "ER_DUP_ENTRY") {
