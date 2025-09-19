@@ -26,7 +26,7 @@ export default function Navbar() {
 
         if (data && data.user && data.user.role) {
           console.log("User role from backend:", data.user.role);
-          setRole(data.user.role === "admin" ? "admin" : "user");
+          setRole(data.user.username === "admin" ? "admin" : "user");
         } else {
           setRole("guest");
         }
