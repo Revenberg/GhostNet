@@ -98,9 +98,11 @@ export default function GameRoutePoints() {
                 </div>
                 <form className="space-y-2 mb-6" onSubmit={handleSubmit}>
                     <div className="flex gap-2">
+                        <input type="text" name="location" placeholder="Locatie" value={form.location} onChange={handleChange} className="border px-2 py-1 rounded w-40" />
+                    </div>
+                    <div className="flex gap-2">
                         <input type="number" name="latitude" placeholder="Lat" value={form.latitude} onChange={handleChange} className="border px-2 py-1 rounded w-28" step="any" required />
                         <input type="number" name="longitude" placeholder="Lon" value={form.longitude} onChange={handleChange} className="border px-2 py-1 rounded w-28" step="any" required />
-                        <input type="text" name="location" placeholder="Locatie" value={form.location} onChange={handleChange} className="border px-2 py-1 rounded w-40" />
                     </div>
                     <textarea name="description" placeholder="Beschrijving" value={form.description} onChange={handleChange} className="border px-2 py-1 rounded w-full" rows={2} />
                     <input type="text" name="images" placeholder="Afbeeldingen (komma gescheiden)" value={form.images} onChange={handleChange} className="border px-2 py-1 rounded w-full" />
