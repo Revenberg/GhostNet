@@ -9,39 +9,38 @@ export default function TeamRegister() {
 		setForm({ ...form, [e.target.name]: e.target.value });
 	};
 
-		const handleSubmit = async (e) => {
-			e.preventDefault();
-			setMessage("...sending");
-			try {
-				const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-				const res = await fetch(`${backendHost}/api/teams`, {
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setMessage("...sending");
+		try {
+			const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+			const res = await fetch(`${backendHost}/api/teams`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(form),
+			});
+			const data = await res.json();
+			if (res.ok) {
+				// Create event in frontend (matches working curl)
+				const team_id = data.team.id;
+				const now = new Date();
+				const pad = n => n.toString().padStart(2, '0');
+				const dateStr = `${pad(now.getDate())}-${pad(now.getMonth() + 1)}-${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+				const eventMsg = `Team ${form.teamname} aangemaakt op ${dateStr}`;
+				await fetch(`${backendHost}/api/games/events/${team_id}`, {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(form),
+					body: JSON.stringify({ event_type: "Info", event_message: eventMsg })
 				});
-				const data = await res.json();
-				console.log("data", data);
-				if (res.ok) {
-								// Create event in frontend (matches working curl)
-								const team_id = data.id;
-								const now = new Date();
-								const pad = n => n.toString().padStart(2, '0');
-								const dateStr = `${pad(now.getDate())}-${pad(now.getMonth()+1)}-${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
-								const eventMsg = `Team ${form.teamname} aangemaakt op ${dateStr}`;
-								await fetch(`${backendHost}/api/games/events/${team_id}`, {
-									method: "POST",
-									headers: { "Content-Type": "application/json" },
-									body: JSON.stringify({ event_type: "Info", event_message: eventMsg })
-								});
-					setMessage("✅ Team added!");
-					setForm({ teamname: "" });
-				} else {
-					setMessage(`❌ ${data.error}`);
-				}
-			} catch (err) {
-				setMessage("❌ Server error");
+				setMessage("✅ Team added!");
+				setForm({ teamname: "" });
+			} else {
+				setMessage(`❌ ${data.error}`);
 			}
-		};
+		} catch (err) {
+			setMessage("❌ Server error");
+		}
+	};
 
 	return (
 		<RequireRole role="admin">
