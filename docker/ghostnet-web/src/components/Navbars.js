@@ -48,7 +48,7 @@ export function NavbarAdmin() {
       <Link to="/speluitleg" className="hover:underline">Speluitleg</Link>
       <Link to="/contact" className="hover:underline">Contact</Link>
       <div className="relative group">
-        <button className="hover:underline focus:outline-none">Gebruikers ▾</button>
+        <button className="hover:underline focus:outline-none">Gebruikersbeheer ▾</button>
         <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
           <Link to="/users-register" className="block px-4 py-2 hover:bg-purple-100">Register</Link>
           <Link to="/users-overview" className="block px-4 py-2 hover:bg-purple-100">Gebruikers overzicht</Link>
@@ -56,7 +56,7 @@ export function NavbarAdmin() {
         </div>
       </div>
       <div className="relative group">
-        <button className="hover:underline focus:outline-none">Teams ▾</button>
+        <button className="hover:underline focus:outline-none">Teambeheer ▾</button>
         <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
           <Link to="/teams-overview" className="block px-4 py-2 hover:bg-purple-100">Teams overzicht</Link>
           <Link to="/add-team" className="block px-4 py-2 hover:bg-purple-100">Team registreren</Link>
@@ -66,9 +66,9 @@ export function NavbarAdmin() {
       </div>
 
       <div className="relative group">
-        <button className="hover:underline focus:outline-none">{user.teamname} ▾</button>
+        <button className="hover:underline focus:outline-none">Team ▾</button>
         <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
-          <Link to="/my-team" className="block px-4 py-2 hover:bg-purple-100">Mijn Team</Link>
+          <Link to="/my-team" className="block px-4 py-2 hover:bg-purple-100">{user.teamname}</Link>
         </div>
       </div>
 
