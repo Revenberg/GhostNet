@@ -13,15 +13,11 @@ export default function TeamSendEvent() {
       const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
       const user = getUserFromCookie();
       
-      console.log("Current user:", user);  
-
       if (!user || !user.teamId) {
         setStatus("❌ Geen team gevonden voor deze gebruiker");
         return;
       }
       const team_id = user.teamId;
-
-      console.log("Sending event to team_id:", team_id, "with message:", eventMsg);
 
       const res = await fetch(`${backendHost}/api/games/events/${team_id}`, {
         method: "POST",
