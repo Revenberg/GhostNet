@@ -50,7 +50,7 @@ export default function TeamsOverview() {
 								<tr key={team.id}>
 									<td className="border-b p-2">{team.id}</td>
 									<td className="border-b p-2">
-										<Link to="/team-details" className="text-blue-700 hover:underline">{team.teamname}</Link>
+										<Link to={`/team-details/${team.id}`} className="text-blue-700 hover:underline">{team.teamname}</Link>
 									</td>
 									<td className="border-b p-2">{team.teamcode}</td>
 								</tr>
