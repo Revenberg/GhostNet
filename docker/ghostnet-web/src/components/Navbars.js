@@ -22,11 +22,13 @@ export function NavbarUser() {
       <Link to="/" className="hover:underline">Home</Link>
       <Link to="/speluitleg" className="hover:underline">Speluitleg</Link>
       <Link to="/contact" className="hover:underline">Contact</Link>
-      <Link to="/users-logout" className="hover:underline">Logout</Link>
-      {user && user.username && (
-        <span className="mr-6 font-semibold text-white">{user.username}</span>
-      )}
-          </nav>
+      <div className="relative group">
+        <button className="bg-purple-900 hover:bg-purple-800 text-white font-semibold px-4 py-2 rounded focus:outline-none">{user.username} ▾</button>
+        <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
+          <Link to="//users-logout" className="block px-4 py-2 hover:bg-purple-100">Logout</Link>
+        </div>
+      </div>
+    </nav>
   );
 }
 
@@ -56,10 +58,14 @@ export function NavbarAdmin() {
           <Link to="/delete-team" className="block px-4 py-2 hover:bg-purple-100">Team verwijderen</Link>
         </div>
       </div>
-      <Link to="/users-logout" className="hover:underline">Logout</Link>
-      {user && user.username && (
-        <span className="mr-6 font-semibold text-white">{user.username}</span>
-      )}      
+
+      <div className="relative group">
+        <button className="bg-purple-900 hover:bg-purple-800 text-white font-semibold px-4 py-2 rounded focus:outline-none">{user.username} ▾</button>
+        <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
+          <Link to="//users-logout" className="block px-4 py-2 hover:bg-purple-100">Logout</Link>
+        </div>
+      </div>
+
     </nav>
   );
 }
