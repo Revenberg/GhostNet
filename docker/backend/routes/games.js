@@ -15,6 +15,7 @@ export default function createGamesRouter(pool) {
           GROUP BY team_id
         ) latest ON gp.id = latest.max_id
         WHERE gp.game_id = ?
+        ORDER BY gp.lastupdate DESC
       `, [game_id, game_id]);
       res.json({ success: true, progress: rows });
     } catch (err) {
@@ -67,7 +68,7 @@ export default function createGamesRouter(pool) {
     try {
       const { game_id } = req.params;
       const [rows] = await pool.query(
-        "SELECT * FROM game_progress WHERE game_id = ?",
+        "SELECT * FROM game_progress WHERE game_id = ? order by team_id, lastupdate DESC",
         [game_id]
       );
       res.json({ success: true, progress: rows });
@@ -82,7 +83,7 @@ export default function createGamesRouter(pool) {
     try {
       const { team_id } = req.params;
       const [rows] = await pool.query(
-        "SELECT * FROM game_progress WHERE team_id = ?",
+        "SELECT * FROM game_progress WHERE team_id = ? order by game_id, lastupdate DESC",
         [team_id]
       );
       res.json({ success: true, progress: rows });
@@ -135,7 +136,7 @@ export default function createGamesRouter(pool) {
   // List all games
   router.get("/", async (req, res) => {
     try {
-      const [rows] = await pool.query("SELECT * FROM game");
+      const [rows] = await pool.query("SELECT * FROM game order by lastupdate DESC");
       res.json({ success: true, games: rows });
     } catch (err) {
       console.error(err);
@@ -179,13 +180,13 @@ export default function createGamesRouter(pool) {
 // Example: Get all games
   router.get("/", async (req, res) => {
     try {
-      const [rows] = await pool.query("SELECT * FROM games");
+      const [rows] = await pool.query("SELECT * FROM games order by lastupdate DESC");
       res.json({ success: true, games: rows });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });
     }
-  });
+  });   
 
   return router;
 }

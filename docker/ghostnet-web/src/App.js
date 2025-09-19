@@ -22,6 +22,8 @@ import TeamSendEvent from "./pages/Team/TeamSendEvent";
 import GamesCreate from "./pages/Games/GamesCreate";
 import GamesUpdate from "./pages/Games/GamesUpdate";
 import GamesList from "./pages/Games/GamesList";
+import GamesSetStatus from "./pages/Games/GamesSetStatus";
+import GamesProgressOverview from "./pages/Games/GamesProgressOverview";
 
 export default function App() {
   return (
@@ -29,24 +31,28 @@ export default function App() {
       <Navbar />
       <div className="p-6">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/speluitleg" element={<Speluitleg />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/users-login" element={<UsersLogin />} />
-          <Route path="/users-register" element={<UsersRegister />} />
-          <Route path="/users-overview" element={<UsersOverview />} />
-          <Route path="/users-logout" element={<UsersLogout />} />
-          <Route path="/update-user" element={<UsersUpdate />} />
-          <Route path="/update-password" element={<UpdatePassword />} />
-          <Route path="/add-team" element={<TeamRegister />} />
-          <Route path="/update-team" element={<TeamsUpdate />} />
-          <Route path="/delete-team" element={<TeamDelete />} />
-          <Route path="/teams-overview" element={<TeamsOverview />} />
-          <Route path="/team-details/:teamId" element={<TeamDetails />} />
-          <Route path="/team-send-event" element={<TeamSendEvent />} />
-          <Route path="/games-create" element={<GamesCreate />} />
-          <Route path="/games-update" element={<GamesUpdate />} />
-          <Route path="/games-list" element={<GamesList />} />
+            <>
+              <Route path="/" element={<Home />} />
+              <Route path="/speluitleg" element={<Speluitleg />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/users-login" element={<UsersLogin />} />
+              <Route path="/users-register" element={<UsersRegister />} />
+              <Route path="/users-overview" element={<UsersOverview />} />
+              <Route path="/users-logout" element={<UsersLogout />} />
+              <Route path="/update-user" element={<UsersUpdate />} />
+              <Route path="/update-password" element={<UpdatePassword />} />
+              <Route path="/add-team" element={<TeamRegister />} />
+              <Route path="/update-team" element={<TeamsUpdate />} />
+              <Route path="/delete-team" element={<TeamDelete />} />
+              <Route path="/teams-overview" element={<TeamsOverview />} />
+              <Route path="/team-details/:teamId" element={<TeamDetails />} />
+              <Route path="/team-send-event" element={<TeamSendEvent />} />
+              <Route path="/games-create" element={<GamesCreate />} />
+              <Route path="/games-update" element={<GamesUpdate />} />
+              <Route path="/games-progress-overview" element={<GamesProgressOverview />} />
+              <Route path="/games-set-status" element={<GamesSetStatus />} />
+              <Route path="/games-list" element={<GamesList />} />
+            </>
         </Routes>
       </div>
     </div>

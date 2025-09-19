@@ -8,6 +8,7 @@ export default function TeamDetails() {
   const [team, setTeam] = useState(null);
   const [members, setMembers] = useState([]);
   const [events, setEvents] = useState([]);
+  const [gameStatuses, setGameStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -54,6 +55,10 @@ export default function TeamDetails() {
         const resEvents = await fetch(`${backendHost}/api/games/events/${teamData.id}`);
         const dataEvents = await resEvents.json();
         setEvents(dataEvents.events || []);
+        // Fetch all game statuses for this team
+        const resGameStatuses = await fetch(`${backendHost}/api/games/progress/by-team/${teamData.id}`);
+        const dataGameStatuses = await resGameStatuses.json();
+        setGameStatuses(dataGameStatuses.progress || []);
       } catch (err) {
         setError("Serverfout bij ophalen team.");
       }
@@ -80,13 +85,24 @@ export default function TeamDetails() {
           ))}
         </ul>
         <h3 className="font-semibold mb-2">Team Events:</h3>
-        <ul className="list-disc list-inside">
+        <ul className="list-disc list-inside mb-6">
           {events.length === 0 && <li className="text-gray-500">Geen events gevonden.</li>}
           {events.map(event => (
             <li key={event.id}>
               <span className="font-mono text-xs text-gray-600">[{new Date(event.event_timestamp).toLocaleString()}]</span>
               {" "}{event.event_type}
               {" "}{event.event_message}
+            </li>
+          ))}
+        </ul>
+        <h3 className="font-semibold mb-2">Game Statussen:</h3>
+        <ul className="list-disc list-inside">
+          {gameStatuses.length === 0 && <li className="text-gray-500">Geen game statussen gevonden.</li>}
+          {gameStatuses.map(status => (
+            <li key={status.id}>
+              <span className="font-mono text-xs text-gray-600">[{new Date(status.timestamp).toLocaleString()}]</span>
+              {" "}<span className="font-semibold">{status.game_name || status.game_id}</span>
+              {": "}<span>{status.status}</span>
             </li>
           ))}
         </ul>

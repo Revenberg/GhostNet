@@ -72,10 +72,12 @@ export function NavbarAdmin() {
 
       <div className="relative group">
         <button className="hover:underline focus:outline-none">Games ▾</button>
-        <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
+        <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
           <Link to="/games-list" className="block px-4 py-2 hover:bg-purple-100">Alle games</Link>
           <Link to="/games-create" className="block px-4 py-2 hover:bg-purple-100">Game aanmaken</Link>
           <Link to="/games-update" className="block px-4 py-2 hover:bg-purple-100">Game status bijwerken</Link>
+          <Link to="/games-set-status" className="block px-4 py-2 hover:bg-purple-100">Status instellen (per team)</Link>
+          <Link to="/games-progress-overview" className="block px-4 py-2 hover:bg-purple-100">Voortgang overzicht</Link>
         </div>
       </div>
 

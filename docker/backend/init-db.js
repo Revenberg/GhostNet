@@ -60,7 +60,7 @@ export async function ensureTables(pool) {
         status VARCHAR(64),
         FOREIGN KEY (game_id) REFERENCES game(id),
         FOREIGN KEY (team_id) REFERENCES teams(id),
-        progress_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
   await conn.query(`
