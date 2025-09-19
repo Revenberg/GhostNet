@@ -37,15 +37,6 @@ export default function GamesCreate() {
         <form className="space-y-4" onSubmit={handleSubmit}>
           <input
             type="text"
-            name="game_id"
-            placeholder="Game ID"
-            value={form.game_id}
-            onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
-            required
-          />
-          <input
-            type="text"
             name="name"
             placeholder="Naam"
             value={form.name}

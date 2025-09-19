@@ -4,13 +4,13 @@ export default function createGamesRouter(pool) {
   // Create a new game (status = 'new')
   router.post("/", async (req, res) => {
     try {
-      const { game_id, name } = req.body;
-      if (!game_id || !name) {
-        return res.status(400).json({ error: "game_id and name required" });
+      const { name } = req.body;
+      if (!name) {
+        return res.status(400).json({ error: "name required" });
       }
       const [result] = await pool.query(
-        "INSERT INTO game (game_id, name, status) VALUES (?, ?, ?)",
-        [game_id, name, 'new']
+        "INSERT INTO game (name, status) VALUES (?, ?)",
+        [name, 'new']
       );
       res.json({ success: true, id: result.insertId });
     } catch (err) {
