@@ -59,6 +59,10 @@ export async function ensureTables(pool) {
     )
   `);
   await conn.query(`
+    drop table if exists game_route_points;
+    `);
+
+  await conn.query(`
     CREATE TABLE IF NOT EXISTS game_route_points (
         id INT AUTO_INCREMENT PRIMARY KEY,
         location VARCHAR(64),
@@ -69,6 +73,10 @@ export async function ensureTables(pool) {
         hints TEXT
     )
   `);
+  await conn.query(`
+  drop table if exists game_routes;
+    `);
+    
     await conn.query(`
     CREATE TABLE IF NOT EXISTS game_routes (
         id INT AUTO_INCREMENT PRIMARY KEY,
