@@ -57,7 +57,7 @@ export default function UsersRegister() {
         setMessage("✅ Registration successful! Je wordt doorgestuurd naar de login pagina...");
         setTimeout(() => {
           navigate("/users-login");
-        }, 5000);
+        }, 2000);
       } else {
         setMessage(`❌ Error: ${data.error}`);
       }

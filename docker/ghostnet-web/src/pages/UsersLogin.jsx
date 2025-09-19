@@ -39,7 +39,7 @@ export default function UsersLogin() {
 
         setTimeout(() => {
           navigate("/");
-        }, 5000);
+        }, 2000);
       } else {
         setMessage(`❌ ${data.error}`);
       }
