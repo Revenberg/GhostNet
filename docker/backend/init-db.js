@@ -40,19 +40,27 @@ export async function ensureTables(pool) {
     )
   `);
   await conn.query(`
+    DROP TABLE IF EXISTS game_progress;
+    DROP TABLE IF EXISTS game;
+    `);  
+  
+  await conn.query(`
     CREATE TABLE IF NOT EXISTS game (
       id INT AUTO_INCREMENT PRIMARY KEY,
       name VARCHAR(64) UNIQUE,
-      status VARCHAR(64)
+      status VARCHAR(64),
+      lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
-  `);
+  `);  
   await conn.query(`
     CREATE TABLE IF NOT EXISTS game_progress (
         id INT AUTO_INCREMENT PRIMARY KEY,
         game_id INT,
         team_id INT,
         status VARCHAR(64),
-        FOREIGN KEY (game_id) REFERENCES game(id)
+        FOREIGN KEY (game_id) REFERENCES game(id),
+        FOREIGN KEY (team_id) REFERENCES teams(id),
+        progress_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
   await conn.query(`
