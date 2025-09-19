@@ -10,6 +10,10 @@ export function getUserFromCookie() {
 }
 
 export async function checkUserGranted(requiredRole = null) {
+  const user = getUserFromCookie();
+
+  if (!user) return false;
+  
   const role = user.role;
   const granted = false;
     
