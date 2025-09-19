@@ -4,12 +4,12 @@ import { getUserFromCookie } from "../utils/auth";
 
 export default function Navbar() {
   const user = getUserFromCookie();
+  const role = "guest";
 
-  if (!user) return "guest";
-  
-  const role = user.role;
-    
+  if (user) role = user.role;
+
   if (role === "admin") return <NavbarAdmin />;
   if (role === "user") return <NavbarUser />;
+  
   return <NavbarGuest />;
 }
