@@ -19,7 +19,7 @@ function getUserFromCookie() {
 export default function Navbar() {
   const user = getUserFromCookie();
 
-  if (!user) return role = guest;
+  if (!user) return role = "guest";
 
   console.log("User from cookie:", user);
   
