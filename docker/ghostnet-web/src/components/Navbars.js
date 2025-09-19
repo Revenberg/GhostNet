@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useUserRole } from "../utils/useUserRole";
+import { getUserFromCookie } from "../utils/auth";
 
 export function NavbarGuest() {
   return (
@@ -15,7 +15,7 @@ export function NavbarGuest() {
 }
 
 export function NavbarUser() {
-  const { user } = useUserRole();
+  const user = getUserFromCookie();
   return (
     <nav className="bg-purple-700 text-white p-4 flex items-center justify-center space-x-6">
 
