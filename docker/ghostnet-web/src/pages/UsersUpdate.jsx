@@ -1,4 +1,7 @@
+
 import React, { useState } from "react";
+import RequireRole from "../components/RequireRole";
+
 
 export default function UsersUpdate() {
   const [form, setForm] = useState({ username: "", email: "" });
@@ -34,32 +37,34 @@ export default function UsersUpdate() {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow">
-      <h2 className="text-xl font-bold mb-4">Gebruiker bijwerken</h2>
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Gebruikersnaam"
-          value={form.username}
-          onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="E-mail"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
-        <button type="submit" className="w-full btn-primary" disabled={isSubmitting}>
-          Bijwerken
-        </button>
-      </form>
-      {message && <p className="mt-4 text-sm">{message}</p>}
-    </div>
+    <RequireRole role="admin">
+      <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow">
+        <h2 className="text-xl font-bold mb-4">Gebruiker bijwerken</h2>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="username"
+            placeholder="Gebruikersnaam"
+            value={form.username}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="E-mail"
+            value={form.email}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
+          />
+          <button type="submit" className="w-full btn-primary" disabled={isSubmitting}>
+            Bijwerken
+          </button>
+        </form>
+        {message && <p className="mt-4 text-sm">{message}</p>}
+      </div>
+    </RequireRole>
   );
 }

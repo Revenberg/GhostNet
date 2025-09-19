@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import RequireRole from "../components/RequireRole";
 
 export default function UsersOverview() {
   const [users, setUsers] = useState([]);
@@ -27,36 +28,38 @@ export default function UsersOverview() {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
-      <h2 className="text-xl font-bold mb-4">Users Overview</h2>
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p className="text-red-600">{error}</p>
-      ) : (
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <th className="border-b p-2 text-left">ID</th>
-              <th className="border-b p-2 text-left">Username</th>
-              <th className="border-b p-2 text-left">Team</th>
-              <th className="border-b p-2 text-left">Role</th>
-              <th className="border-b p-2 text-left">Token</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td className="border-b p-2">{user.id}</td>
-                <td className="border-b p-2">{user.username}</td>
-                <td className="border-b p-2">{user.teamname}</td>
-                <td className="border-b p-2">{user.role}</td>
-                <td className="border-b p-2">{user.token}</td>
+    <RequireRole role="admin">
+      <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
+        <h2 className="text-xl font-bold mb-4">Users Overview</h2>
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p className="text-red-600">{error}</p>
+        ) : (
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                <th className="border-b p-2 text-left">ID</th>
+                <th className="border-b p-2 text-left">Username</th>
+                <th className="border-b p-2 text-left">Team</th>
+                <th className="border-b p-2 text-left">Role</th>
+                <th className="border-b p-2 text-left">Token</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td className="border-b p-2">{user.id}</td>
+                  <td className="border-b p-2">{user.username}</td>
+                  <td className="border-b p-2">{user.teamname}</td>
+                  <td className="border-b p-2">{user.role}</td>
+                  <td className="border-b p-2">{user.token}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </RequireRole>
   );
 }

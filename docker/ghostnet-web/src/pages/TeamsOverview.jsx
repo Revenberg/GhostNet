@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import RequireRole from "../components/RequireRole";
 
 export default function TeamsOverview() {
   const [teams, setTeams] = useState([]);
@@ -27,32 +28,34 @@ export default function TeamsOverview() {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
-      <h2 className="text-xl font-bold mb-4">Teams Overview</h2>
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p className="text-red-600">{error}</p>
-      ) : (
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <th className="border-b p-2 text-left">ID</th>
-              <th className="border-b p-2 text-left">Team Name</th>
-              <th className="border-b p-2 text-left">Team Code</th>
-            </tr>
-          </thead>
-          <tbody>
-            {teams.map((team) => (
-              <tr key={team.id}>
-                <td className="border-b p-2">{team.id}</td>
-                <td className="border-b p-2">{team.teamname}</td>
-                <td className="border-b p-2">{team.teamcode}</td>
+    <RequireRole role="admin">
+      <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
+        <h2 className="text-xl font-bold mb-4">Teams Overview</h2>
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p className="text-red-600">{error}</p>
+        ) : (
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                <th className="border-b p-2 text-left">ID</th>
+                <th className="border-b p-2 text-left">Team Name</th>
+                <th className="border-b p-2 text-left">Team Code</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+            </thead>
+            <tbody>
+              {teams.map((team) => (
+                <tr key={team.id}>
+                  <td className="border-b p-2">{team.id}</td>
+                  <td className="border-b p-2">{team.teamname}</td>
+                  <td className="border-b p-2">{team.teamcode}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </RequireRole>
   );
 }

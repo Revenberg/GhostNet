@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
+import RequireRole from "../components/RequireRole";
 
-export default function TeamDelete() {
   const [teams, setTeams] = useState([]);
   const [selected, setSelected] = useState(null);
   const [message, setMessage] = useState("");
@@ -40,25 +40,26 @@ export default function TeamDelete() {
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow">
-      <h2 className="text-xl font-bold mb-4">Delete Team</h2>
-      <div className="mb-4">
-        <label>Select a team:</label>
-        <select className="ml-2 border rounded" onChange={e => setSelected(Number(e.target.value))} value={selected || ""}>
-          <option value="">-- Select --</option>
-          {teams.map(team => (
-            <option key={team.id} value={team.id}>{team.teamname}</option>
-          ))}
-        </select>
+    <RequireRole role="admin">
+      <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow">
+        <h2 className="text-xl font-bold mb-4">Delete Team</h2>
+        <div className="mb-4">
+          <label>Select a team:</label>
+          <select className="ml-2 border rounded" onChange={e => setSelected(Number(e.target.value))} value={selected || ""}>
+            <option value="">-- Select --</option>
+            {teams.map(team => (
+              <option key={team.id} value={team.id}>{team.teamname}</option>
+            ))}
+          </select>
+        </div>
+        <button
+          className="w-full btn-primary bg-red-600 hover:bg-red-700"
+          onClick={handleDelete}
+          disabled={!selected}
+        >
+          Delete Team
+        </button>
+        {message && <p className="mt-4 text-sm">{message}</p>}
       </div>
-      <button
-        className="w-full btn-primary bg-red-600 hover:bg-red-700"
-        onClick={handleDelete}
-        disabled={!selected}
-      >
-        Delete Team
-      </button>
-      {message && <p className="mt-4 text-sm">{message}</p>}
-    </div>
+    </RequireRole>
   );
-}
