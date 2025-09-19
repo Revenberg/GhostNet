@@ -21,6 +21,9 @@ export default function Navbar() {
     fetch(`${backendHost}/api/users/by-token/${token}`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
+        
+        console.log("User data from token:", data);
+
         if (data && data.user && data.user.role) {
           console.log("User role from backend:", data.user.role);
           setRole(data.user.role === "admin" ? "admin" : "user");
@@ -31,6 +34,8 @@ export default function Navbar() {
       .catch(() => setRole("guest"));
   }, []);
 
+  console.log("Current role:", role);
+  
   if (role === "admin") return <NavbarAdmin />;
   if (role === "user") return <NavbarUser />;
   return <NavbarGuest />;
