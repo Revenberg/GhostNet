@@ -27,7 +27,7 @@ export default function TeamRegister() {
 					const pad = n => n.toString().padStart(2, '0');
 					const dateStr = `${pad(now.getDate())}-${pad(now.getMonth()+1)}-${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
 					const eventMsg = `Team ${form.teamname} aangemaakt op ${dateStr}`;
-					await fetch(`${backendHost}/api/teams/events`, {
+					await fetch(`${backendHost}/api/games/events`, {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
 						body: JSON.stringify({ team_id, event_type: eventMsg })
