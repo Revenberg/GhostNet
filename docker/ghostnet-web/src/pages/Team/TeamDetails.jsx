@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import RequireRole from "../../components/RequireRole";
 import { getUserFromCookie } from "../../utils/auth";
 
 export default function TeamDetails() {
+  const { teamId } = useParams();
   const [team, setTeam] = useState(null);
   const [members, setMembers] = useState([]);
   const [events, setEvents] = useState([]);
@@ -57,8 +59,8 @@ export default function TeamDetails() {
       }
       setLoading(false);
     }
-    fetchTeam();
-  }, []);
+    fetchTeam(teamId);
+  }, [teamId]);
 
   if (loading) return <div className="text-center">Laden...</div>;
   if (error) return <div className="text-center text-red-600">{error}</div>;

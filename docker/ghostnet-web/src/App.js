@@ -38,7 +38,7 @@ export default function App() {
           <Route path="/update-team" element={<TeamsUpdate />} />
           <Route path="/delete-team" element={<TeamDelete />} />
           <Route path="/teams-overview" element={<TeamsOverview />} />
-          <Route path="/team-details" element={<TeamDetails />} />
+          <Route path="/team-details/:teamId" element={<TeamDetails />} />
         </Routes>
       </div>
     </div>
