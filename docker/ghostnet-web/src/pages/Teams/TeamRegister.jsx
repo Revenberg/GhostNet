@@ -21,17 +21,17 @@ export default function TeamRegister() {
 				});
 				const data = await res.json();
 				if (res.ok) {
-					// Create event in frontend
-					const team_id = data.id;
-					const now = new Date();
-					const pad = n => n.toString().padStart(2, '0');
-					const dateStr = `${pad(now.getDate())}-${pad(now.getMonth()+1)}-${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
-					const eventMsg = `Team ${form.teamname} aangemaakt op ${dateStr}`;
-					await fetch(`${backendHost}/api/games/events/${team_id}`, {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({ event_type: "Info", event_message: eventMsg })
-					});
+								// Create event in frontend (matches working curl)
+								const team_id = data.id;
+								const now = new Date();
+								const pad = n => n.toString().padStart(2, '0');
+								const dateStr = `${pad(now.getDate())}-${pad(now.getMonth()+1)}-${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+								const eventMsg = `Team ${form.teamname} aangemaakt op ${dateStr}`;
+								await fetch(`${backendHost}/api/games/events/${team_id}`, {
+									method: "POST",
+									headers: { "Content-Type": "application/json" },
+									body: JSON.stringify({ event_type: "Info", event_message: eventMsg })
+								});
 					setMessage("✅ Team added!");
 					setForm({ teamname: "" });
 				} else {
