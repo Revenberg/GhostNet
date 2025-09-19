@@ -10,7 +10,15 @@ const dbConfig = {
 export async function ensureTables(pool) {
   const conn = await pool.getConnection();
   // removed duplicate game table creation above
-    
+
+  await conn.query(`
+    drop table if exists game_routes_points;
+    `);
+
+      await conn.query(`
+    drop table if exists game_routes;
+    `);
+
   await conn.query(`
     CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -61,12 +69,14 @@ export async function ensureTables(pool) {
   await conn.query(`
     CREATE TABLE IF NOT EXISTS game_route_points (
         id INT AUTO_INCREMENT PRIMARY KEY,
+        game_id INT,
         location VARCHAR(64),
         latitude DOUBLE,
         longitude DOUBLE,
         description TEXT,
         images TEXT,
-        hints TEXT
+        hints TEXT,
+        FOREIGN KEY (game_id) REFERENCES game(id)
     )
   `);
     await conn.query(`

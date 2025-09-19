@@ -7,14 +7,14 @@ export default function createGamesRouter(pool) {
   // Create a new game_route_point
   router.post("/route-points", async (req, res) => {
     try {
-      const { location, latitude, longitude, description, images, hints } = req.body;
-      if (!location || latitude == null || longitude == null) {
-        return res.status(400).json({ error: "location, latitude, and longitude required" });
+      const { game_id, location, latitude, longitude, description, images, hints } = req.body;
+      if (!location || !game_id ) {
+        return res.status(400).json({ error: "location and game Id required" });
       }
       const [result] = await pool.query(
-        `INSERT INTO game_route_points (location, latitude, longitude, description, images, hints)
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [location, latitude, longitude, description, images, hints]
+        `INSERT INTO game_route_points (game_id, location, latitude, longitude, description, images, hints)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [game_id, location, latitude, longitude, description, images, hints]
       );  
 
   // Get all route points
@@ -41,9 +41,10 @@ export default function createGamesRouter(pool) {
   router.put("/route-points/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const { location, latitude, longitude, description, images, hints } = req.body;
+      const { game_id, location, latitude, longitude, description, images, hints } = req.body;
       const [result] = await pool.query(
         `UPDATE game_route_points SET
+          game_id = COALESCE(?, game_id),
           location = COALESCE(?, location),
           latitude = COALESCE(?, latitude),
           longitude = COALESCE(?, longitude),
@@ -51,7 +52,7 @@ export default function createGamesRouter(pool) {
           images = COALESCE(?, images),
           hints = COALESCE(?, hints)
          WHERE id = ?`,
-        [location, latitude, longitude, description, images, hints, id]
+        [game_id, location, latitude, longitude, description, images, hints, id]
       );
       if (result.affectedRows === 0) {
         return res.status(404).json({ error: "Route point not found" });
@@ -81,13 +82,13 @@ export default function createGamesRouter(pool) {
     }
   });
 
-  // Get all route points for a route
-  router.get("/route-points/by-route/:location", async (req, res) => {
+  // Get all route points for a game
+  router.get("/route-points/by-game/:game_id", async (req, res) => {
     try {
-      const { location } = req.params;
+      const { game_id } = req.params;
       const [rows] = await pool.query(
-        `SELECT * FROM game_route_points WHERE location = ? ORDER BY id ASC`,
-        [location]
+        `SELECT * FROM game_route_points WHERE game_id = ? ORDER BY id ASC`,
+        [game_id]
       );
       res.json({ success: true, points: rows });
     } catch (err) {
@@ -97,6 +98,24 @@ export default function createGamesRouter(pool) {
   });
 
   // --- GAME ROUTES MAINTAIN ENDPOINTS ---
+  // Create a new game_routes entry
+  router.post("/routes", async (req, res) => {
+    try {
+      const { game_id, game_route_points_id, order_id } = req.body;
+      if (!game_id || !game_route_points_id) {
+        return res.status(400).json({ error: "game_id and game_route_points_id required" });
+      }
+      const [result] = await pool.query(
+        `INSERT INTO game_routes (game_id, game_route_points_id, order_id) VALUES (?, ?, ?)` ,
+        [game_id, game_route_points_id, order_id || 0]
+      );
+      res.json({ success: true, id: result.insertId });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
   // Get all routes for a game
   router.get("/routes", async (req, res) => {
     try {
