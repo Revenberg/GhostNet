@@ -17,37 +17,15 @@ function getUserFromCookie() {
 
 
 export default function Navbar() {
-  const [role, setRole] = useState("guest");
+  const user = getUserFromCookie();
 
-  useEffect(() => {
-    const user = getUserFromCookie();
-    console.log("User from cookie:", user);
-    console.log("User from cookie:", user.role);
-    
-    const token = getTokenFromCookie();
-    console.log("Token from cookie:", token);
+  if (!user) return setRole("guest");
 
-    if (!token) return setRole("guest");
-
-    const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-    fetch(`${backendHost}/api/users/by-token/${token}`)
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        
-        console.log("User data from token:", data);
-
-        if (data && data.user && data.user.role) {
-          console.log("User role from backend:", data.user.role);
-          setRole(data.user.username === "admin" ? "admin" : "user");
-        } else {
-          setRole("guest");
-        }
-      })
-      .catch(() => setRole("guest"));
-  }, []);
-
-  console.log("Current role:", role);
+  console.log("User from cookie:", user);
   
+  const role = user.role;
+  console.log("User role from cookie:", role);
+    
   if (role === "admin") return <NavbarAdmin />;
   if (role === "user") return <NavbarUser />;
   return <NavbarGuest />;
