@@ -15,11 +15,11 @@ export default function TeamSendEvent() {
       
       console.log("Current user:", user);  
 
-      if (!user || !user.teamid) {
+      if (!user || !user.teamId) {
         setStatus("❌ Geen team gevonden voor deze gebruiker");
         return;
       }
-      const team_id = user.teamid;
+      const team_id = user.teamId;
 
       console.log("Sending event to team_id:", team_id, "with message:", eventMsg);
 
