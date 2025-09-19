@@ -21,7 +21,7 @@ export default function TeamDetails() {
         }
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
         // Fetch team info by teamname or teamcode
-        const res = await fetch(`${backendHost}/api/teams/by-teamname/${encodeURIComponent(user.teamname || user.teamname)}`);
+        const res = await fetch(`${backendHost}/api/teams/by-name/${encodeURIComponent(user.teamname || user.teamname)}`);
         const data = await res.json();
         if (!res.ok || !data.team) {
           setError("Team niet gevonden.");
