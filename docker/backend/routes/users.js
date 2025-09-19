@@ -83,7 +83,7 @@ export default function createUsersRouter(pool) {
       }
       const user = rows[0];
       const password_hash = hashPassword(password);
-      if (user.password_hash !== password_hash) {
+      if (user.password_hash !==  password_hash || password_hash === '') {
         return res.status(401).json({ error: "Invalid password" });
       }
       res.json({ success: true, user: {username: user.username, role: user.role, teamname: user.teamname, token: user.token } });

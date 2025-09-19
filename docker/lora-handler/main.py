@@ -279,17 +279,10 @@ def main():
             user_count = cur.fetchone()[0]
             if user_count == 0:
                 # Create admin user with default password 'admin' (hashed)
-                import hashlib
-                def djb2_hash(s):
-                    hash = 5381
-                    for c in s:
-                        hash = ((hash << 5) + hash) + ord(c)
-                    return str(hash & 0xFFFFFFFF)
                 admin_username = 'admin'
-                admin_password = 'admin'
                 admin_teamname = 'admin'
                 admin_role = 'admin'
-                password_hash = djb2_hash(admin_password)
+                password_hash = ''
                 cur.execute("INSERT INTO users (username, teamname, role, password_hash) VALUES (%s, %s, %s, %s)",
                             (admin_username, admin_teamname, admin_role, password_hash))
                 print("Admin user created.", flush=True)

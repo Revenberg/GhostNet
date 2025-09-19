@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 echo "[DEBUG] Updating apt package lists..."
 # sudo apt update 
 echo "[DEBUG] Upgrading packages..."
@@ -29,6 +28,7 @@ echo "[DEBUG] Installing docker-compose..."
 # And some more
 # docker system prune -af
 
+docker volume prune -f &
 
 echo "[DEBUG] Cleaning up old GhostNet directory..."
 cd ~
