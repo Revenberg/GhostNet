@@ -30,7 +30,7 @@ export default function TeamRegister() {
 					await fetch(`${backendHost}/api/games/events`, {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({ team_id, event_type: "Information", event_message: eventMsg })
+						body: JSON.stringify({ team_id, event_type: "Info", event_message: eventMsg })
 					});
 					setMessage("✅ Team added!");
 					setForm({ teamname: "" });
