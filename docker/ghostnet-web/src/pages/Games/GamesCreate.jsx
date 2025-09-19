@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import RequireRole from "../../components/RequireRole";
 
 export default function GamesCreate() {
-  const [form, setForm] = useState({ game_id: "", name: "" });
+  const [form, setForm] = useState({ name: "" });
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -17,7 +17,7 @@ export default function GamesCreate() {
       const res = await fetch(`${backendHost}/api/games`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ name: form.name }),
       });
       if (res.ok) {
         setMessage("✅ Game aangemaakt!");
