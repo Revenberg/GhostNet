@@ -29,9 +29,10 @@ export default function createGamesRouter(pool) {
     }
   });
 
-  router.post("/events", async (req, res) => {
+  router.post("/events:team_id", async (req, res) => {
     try {
-      const { team_id, event_type, event_message } = req.body;
+      const { team_id } = req.params;
+      const { event_type, event_message } = req.body;
       if (!team_id || !event_type || !event_message) {
         return res.status(400).json({ error: "team_id, event_type and event_message required" });
       }
