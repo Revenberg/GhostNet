@@ -44,8 +44,6 @@ export function NavbarUser() {
 export function NavbarAdmin() {
   const user = getUserFromCookie();
 
-  console.log("NavbarAdmin user:", user);
-
   return (
     <nav className="bg-purple-700 text-white p-4 flex items-center justify-center space-x-6">
       <Link to="/" className="hover:underline">Home</Link>

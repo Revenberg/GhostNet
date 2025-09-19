@@ -10,10 +10,7 @@ export function getUserFromCookie() {
 }
 
 export async function checkUserGranted(requiredRole = null) {
-  const user = getUserFromCookie();
-
-  console.log("User from cookie:", user);
-  
+  const user = getUserFromCookie();  
   if (!user) return {granted: false, username: null, role: null};
 
   let role = user.role;
