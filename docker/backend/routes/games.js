@@ -1,21 +1,3 @@
-  // Get all route points (optionally filter by location)
-  router.get("/route-points", async (req, res) => {
-    try {
-      const { location } = req.query;
-      let query = `SELECT * FROM game_route_points`;
-      let params = [];
-      if (location) {
-        query += ` WHERE location = ?`;
-        params.push(location);
-      }
-      query += ` ORDER BY id ASC`;
-      const [rows] = await pool.query(query, params);
-      res.json({ success: true, points: rows });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-    }
-  });
 import express from "express";
 
 export default function createGamesRouter(pool) {
@@ -33,7 +15,24 @@ export default function createGamesRouter(pool) {
         `INSERT INTO game_route_points (location, latitude, longitude, description, images, hints)
          VALUES (?, ?, ?, ?, ?, ?)`,
         [location, latitude, longitude, description, images, hints]
-      );
+      );  // Get all route points (optionally filter by location)
+  router.get("/route-points", async (req, res) => {
+    try {
+      const { location } = req.query;
+      let query = `SELECT * FROM game_route_points`;
+      let params = [];
+      if (location) {
+        query += ` WHERE location = ?`;
+        params.push(location);
+      }
+      query += ` ORDER BY id ASC`;
+      const [rows] = await pool.query(query, params);
+      res.json({ success: true, points: rows });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
       res.json({ success: true, id: result.insertId });
     } catch (err) {
       console.error(err);
