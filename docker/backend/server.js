@@ -14,6 +14,7 @@ import cors from "cors";
 
 import usersRouter from "./routes/users.js";
 import teamsRouter from "./routes/teams.js";
+import gamesRouter from "./routes/games.js";
 import { ensureTables } from "./init-db.js";
 
 const app = express();
@@ -58,8 +59,9 @@ async function initMySQL(retries = 10, delay = 5000) {
 initMySQL()
   .then(() => {
     // Mount routers with pool
-    app.use("/api/users", usersRouter(pool));
-    app.use("/api/teams", teamsRouter(pool));
+  app.use("/api/users", usersRouter(pool));
+  app.use("/api/teams", teamsRouter(pool));
+  app.use("/api/games", gamesRouter(pool));
     app.listen(PORT, () => {
       console.log(`✅ Backend running on port ${PORT}`);
     });

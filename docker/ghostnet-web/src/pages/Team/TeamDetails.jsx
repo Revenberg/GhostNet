@@ -35,7 +35,7 @@ export default function TeamDetails() {
         const dataMembers = await resMembers.json();
         setMembers(dataMembers.users || []);
         // Fetch all team events
-        const resEvents = await fetch(`${backendHost}/api/teams/events/${data.team.id}`);
+        const resEvents = await fetch(`${backendHost}/api/games/events/${data.team.id}`);
         const dataEvents = await resEvents.json();
         setEvents(dataEvents.events || []);
       } catch (err) {
