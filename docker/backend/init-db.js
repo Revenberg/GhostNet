@@ -8,6 +8,7 @@ const dbConfig = {
 };
 
 export async function ensureTables(pool) {
+  const conn = await pool.getConnection();
   await conn.query(`
     CREATE TABLE IF NOT EXISTS game (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -16,7 +17,6 @@ export async function ensureTables(pool) {
       status VARCHAR(64)
     )
   `);
-  const conn = await pool.getConnection();
   await conn.query(`
     CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
