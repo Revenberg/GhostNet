@@ -20,11 +20,9 @@ export default function MyTeam() {
           setLoading(false);
           return;
         }
-        console.log("Fetching team for user:", user);
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
         // Fetch team info by teamname
         const res = await fetch(`${backendHost}/api/teams/by-name/${encodeURIComponent(user.teamname)}`);
-        console.log("Team fetch response:", res);
         const data = await res.json();
         if (!res.ok || !data.team) {
           setError("Team niet gevonden.");
@@ -51,9 +49,8 @@ export default function MyTeam() {
   return (
     <RequireRole role="user">
       <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow">
-        <h2 className="text-xl font-bold mb-4">Mijn Team</h2>
+        <h2 className="text-xl font-bold mb-4">{team.teamname}</h2>
         <div className="mb-4">
-          <div><span className="font-semibold">Teamnaam:</span> {team.teamname}</div>
           <div><span className="font-semibold">Teamcode:</span> {team.teamcode}</div>
         </div>
         <h3 className="font-semibold mb-2">Teamleden:</h3>
