@@ -48,9 +48,8 @@ export default function TeamDetails() {
   return (
     <RequireRole role="user">
       <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow">
-        <h2 className="text-xl font-bold mb-4">Mijn Team</h2>
+        <h2 className="text-xl font-bold mb-4">{team.teamname}</h2>
         <div className="mb-4">
-          <div><span className="font-semibold">Teamnaam:</span> {team.teamname}</div>
           <div><span className="font-semibold">Teamcode:</span> {team.teamcode}</div>
         </div>
         <h3 className="font-semibold mb-2">Teamleden:</h3>
