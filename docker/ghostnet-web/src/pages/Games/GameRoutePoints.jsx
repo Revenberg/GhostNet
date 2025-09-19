@@ -5,9 +5,9 @@ export default function GameRoutePoints() {
     const [points, setPoints] = useState([]);
     const [form, setForm] = useState({
         id: "",
-        route_id: "",
         latitude: "",
         longitude: "",
+        location: "",
         description: "",
         images: "",
         hints: ""
@@ -43,7 +43,12 @@ export default function GameRoutePoints() {
 
     const handleEdit = point => {
         setEditingId(point.id);
-        setForm({ ...point });
+        // route_id niet meer in formulier
+        const { route_id, ...rest } = point;
+        setForm({
+            ...rest,
+            location: point.location || point.route_location || ""
+        });
     };
 
     const handleDelete = async id => {
@@ -54,7 +59,7 @@ export default function GameRoutePoints() {
         if (res.ok) setMessage("✅ Punt verwijderd");
         else setMessage("❌ Fout bij verwijderen");
         setEditingId(null);
-        setForm({ id: "", route_id: "", latitude: "", longitude: "", description: "", images: "", hints: "" });
+        setForm({ id: "", latitude: "", longitude: "", location: "", description: "", images: "", hints: "" });
     };
 
     const handleSubmit = async e => {
@@ -64,7 +69,7 @@ export default function GameRoutePoints() {
         const method = editingId ? "PUT" : "POST";
         const url = editingId ? `${backendHost}/api/games/route-points/${editingId}` : `${backendHost}/api/games/route-points`;
         const body = { ...form };
-        if (!body.latitude || !body.longitude || !body.route_id) return setMessage("route_id, latitude en longitude zijn verplicht");
+        if (!body.latitude || !body.longitude) return setMessage("latitude en longitude zijn verplicht");
         const res = await fetch(url, {
             method,
             headers: { "Content-Type": "application/json" },
@@ -73,10 +78,10 @@ export default function GameRoutePoints() {
         if (res.ok) setMessage(editingId ? "✅ Punt bijgewerkt" : "✅ Punt toegevoegd");
         else setMessage("❌ Fout bij opslaan");
         setEditingId(null);
-        setForm({ id: "", route_id: "", latitude: "", longitude: "", description: "", images: "", hints: "" });
+        setForm({ id: "", latitude: "", longitude: "", location: "", description: "", images: "", hints: "" });
     };
 
-    // Unieke routes extraheren
+    // Unieke routes extraheren (optioneel, kan blijven voor overzicht)
     const uniqueRoutes = Array.from(new Set(points.map(p => p.route_id)));
 
     return (
@@ -93,9 +98,9 @@ export default function GameRoutePoints() {
                 </div>
                 <form className="space-y-2 mb-6" onSubmit={handleSubmit}>
                     <div className="flex gap-2">
-                        <input type="number" name="route_id" placeholder="Route ID" value={form.route_id} onChange={handleChange} className="border px-2 py-1 rounded w-24" required />
                         <input type="number" name="latitude" placeholder="Lat" value={form.latitude} onChange={handleChange} className="border px-2 py-1 rounded w-28" step="any" required />
                         <input type="number" name="longitude" placeholder="Lon" value={form.longitude} onChange={handleChange} className="border px-2 py-1 rounded w-28" step="any" required />
+                        <input type="text" name="location" placeholder="Locatie" value={form.location} onChange={handleChange} className="border px-2 py-1 rounded w-40" />
                     </div>
                     <textarea name="description" placeholder="Beschrijving" value={form.description} onChange={handleChange} className="border px-2 py-1 rounded w-full" rows={2} />
                     <input type="text" name="images" placeholder="Afbeeldingen (komma gescheiden)" value={form.images} onChange={handleChange} className="border px-2 py-1 rounded w-full" />
@@ -109,7 +114,8 @@ export default function GameRoutePoints() {
                 <table className="w-full border-collapse">
                     <thead>
                         <tr>
-                            <th className="border-b p-2">Route ID</th>
+                            {/* <th className="border-b p-2">Route ID</th> */}
+                            <th className="border-b p-2">Locatie</th>
                             <th className="border-b p-2">Lat</th>
                             <th className="border-b p-2">Lon</th>
                             <th className="border-b p-2">Beschrijving</th>
@@ -121,7 +127,8 @@ export default function GameRoutePoints() {
                     <tbody>
                         {points.map(point => (
                             <tr key={point.id}>
-                                <td className="border-b p-2">{point.route_id}</td>
+                                {/* <td className="border-b p-2">{point.route_id}</td> */}
+                                <td className="border-b p-2">{point.location || point.route_location || ""}</td>
                                 <td className="border-b p-2">{point.latitude}</td>
                                 <td className="border-b p-2">{point.longitude}</td>
                                 <td className="border-b p-2">{point.description}</td>
