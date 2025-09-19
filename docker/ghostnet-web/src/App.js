@@ -25,6 +25,7 @@ import GamesList from "./pages/Games/GamesList";
 import GamesSetStatus from "./pages/Games/GamesSetStatus";
 import GamesProgressOverview from "./pages/Games/GamesProgressOverview";
 import GameRoutePoints from "./pages/Games/GameRoutePoints";
+import AllRoutePointsOverview from "./pages/Games/AllRoutePointsOverview";
 
 export default function App() {
   return (
@@ -54,6 +55,8 @@ export default function App() {
               <Route path="/games-set-status" element={<GamesSetStatus />} />
               <Route path="/games-list" element={<GamesList />} />
               <Route path="/games-route-points" element={<GameRoutePoints />} />
+              {/* Overzicht van alle routepunten */}
+              <Route path="/games/all-route-points" element={<AllRoutePointsOverview />} />
             </>
         </Routes>
       </div>
