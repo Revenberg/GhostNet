@@ -40,7 +40,6 @@ export default function GamesList() {
             <thead>
               <tr>
                 <th className="border-b p-2 text-left">ID</th>
-                <th className="border-b p-2 text-left">Game ID</th>
                 <th className="border-b p-2 text-left">Naam</th>
                 <th className="border-b p-2 text-left">Status</th>
               </tr>
@@ -49,7 +48,6 @@ export default function GamesList() {
               {games.map((game) => (
                 <tr key={game.id}>
                   <td className="border-b p-2">{game.id}</td>
-                  <td className="border-b p-2">{game.game_id}</td>
                   <td className="border-b p-2">{game.name}</td>
                   <td className="border-b p-2">{game.status}</td>
                 </tr>

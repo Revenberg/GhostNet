@@ -9,13 +9,7 @@ const dbConfig = {
 
 export async function ensureTables(pool) {
   const conn = await pool.getConnection();
-  await conn.query(`
-    CREATE TABLE IF NOT EXISTS game (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(64),
-      status VARCHAR(64)
-      )
-  `);
+  // removed duplicate game table creation above
 
   await conn.query(`
     CREATE TABLE IF NOT EXISTS users (
@@ -47,9 +41,9 @@ export async function ensureTables(pool) {
   `);
   await conn.query(`
     CREATE TABLE IF NOT EXISTS game (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(64) UNIQUE,
-        status VARCHAR(64)
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(64) UNIQUE,
+      status VARCHAR(64)
     )
   `);
   await conn.query(`
