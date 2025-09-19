@@ -12,6 +12,31 @@ export function hashPassword(password) {
 
 export default function createUsersRouter(pool) {
   const router = express.Router();
+
+  // Update user password
+  router.put("/update-password", async (req, res) => {
+    try {
+      const { username, oldPassword, newPassword } = req.body;
+      if (!username || !oldPassword || !newPassword) {
+        return res.status(400).json({ error: "All fields required" });
+      }
+      const [rows] = await pool.query("SELECT * FROM users WHERE username = ?", [username]);
+      if (rows.length === 0) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      const user = rows[0];
+      const oldHash = hashPassword(oldPassword);
+      if (user.password_hash !== oldHash) {
+        return res.status(401).json({ error: "Oud wachtwoord klopt niet" });
+      }
+      const newHash = hashPassword(newPassword);
+      await pool.query("UPDATE users SET password_hash = ? WHERE username = ?", [newHash, username]);
+      res.json({ success: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
   // Get all users by team name
   router.get("/by-team/:teamname", async (req, res) => {
     try {

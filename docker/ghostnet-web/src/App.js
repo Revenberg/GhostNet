@@ -1,3 +1,4 @@
+import UpdatePassword from "./pages/Users/UpdatePassword";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
@@ -30,12 +31,13 @@ export default function App() {
           <Route path="/users-login" element={<UsersLogin />} />
           <Route path="/users-register" element={<UsersRegister />} />
           <Route path="/users-overview" element={<UsersOverview />} />
+          <Route path="/users-logout" element={<UsersLogout />} />
+          <Route path="/update-user" element={<UsersUpdate />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/add-team" element={<TeamRegister />} />
           <Route path="/update-team" element={<TeamsUpdate />} />
-          <Route path="/update-user" element={<UsersUpdate />} />
           <Route path="/delete-team" element={<TeamDelete />} />
           <Route path="/teams-overview" element={<TeamsOverview />} />
-          <Route path="/users-logout" element={<UsersLogout />} />
           <Route path="/team-details" element={<TeamDetails />} />
         </Routes>
       </div>
