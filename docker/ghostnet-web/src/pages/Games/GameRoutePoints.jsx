@@ -79,14 +79,6 @@ export default function GameRoutePoints() {
         <RequireRole role="admin">
             <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow">
                 <h2 className="text-xl font-bold mb-4">Route punten beheren</h2>
-                <div className="mb-4">
-                    <span className="font-semibold">Routes met punten:</span>
-                    <ul className="flex flex-wrap gap-2 mt-1">
-                        {uniqueRoutes.map(rid => (
-                            <li key={rid} className="bg-gray-100 px-2 py-1 rounded text-xs">Route {rid}</li>
-                        ))}
-                    </ul>
-                </div>
                 <form className="space-y-2 mb-6" onSubmit={handleSubmit}>
                     <div className="flex gap-2">
                         <input type="text" name="location" placeholder="Locatie" value={form.location} onChange={handleChange} className="border px-2 py-1 rounded w-40" required />
