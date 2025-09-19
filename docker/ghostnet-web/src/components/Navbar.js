@@ -22,7 +22,7 @@ export default function Navbar() {
   useEffect(() => {
     const user = getUserFromCookie();
     console.log("User from cookie:", user);
-    console.log("User from cookie:", user.token);
+    console.log("User from cookie:", user.role);
     
     const token = getTokenFromCookie();
     console.log("Token from cookie:", token);
