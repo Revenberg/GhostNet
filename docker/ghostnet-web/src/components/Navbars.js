@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useUserRole } from "../utils/useUserRole";
 
 export function NavbarGuest() {
   return (
@@ -14,19 +15,25 @@ export function NavbarGuest() {
 }
 
 export function NavbarUser() {
+  const { user } = useUserRole();
   return (
-    <nav className="bg-purple-700 text-white p-4 flex justify-center space-x-6">
+    <nav className="bg-purple-700 text-white p-4 flex items-center justify-center space-x-6">
+
       <Link to="/" className="hover:underline">Home</Link>
       <Link to="/speluitleg" className="hover:underline">Speluitleg</Link>
       <Link to="/contact" className="hover:underline">Contact</Link>
       <Link to="/users-logout" className="hover:underline">Logout</Link>
-    </nav>
+      {user && user.username && (
+        <span className="mr-6 font-semibold text-white">{user.username}</span>
+      )}
+          </nav>
   );
 }
 
 export function NavbarAdmin() {
+  const { user } = useUserRole();
   return (
-    <nav className="bg-purple-700 text-white p-4 flex justify-center space-x-6">
+    <nav className="bg-purple-700 text-white p-4 flex items-center justify-center space-x-6">
       <Link to="/" className="hover:underline">Home</Link>
       <Link to="/speluitleg" className="hover:underline">Speluitleg</Link>
       <Link to="/contact" className="hover:underline">Contact</Link>
@@ -48,6 +55,9 @@ export function NavbarAdmin() {
         </div>
       </div>
       <Link to="/users-logout" className="hover:underline">Logout</Link>
+      {user && user.username && (
+        <span className="mr-6 font-semibold text-white">{user.username}</span>
+      )}      
     </nav>
   );
 }
