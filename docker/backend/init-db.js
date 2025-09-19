@@ -12,10 +12,9 @@ export async function ensureTables(pool) {
   await conn.query(`
     CREATE TABLE IF NOT EXISTS game (
       id INT AUTO_INCREMENT PRIMARY KEY,
-      game_id INT,
       name VARCHAR(64),
       status VARCHAR(64)
-    )
+      )
   `);
 
   await conn.query(`
