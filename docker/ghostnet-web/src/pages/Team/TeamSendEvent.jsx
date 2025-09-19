@@ -12,16 +12,23 @@ export default function TeamSendEvent() {
     try {
       const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
       const user = getUserFromCookie();
+      
+      console.log("Current user:", user);  
+
       if (!user || !user.teamid) {
         setStatus("❌ Geen team gevonden voor deze gebruiker");
         return;
       }
       const team_id = user.teamid;
+
+      console.log("Sending event to team_id:", team_id, "with message:", eventMsg);
+
       const res = await fetch(`${backendHost}/api/games/events/${team_id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ event_type: "Info", event_message: eventMsg })
       });
+
       if (res.ok) {
         setStatus("✅ Event verzonden!");
         setEventMsg("");

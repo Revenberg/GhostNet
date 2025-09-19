@@ -68,7 +68,6 @@ export default function UsersRegister() {
           body: JSON.stringify({ event_type: "Info", event_message: eventMsg })
         });
 
-
         setMessage("✅ Registration successful! Je wordt doorgestuurd naar de login pagina...");
         setTimeout(() => {
           navigate("/users-login");
