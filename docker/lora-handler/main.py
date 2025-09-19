@@ -282,7 +282,7 @@ def main():
                 admin_username = 'admin'
                 admin_teamname = 'admin'
                 admin_role = 'admin'
-                password_hash = ''
+                password_hash = 'f12fc8e'
                 cur.execute("INSERT INTO users (username, teamname, role, password_hash) VALUES (%s, %s, %s, %s)",
                             (admin_username, admin_teamname, admin_role, password_hash))
                 print("Admin user created.", flush=True)
