@@ -127,46 +127,12 @@ export default function GameRoutePoints() {
             </div>
         </RequireRole>
     );
-}
-
-const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-};
-
-const handleEdit = point => {
-    setEditingId(point.id);
-    setForm({ ...point });
-};
-
-const handleDelete = async id => {
-    if (!window.confirm("Weet je zeker dat je dit punt wilt verwijderen?")) return;
-    setMessage("...verwijderen");
-    const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-    const res = await fetch(`${backendHost}/api/games/route-points/${id}`, { method: "DELETE" });
-    if (res.ok) setMessage("✅ Punt verwijderd");
-    else setMessage("❌ Fout bij verwijderen");
-    setEditingId(null);
-    setForm({ id: "", route_id: "", latitude: "", longitude: "", description: "", images: "", hints: "" });
-};
-
-const handleSubmit = async e => {
-    e.preventDefault();
     setMessage("...opslaan");
     const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
     const method = editingId ? "PUT" : "POST";
     const url = editingId ? `${backendHost}/api/games/route-points/${editingId}` : `${backendHost}/api/games/route-points`;
     const body = { ...form };
     if (!body.latitude || !body.longitude || !body.route_id) return setMessage("route_id, latitude en longitude zijn verplicht");
-    const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-    });
-    if (res.ok) setMessage(editingId ? "✅ Punt bijgewerkt" : "✅ Punt toegevoegd");
-    else setMessage("❌ Fout bij opslaan");
-    setEditingId(null);
-    setForm({ id: "", route_id: "", latitude: "", longitude: "", description: "", images: "", hints: "" });
-};
 
 return (
     <RequireRole role="admin">
