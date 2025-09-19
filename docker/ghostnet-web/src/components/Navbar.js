@@ -1,17 +1,13 @@
 import React from "react";
 import { NavbarGuest, NavbarUser, NavbarAdmin } from "./Navbars";
-import { getUserFromCookie } from "../utils/auth";
+import { useUserRole } from "../utils/useUserRole";
 
 export default function Navbar() {
-  const user = getUserFromCookie();
+  const { role, loading } = useUserRole();
 
-  console.log("User from cookie:", user);
-  let role = "guest";
-
-  if (user) role = user.role;
-
+  if (loading) return null;
   if (role === "admin") return <NavbarAdmin />;
   if (role === "user") return <NavbarUser />;
-  
   return <NavbarGuest />;
 }
+
