@@ -127,6 +127,7 @@ export default function GameRoutePoints() {
             </div>
         </RequireRole>
     );
+    
     setMessage("...opslaan");
     const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
     const method = editingId ? "PUT" : "POST";
@@ -185,4 +186,4 @@ return (
         </div>
     </RequireRole>
 );
-
+}
