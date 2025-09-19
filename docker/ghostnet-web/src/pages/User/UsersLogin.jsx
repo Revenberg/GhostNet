@@ -39,6 +39,9 @@ export default function UsersLogin() {
 
         setTimeout(() => {
           navigate("/");
+          setTimeout(() => {
+            window.location.reload(); // Force navbar and app state to refresh
+          }, 100);
         }, 2000);
       } else {
         setMessage(`❌ ${data.error}`);
