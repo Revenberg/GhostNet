@@ -55,7 +55,6 @@ export default function App() {
               <Route path="/games-set-status" element={<GamesSetStatus />} />
               <Route path="/games-list" element={<GamesList />} />
               <Route path="/games-route-points" element={<GameRoutePoints />} />
-              {/* Overzicht van alle routepunten */}
               <Route path="/games/all-route-points" element={<AllRoutePointsOverview />} />
             </>
         </Routes>
