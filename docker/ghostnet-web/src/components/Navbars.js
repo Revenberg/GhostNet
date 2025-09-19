@@ -78,8 +78,7 @@ export function NavbarAdmin() {
           <Link to="/games-update" className="block px-4 py-2 hover:bg-purple-100">Game status bijwerken</Link>
           <Link to="/games-set-status" className="block px-4 py-2 hover:bg-purple-100">Status instellen (per team)</Link>
           <Link to="/games-progress-overview" className="block px-4 py-2 hover:bg-purple-100">Voortgang overzicht</Link>
-          <Link to="/games-route-points-maintain" className="block px-4 py-2 hover:bg-purple-100">Route punten beheren</Link>
-          <Link to="/games-routes-with-points-maintain" className="block px-4 py-2 hover:bg-purple-100">Routes & punten beheren</Link>
+          <Link to="/games-route-points" className="block px-4 py-2 hover:bg-purple-100">Route punten beheren</Link>
         </div>
       </div>
 

@@ -10,14 +10,6 @@ const dbConfig = {
 export async function ensureTables(pool) {
   const conn = await pool.getConnection();
   // removed duplicate game table creation above
-
-  await conn.query(`
-    drop table if exists game_routes;
-    `);
-
-  await conn.query(`
-    drop table if exists game_route_points;
-    `);
     
   await conn.query(`
     CREATE TABLE IF NOT EXISTS users (
