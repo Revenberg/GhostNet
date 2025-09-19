@@ -1,9 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RequireRole from "../../components/RequireRole";
 
 export default function GamesUpdate() {
   const [form, setForm] = useState({ id: "", status: "" });
   const [message, setMessage] = useState("");
+  const [games, setGames] = useState([]);
+
+  useEffect(() => {
+    async function fetchGames() {
+      try {
+        const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+        const res = await fetch(`${backendHost}/api/games`);
+        const data = await res.json();
+        if (res.ok && data.success) {
+          setGames(data.games);
+        }
+      } catch {}
+    }
+    fetchGames();
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -35,15 +50,20 @@ export default function GamesUpdate() {
       <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow">
         <h2 className="text-xl font-bold mb-4">Game status bijwerken</h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <input
-            type="text"
+          <select
             name="id"
-            placeholder="Game ID"
             value={form.id}
             onChange={handleChange}
             className="w-full border px-3 py-2 rounded"
             required
-          />
+          >
+            <option value="">Selecteer een game...</option>
+            {games.map(game => (
+              <option key={game.id} value={game.id}>
+                {game.id} - {game.name}
+              </option>
+            ))}
+          </select>
           <input
             type="text"
             name="status"
