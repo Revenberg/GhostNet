@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import RequireRole from "../../components/RequireRole";
+import { Link } from "react-router-dom";
 
 export default function TeamsOverview() {
 	const [teams, setTeams] = useState([]);
@@ -48,7 +49,9 @@ export default function TeamsOverview() {
 							{teams.map((team) => (
 								<tr key={team.id}>
 									<td className="border-b p-2">{team.id}</td>
-									<td className="border-b p-2">{team.teamname}</td>
+									<td className="border-b p-2">
+										<Link to="/team-details" className="text-blue-700 hover:underline">{team.teamname}</Link>
+									</td>
 									<td className="border-b p-2">{team.teamcode}</td>
 								</tr>
 							))}
