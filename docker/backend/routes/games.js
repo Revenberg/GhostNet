@@ -1,9 +1,75 @@
+  // --- GAME ROUTES ENDPOINTS ---
 import express from "express";
 
 export default function createGamesRouter(pool) {
   // List latest game_progress per team for a game
 // Create a new game (status = 'new')
   const router = express.Router();
+
+    // Create a new game_route
+  router.post("/routes", async (req, res) => {
+    try {
+      const { game_id, order_id, location, latitude, longitude, description, images, hints } = req.body;
+      if (!game_id || order_id == null) {
+        return res.status(400).json({ error: "game_id and order_id required" });
+      }
+      const [result] = await pool.query(
+        `INSERT INTO game_routes (game_id, order_id, location, latitude, longitude, description, images, hints)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [game_id, order_id, location, latitude, longitude, description, images, hints]
+      );
+      res.json({ success: true, id: result.insertId });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  // Update a game_route by id
+  router.put("/routes/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { game_id, order_id, location, latitude, longitude, description, images, hints } = req.body;
+      const [result] = await pool.query(
+        `UPDATE game_routes SET
+          game_id = COALESCE(?, game_id),
+          order_id = COALESCE(?, order_id),
+          location = COALESCE(?, location),
+          latitude = COALESCE(?, latitude),
+          longitude = COALESCE(?, longitude),
+          description = COALESCE(?, description),
+          images = COALESCE(?, images),
+          hints = COALESCE(?, hints)
+         WHERE id = ?`,
+        [game_id, order_id, location, latitude, longitude, description, images, hints, id]
+      );
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Route not found" });
+      }
+      res.json({ success: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  // Delete a game_route by id
+  router.delete("/routes/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const [result] = await pool.query(
+        `DELETE FROM game_routes WHERE id = ?`,
+        [id]
+      );
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Route not found" });
+      }
+      res.json({ success: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
   
   router.get("/progress/by-game-latest/:game_id", async (req, res) => {
     try {

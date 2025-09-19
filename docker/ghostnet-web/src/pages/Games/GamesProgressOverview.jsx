@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import RequireRole from "../../components/RequireRole";
 
+function formatDateTime(ts) {
+  const d = new Date(ts);
+  const pad = n => n.toString().padStart(2, '0');
+  return `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export default function GamesProgressOverview() {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState("");
@@ -74,7 +80,9 @@ export default function GamesProgressOverview() {
                 <tr key={row.team_id}>
                   <td className="border-b p-2">{row.team_id}</td>
                   <td className="border-b p-2">{row.status}</td>
-                  <td className="border-b p-2">{row.id}</td>
+                  <td className="border-b p-2">{
+                    row.lastupdate ? formatDateTime(row.lastupdate) : "-"
+                  }</td>
                 </tr>
               ))}
             </tbody>
@@ -83,4 +91,11 @@ export default function GamesProgressOverview() {
       </div>
     </RequireRole>
   );
+}
+
+// Helper functie voor datum/tijd formaat
+function formatDateTime(ts) {
+  const d = new Date(ts);
+  const pad = n => n.toString().padStart(2, '0');
+  return `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
