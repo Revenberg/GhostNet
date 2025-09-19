@@ -20,6 +20,7 @@ export default function TeamRegister() {
 					body: JSON.stringify(form),
 				});
 				const data = await res.json();
+				console.log("data", data);
 				if (res.ok) {
 								// Create event in frontend (matches working curl)
 								const team_id = data.id;
