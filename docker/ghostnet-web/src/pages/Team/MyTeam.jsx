@@ -20,9 +20,11 @@ export default function MyTeam() {
           setLoading(false);
           return;
         }
+        console.log("Fetching team for user:", user);
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
         // Fetch team info by teamname
         const res = await fetch(`${backendHost}/api/teams/by-name/${encodeURIComponent(user.teamname)}`);
+        console.log("Team fetch response:", res);
         const data = await res.json();
         if (!res.ok || !data.team) {
           setError("Team niet gevonden.");
