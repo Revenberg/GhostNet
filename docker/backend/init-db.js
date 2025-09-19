@@ -28,10 +28,15 @@ export async function ensureTables(pool) {
     )
   `);
   await conn.query(`
+    drop table if exists team_events
+  `);
+  
+  await conn.query(`
     CREATE TABLE IF NOT EXISTS team_events (
         id INT AUTO_INCREMENT PRIMARY KEY,
         team_id INT,
         event_type VARCHAR(64),
+        event_message VARCHAR(255),
         event_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (team_id) REFERENCES teams(id)
     )
