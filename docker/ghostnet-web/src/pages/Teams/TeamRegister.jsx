@@ -20,7 +20,7 @@ export default function TeamRegister() {
 				body: JSON.stringify(form),
 			});
 			const data = await res.json();
-			console.log("response", res);
+			console.log("response", res.ok);
 			if (res.ok) {
 				// Create event in frontend (matches working curl)
 				console.log("data", data);
