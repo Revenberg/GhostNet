@@ -1,6 +1,8 @@
+
 import React, { useEffect, useState } from "react";
 import RequireRole from "../components/RequireRole";
 
+export default function TeamDelete() {
   const [teams, setTeams] = useState([]);
   const [selected, setSelected] = useState(null);
   const [message, setMessage] = useState("");
@@ -63,3 +65,4 @@ import RequireRole from "../components/RequireRole";
       </div>
     </RequireRole>
   );
+}
