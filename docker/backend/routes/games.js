@@ -17,8 +17,8 @@ export default function createGamesRouter(pool) {
         [location, latitude, longitude, description, images, hints]
       );  
 
-  // Get all route points (optionally filter by location)
-  router.get("/route-points", async (res) => {
+  // Get all route points
+    router.get("/route-points", async (req, res) => {
     try {
       let query = `SELECT * FROM game_route_points`;
       let params = [];
