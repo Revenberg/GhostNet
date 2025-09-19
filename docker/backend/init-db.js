@@ -38,14 +38,7 @@ export async function ensureTables(pool) {
         event_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (team_id) REFERENCES teams(id)
     )
-  `);
-  await conn.query(`
-    DROP TABLE IF EXISTS game_progress
-    `);  
-  await conn.query(`
-    DROP TABLE IF EXISTS game
-    `);  
-  
+  `);  
   await conn.query(`
     CREATE TABLE IF NOT EXISTS game (
       id INT AUTO_INCREMENT PRIMARY KEY,

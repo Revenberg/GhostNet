@@ -2,6 +2,9 @@ import express from "express";
 
 export default function createGamesRouter(pool) {
   // List latest game_progress per team for a game
+// Create a new game (status = 'new')
+  const router = express.Router();
+  
   router.get("/progress/by-game-latest/:game_id", async (req, res) => {
     try {
       const { game_id } = req.params;
@@ -92,8 +95,6 @@ export default function createGamesRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-  // Create a new game (status = 'new')
-  const router = express.Router();
   router.post("/", async (req, res) => {
     try {
       const { name } = req.body;
