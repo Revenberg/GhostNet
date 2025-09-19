@@ -19,19 +19,12 @@ export default function GameRoutePoints() {
         async function fetchAllPoints() {
             const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
             try {
-                // Haal alle routes op
-                const resRoutes = await fetch(`${backendHost}/api/games/route-points`);
-                const dataRoutes = await resRoutes.json();
-                if (!resRoutes.ok || !dataRoutes.success) return setPoints([]);
-                const allPoints = [];
-                for (const route of dataRoutes.routes) {
-                    const resPoints = await fetch(`${backendHost}/api/games/route-points/by-route/${route.id}`);
-                    const dataPoints = await resPoints.json();
-                    if (resPoints.ok && dataPoints.success) {
-                        allPoints.push(...dataPoints.points.map(p => ({ ...p, route_id: route.id, route_location: route.location })));
-                    }
-                }
-                setPoints(allPoints);
+                const resPoints = await fetch(`${backendHost}/api/games/route-points`);
+                const dataPoints = await resPoints.json();
+                if (resPoints.ok && dataPoints.success) {
+                    points.push(...dataPoints.points.map(p => ({ ...p, route_id: route.id, route_location: route.location })));
+                }                
+                setPoints(points);
             } catch { }
         }
         fetchAllPoints();
@@ -69,7 +62,7 @@ export default function GameRoutePoints() {
         const method = editingId ? "PUT" : "POST";
         const url = editingId ? `${backendHost}/api/games/route-points/${editingId}` : `${backendHost}/api/games/route-points`;
         const body = { ...form };
-        if (!body.latitude || !body.longitude) return setMessage("latitude en longitude zijn verplicht");
+        
         const res = await fetch(url, {
             method,
             headers: { "Content-Type": "application/json" },
