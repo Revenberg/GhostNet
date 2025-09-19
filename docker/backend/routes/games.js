@@ -1,4 +1,9 @@
-  // --- GAME ROUTE POINTS ENDPOINTS ---
+import express from "express";
+
+export default function createGamesRouter(pool) {
+  // Create a new game (status = 'new')
+  const router = express.Router();
+
   // Create a new game_route_point
   router.post("/route-points", async (req, res) => {
     try {
@@ -96,16 +101,6 @@
       res.status(500).json({ error: "Database error" });
     }
   });
-  // --- GAME ROUTES ENDPOINTS ---
-import express from "express";
-
-export default function createGamesRouter(pool) {
-  // List latest game_progress per team for a game
-// Create a new game (status = 'new')
-  const router = express.Router();
-
-  
-
   
   router.get("/progress/by-game-latest/:game_id", async (req, res) => {
     try {
