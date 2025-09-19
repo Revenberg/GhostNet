@@ -19,6 +19,9 @@ import TeamDelete from "./pages/Teams/TeamDelete";
 import TeamsOverview from "./pages/Teams/TeamsOverview";
 import TeamDetails from "./pages/Team/TeamDetails";
 import TeamSendEvent from "./pages/Team/TeamSendEvent";
+import GamesCreate from "./pages/Games/GamesCreate";
+import GamesUpdate from "./pages/Games/GamesUpdate";
+import GamesList from "./pages/Games/GamesList";
 
 export default function App() {
   return (
@@ -41,6 +44,9 @@ export default function App() {
           <Route path="/teams-overview" element={<TeamsOverview />} />
           <Route path="/team-details/:teamId" element={<TeamDetails />} />
           <Route path="/team-send-event" element={<TeamSendEvent />} />
+          <Route path="/games-create" element={<GamesCreate />} />
+          <Route path="/games-update" element={<GamesUpdate />} />
+          <Route path="/games-list" element={<GamesList />} />
         </Routes>
       </div>
     </div>
