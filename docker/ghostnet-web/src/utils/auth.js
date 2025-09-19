@@ -6,8 +6,12 @@ export function getUserFromCookie() {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; user=`);
   if (parts.length !== 2) return null;
+  
+  
   console.log("User from cookie:", parts);
   console.log("Decoded user:", JSON.parse(decodeURIComponent(parts.pop().split(';').shift())));
+
+
   return JSON.parse(decodeURIComponent(parts.pop().split(';').shift()));
 }
 
