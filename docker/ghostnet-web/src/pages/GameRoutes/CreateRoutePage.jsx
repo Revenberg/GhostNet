@@ -4,6 +4,8 @@ import RequireRole from "../../components/RequireRole";
 export default function CreateRoutePage() {
     const [games, setGames] = useState([]);
     const [selectedGame, setSelectedGame] = useState(null);
+    const [routes, setRoutes] = useState([]);
+    const [selectedRoute, setSelectedRoute] = useState(null); // route object or null
     const [points, setPoints] = useState([]);
     const [orderMap, setOrderMap] = useState({});
     const [message, setMessage] = useState("");
@@ -22,6 +24,25 @@ export default function CreateRoutePage() {
         fetchGames();
     }, []);
 
+    // Fetch routes for selected game
+    useEffect(() => {
+        if (!selectedGame) {
+            setRoutes([]);
+            setSelectedRoute(null);
+            setRouteName("");
+            return;
+        }
+        async function fetchRoutes() {
+            try {
+                const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+                const res = await fetch(`${backendHost}/api/game_routes?game_id=${selectedGame.id}`);
+                const data = await res.json();
+                if (res.ok && data.success) setRoutes(data.routes);
+            } catch {}
+        }
+        fetchRoutes();
+    }, [selectedGame]);
+
     useEffect(() => {
         if (!selectedGame) {
             setPoints([]);
@@ -34,7 +55,11 @@ export default function CreateRoutePage() {
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
                 // Only fetch from /api/game_routes, which now returns all points with order info
-                const routesRes = await fetch(`${backendHost}/api/game_routes?game_id=${selectedGame.id}`);
+                let url = `${backendHost}/api/game_routes?game_id=${selectedGame.id}`;
+                if (selectedRoute && selectedRoute.id) {
+                    url += `&route_id=${selectedRoute.id}`;
+                }
+                const routesRes = await fetch(url);
                 const routesData = await routesRes.json();
                 if (routesRes.ok && routesData.success) {
                     setPoints(routesData.points);
@@ -49,7 +74,7 @@ export default function CreateRoutePage() {
             setLoading(false);
         }
         fetchPointsAndOrder();
-    }, [selectedGame]);
+    }, [selectedGame, selectedRoute]);
 
     const handleOrderChange = (id, value) => {
         setOrderMap({ ...orderMap, [id]: value });
@@ -105,7 +130,32 @@ export default function CreateRoutePage() {
                             <option key={game.id} value={game.id}>{game.id} - {game.name}</option>
                         ))}
                     </select>
-                    <span className="ml-4">Route naam:</span> <input type="text" className="border px-2 py-1 rounded" value={routeName} onChange={e => setRouteName(e.target.value)} />
+                    <span className="ml-4">Selecteer route:</span>
+                    <select
+                        className="border px-2 py-1 rounded ml-2"
+                        value={selectedRoute ? selectedRoute.id : "new"}
+                        onChange={e => {
+                            if (e.target.value === "new") {
+                                setSelectedRoute(null);
+                                setRouteName("");
+                            } else {
+                                const route = routes.find(r => r.id === Number(e.target.value));
+                                setSelectedRoute(route || null);
+                                setRouteName(route ? route.route_name : "");
+                            }
+                        }}
+                    >
+                        <option value="new">-- Nieuwe route --</option>
+                        {routes.map(route => (
+                            <option key={route.id} value={route.id}>{route.route_name}</option>
+                        ))}
+                    </select>
+                    {(!selectedRoute || !selectedRoute.id) && (
+                        <>
+                            <span className="ml-4">Route naam:</span>
+                            <input type="text" className="border px-2 py-1 rounded" value={routeName} onChange={e => setRouteName(e.target.value)} />
+                        </>
+                    )}
                 </div>
                 {selectedGame && (
                     <div>
