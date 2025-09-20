@@ -3,44 +3,6 @@ import express from "express";
 export default function createGameRoutesRouter(pool) {
   const router = express.Router();
 
-  // --- ROUTE ENDPOINTS ---
-  // Create a new route (route metadata only)
-  router.post("/", async (req, res) => {
-    try {
-      const { route_name, game_id } = req.body;
-      if (!route_name || !game_id) {
-        return res.status(400).json({ error: "route_name and game_id required" });
-      }
-      const [result] = await pool.query(
-        `INSERT INTO game_routes (route_name, game_id) VALUES (?, ?)`,
-        [route_name, game_id]
-      );
-      res.json({ success: true, id: result.insertId });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-    }
-  });
-
-  // List all routes (optionally filter by game_id)
-  router.get("/", async (req, res) => {
-    try {
-      const { game_id } = req.query;
-      let query = `SELECT * FROM game_routes`;
-      let params = [];
-      if (game_id) {
-        query += ` WHERE game_id = ?`;
-        params.push(game_id);
-      }
-      query += ` ORDER BY lastupdate DESC`;
-      const [rows] = await pool.query(query, params);
-      res.json({ success: true, routes: rows });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-    }
-  });
-
     // Create a new game_route_point
   router.post("/points", async (req, res) => {
     try {
@@ -160,6 +122,44 @@ export default function createGameRoutesRouter(pool) {
         game_route_id: routeMap[p.id]?.id ?? null
       }));
       res.json({ success: true, points: result });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+    // --- ROUTE ENDPOINTS ---
+  // Create a new route (route metadata only)
+  router.post("/", async (req, res) => {
+    try {
+      const { route_name, game_id } = req.body;
+      if (!route_name || !game_id) {
+        return res.status(400).json({ error: "route_name and game_id required" });
+      }
+      const [result] = await pool.query(
+        `INSERT INTO game_routes (route_name, game_id) VALUES (?, ?)`,
+        [route_name, game_id]
+      );
+      res.json({ success: true, id: result.insertId });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  // List all routes (optionally filter by game_id)
+  router.get("/", async (req, res) => {
+    try {
+      const { game_id } = req.query;
+      let query = `SELECT * FROM game_routes`;
+      let params = [];
+      if (game_id) {
+        query += ` WHERE game_id = ?`;
+        params.push(game_id);
+      }
+      query += ` ORDER BY lastupdate DESC`;
+      const [rows] = await pool.query(query, params);
+      res.json({ success: true, routes: rows });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });

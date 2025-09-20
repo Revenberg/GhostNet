@@ -86,8 +86,8 @@ export default function GameRoutePoints() {
         setMessage("...opslaan");
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
         const method = editingId ? "PUT" : "POST";
-    const url = editingId ? `${backendHost}/api/game_routes/points/${editingId}` : `${backendHost}/api/game_routes/points`;
-    const body = { ...form, game_id: selectedGameId };
+        const url = editingId ? `${backendHost}/api/game_routes/points/${editingId}` : `${backendHost}/api/game_routes/points`;
+        const body = { ...form, game_id: selectedGameId };
         
         const res = await fetch(url, {
             method,
