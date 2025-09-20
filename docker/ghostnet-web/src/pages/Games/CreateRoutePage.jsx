@@ -78,10 +78,14 @@ export default function CreateRoutePage() {
         try {
             await Promise.all(sortedPoints.map(async point => {
                 const order_id = orderMap[point.id];
-                await fetch(`${backendHost}/api/games/route-points/${point.id}`, {
-                    method: "PUT",
+                await fetch(`${backendHost}/api/games/routes`, {
+                    method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ order_id })
+                    body: JSON.stringify({
+                        game_id: selectedGame.id,
+                        game_route_points_id: point.id,
+                        order_id
+                    })
                 });
             }));
             setMessage("✅ Alle volgordes opgeslagen");
