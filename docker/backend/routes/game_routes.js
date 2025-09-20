@@ -111,7 +111,7 @@ export default function createGameRoutesRouter(pool) {
         `SELECT gro.*, gr.route_name
          FROM game_route_order gro
          JOIN game_routes gr ON gro.game_route_id = gr.id 
-         WHERE gro.game_id = ?`,
+         WHERE gr.game_id = ?`,
         [game_id]
       );
       // Build a map: { [pointId]: { [routeId]: { order_id, route_name } } }
