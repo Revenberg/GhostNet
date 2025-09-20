@@ -22,25 +22,38 @@ export default function CreateRoutePage() {
     }, []);
 
     useEffect(() => {
-        if (!selectedGame) return setPoints([]);
-        async function fetchPoints() {
+        if (!selectedGame) {
+            setPoints([]);
+            setOrderMap({});
+            return;
+        }
+        async function fetchPointsAndOrder() {
             setLoading(true);
             setMessage("");
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                const res = await fetch(`${backendHost}/api/games/route-points/by-game/${selectedGame.id}`);
-                const data = await res.json();
-                if (res.ok && data.success) {
-                    setPoints(data.points);
-                    // Init orderMap
+                // Fetch all points for this game
+                const pointsRes = await fetch(`${backendHost}/api/games/route-points/by-game/${selectedGame.id}`);
+                const pointsData = await pointsRes.json();
+                // Fetch current order from routes table
+                const routesRes = await fetch(`${backendHost}/api/games/routes?game_id=${selectedGame.id}`);
+                const routesData = await routesRes.json();
+                if (pointsRes.ok && pointsData.success && routesRes.ok && routesData.success) {
+                    setPoints(pointsData.points);
+                    // Build orderMap from routes table (order_id per point)
                     const om = {};
-                    data.points.forEach(p => { om[p.id] = p.order_id || ""; });
+                    // Map: pointId -> order_id from routes
+                    routesData.points?.forEach(r => { om[r.game_route_points_id] = r.order_id; });
+                    // Fallback: if a point is not in routes, use its own order_id or blank
+                    pointsData.points.forEach(p => {
+                        if (om[p.id] === undefined) om[p.id] = p.order_id || "";
+                    });
                     setOrderMap(om);
                 }
             } catch {}
             setLoading(false);
         }
-        fetchPoints();
+        fetchPointsAndOrder();
     }, [selectedGame]);
 
     const handleOrderChange = (id, value) => {
@@ -66,9 +79,9 @@ export default function CreateRoutePage() {
 
     // Sorteer punten op order_id (of id als order_id ontbreekt)
     const sortedPoints = [...points].sort((a, b) => {
-        const aOrder = orderMap[a.id] !== undefined && orderMap[a.id] !== "" ? Number(orderMap[a.id]) : (a.order_id || a.id);
-        const bOrder = orderMap[b.id] !== undefined && orderMap[b.id] !== "" ? Number(orderMap[b.id]) : (b.order_id || b.id);
-        return aOrder - bOrder;
+    const aOrder = orderMap[a.id] !== undefined && orderMap[a.id] !== "" ? Number(orderMap[a.id]) : a.id;
+    const bOrder = orderMap[b.id] !== undefined && orderMap[b.id] !== "" ? Number(orderMap[b.id]) : b.id;
+    return aOrder - bOrder;
     });
 
     // Opslaan van alle order_id's tegelijk
