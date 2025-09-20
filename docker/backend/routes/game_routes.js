@@ -114,30 +114,36 @@ export default function createGameRoutesRouter(pool) {
          WHERE gr.game_id = ?`,
         [game_id]
       );
-      // Build a map: { [pointId]: { [routeId]: { order_id, route_name } } }
-      const pointRouteMap = {};
+      // Build a map: { [pointId]: [{ order_id, route_name }] }
+      const pointRouteArr = {};
       orders.forEach(o => {
-        if (!pointRouteMap[o.game_route_points_id]) pointRouteMap[o.game_route_points_id] = {};
-        pointRouteMap[o.game_route_points_id][o.game_route_id] = {
+        if (!pointRouteArr[o.game_route_points_id]) pointRouteArr[o.game_route_points_id] = [];
+        pointRouteArr[o.game_route_points_id].push({
           order_id: o.order_id,
           route_name: o.route_name
-        };
+        });
       });
-      // Compose result: for each point, add route_orders: { [routeId]: order_id }, and route_names: { [routeId]: route_name }
+      // Compose result: for each point, if only one route, flatten; else, keep as array
       const result = points.map(p => {
-        const route_orders = {};
-        const route_names = {};
-        if (pointRouteMap[p.id]) {
-          Object.entries(pointRouteMap[p.id]).forEach(([routeId, val]) => {
-            route_orders[routeId] = val.order_id;
-            route_names[routeId] = val.route_name;
-          });
+        const routes = pointRouteArr[p.id] || [];
+        if (routes.length === 1) {
+          return {
+            ...p,
+            route_orders: routes[0].order_id,
+            route_name: routes[0].route_name
+          };
+        } else if (routes.length > 1) {
+          // If multiple routes, return arrays (or objects if needed)
+          return {
+            ...p,
+            route_orders: routes.map(r => r.order_id),
+            route_names: routes.map(r => r.route_name)
+          };
+        } else {
+          return {
+            ...p
+          };
         }
-        return {
-          ...p,
-          route_orders,
-          route_names
-        };
       });
       res.json({ success: true, points: result });
     } catch (err) {
