@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import RequireRole from "../../components/RequireRole";
 
 export default function CreateRoutePage() {
+    // ...existing state...
+    const [savingRoute, setSavingRoute] = useState(false);
     const [games, setGames] = useState([]);
     const [selectedGame, setSelectedGame] = useState(null);
     const [routes, setRoutes] = useState([]);
@@ -49,32 +51,28 @@ export default function CreateRoutePage() {
             setOrderMap({});
             return;
         }
-        async function fetchPointsAndOrder() {
+        async function fetchPoints() {
             setLoading(true);
             setMessage("");
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                // Only fetch from /api/game_routes, which now returns all points with order info
-                let url = `${backendHost}/api/game_routes?game_id=${selectedGame.id}`;
-                if (selectedRoute && selectedRoute.id) {
-                    url += `&route_id=${selectedRoute.id}`;
-                }
-                const routesRes = await fetch(url);
-                const routesData = await routesRes.json();
-                if (routesRes.ok && routesData.success) {
-                    const safePoints = Array.isArray(routesData.points) ? routesData.points : [];
-                    setPoints(safePoints);
-                    // Build orderMap from result (order_id per point)
-                    const om = {};
-                    safePoints.forEach(p => {
-                        om[p.id] = p.order_id || "";
-                    });
-                    setOrderMap(om);
-                }
-            } catch {}
+                const res = await fetch(`${backendHost}/api/game_routes/points/by-game/${selectedGame.id}`);
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.error || "Fout bij laden");
+                setPoints(data.points);
+                // Build orderMap from result (order_id per point)
+                const om = {};
+                (data.points || []).forEach(p => {
+                    om[p.id] = p.order_id || "";
+                });
+                setOrderMap(om);
+            } catch {
+                setPoints([]);
+                setOrderMap({});
+            }
             setLoading(false);
         }
-        fetchPointsAndOrder();
+        fetchPoints();
     }, [selectedGame, selectedRoute]);
 
     const handleOrderChange = (id, value) => {
@@ -110,6 +108,38 @@ export default function CreateRoutePage() {
         } catch {
             setMessage("❌ Fout bij opslaan");
         }
+    };
+
+    // Save new route
+    const handleSaveRoute = async () => {
+        if (!routeName || !selectedGame) return;
+        setSavingRoute(true);
+        setMessage("");
+        try {
+            const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+            const res = await fetch(`${backendHost}/api/game_routes`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ route_name: routeName, game_id: selectedGame.id })
+            });
+            const data = await res.json();
+            if (res.ok && data.success) {
+                setMessage("✅ Route opgeslagen");
+                // Refresh routes and select the new one
+                const routesRes = await fetch(`${backendHost}/api/game_routes?game_id=${selectedGame.id}`);
+                const routesData = await routesRes.json();
+                if (routesRes.ok && routesData.success) {
+                    setRoutes(routesData.routes);
+                    const newRoute = routesData.routes.find(r => r.id === data.id);
+                    setSelectedRoute(newRoute || null);
+                }
+            } else {
+                setMessage("❌ Fout bij opslaan van route");
+            }
+        } catch {
+            setMessage("❌ Fout bij opslaan van route");
+        }
+        setSavingRoute(false);
     };
 
     return (
@@ -155,6 +185,13 @@ export default function CreateRoutePage() {
                         <>
                             <span className="ml-4">Route naam:</span>
                             <input type="text" className="border px-2 py-1 rounded" value={routeName} onChange={e => setRouteName(e.target.value)} />
+                            <button
+                                className="btn-primary px-3 py-1 ml-2"
+                                onClick={handleSaveRoute}
+                                disabled={savingRoute || !routeName || !selectedGame}
+                            >
+                                Route opslaan
+                            </button>
                         </>
                     )}
                 </div>
