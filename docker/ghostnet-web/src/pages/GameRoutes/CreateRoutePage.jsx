@@ -84,8 +84,14 @@ export default function CreateRoutePage() {
                         body: JSON.stringify({
                             game_route_id: route.id,
                             game_route_points_id: point.id,
-                            order_id: order_id
+                            order_id: order_id 
                         })
+                    });
+                    console.log('Response for point', point.id, 'route', route.id, ':', res);
+                    console.log('Request body:', {
+                        game_route_id: route.id,
+                        game_route_points_id: point.id,
+                        order_id: order_id 
                     });
                     if (!res.ok) {
                         let errMsg = `Fout bij punt ${point.id}, route ${route.id}<br />`;
