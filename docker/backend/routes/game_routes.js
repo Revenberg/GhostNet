@@ -79,13 +79,13 @@ export default function createGameRoutesRouter(pool) {
   // Create a new game_routes entry
   router.post("/routes", async (req, res) => {
     try {
-      const { game_id, route_name, game_route_points_id, order_id } = req.body;
-      if (!game_id || !game_route_points_id || !route_name) {
-        return res.status(400).json({ error: "route_name, game_id and game_route_points_id required" });
+      const { game_route_id, game_route_points_id, order_id } = req.body;
+      if (!game_route_points_id || !game_route_id || !order_id) {
+        return res.status(400).json({ error: "game_route_id, game_route_points_id and order_id required" });
       }
       const [result] = await pool.query(
-        `INSERT INTO game_route_order (game_id, route_name, game_route_points_id, order_id) VALUES (?, ?, ?, ?)` ,
-        [game_id, route_name, game_route_points_id, order_id || 0]
+        `INSERT INTO game_route_order (game_route_id, game_route_points_id, order_id) VALUES (?, ?, ?)`,
+        [game_route_id, game_route_points_id, order_id || 0]
       );
       res.json({ success: true, id: result.insertId });
     } catch (err) {
