@@ -62,10 +62,11 @@ export default function CreateRoutePage() {
                 const routesRes = await fetch(url);
                 const routesData = await routesRes.json();
                 if (routesRes.ok && routesData.success) {
-                    setPoints(routesData.points);
+                    const safePoints = Array.isArray(routesData.points) ? routesData.points : [];
+                    setPoints(safePoints);
                     // Build orderMap from result (order_id per point)
                     const om = {};
-                    routesData.points.forEach(p => {
+                    safePoints.forEach(p => {
                         om[p.id] = p.order_id || "";
                     });
                     setOrderMap(om);
