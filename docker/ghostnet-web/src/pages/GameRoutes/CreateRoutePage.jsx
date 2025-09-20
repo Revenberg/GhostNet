@@ -9,7 +9,6 @@ export default function CreateRoutePage() {
     const [routes, setRoutes] = useState([]);
     const [selectedRoute, setSelectedRoute] = useState(null); // route object or null
     const [points, setPoints] = useState([]);
-    const [orderMap, setOrderMap] = useState({});
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [routeName, setRouteName] = useState("");
@@ -48,7 +47,6 @@ export default function CreateRoutePage() {
     useEffect(() => {
         if (!selectedGame) {
             setPoints([]);
-            setOrderMap({});
             return;
         }
         async function fetchPoints() {
@@ -60,15 +58,8 @@ export default function CreateRoutePage() {
                 const data = await res.json();
                 if (!res.ok || !data.success) throw new Error(data.error || "Fout bij laden");
                 setPoints(data.points);
-                // Build orderMap from result (order_id per point)
-                const om = {};
-                (data.points || []).forEach(p => {
-                    om[p.id] = p.order_id || "";
-                });
-                setOrderMap(om);
             } catch {
                 setPoints([]);
-                setOrderMap({});
             }
             setLoading(false);
         }
