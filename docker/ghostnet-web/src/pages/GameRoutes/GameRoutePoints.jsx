@@ -38,7 +38,7 @@ export default function GameRoutePoints() {
         async function fetchPoints() {
             const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
             try {
-                const res = await fetch(`${backendHost}/api/games/route-points/by-game/${selectedGameId}`);
+                const res = await fetch(`${backendHost}/api/game_route_points/by-game/${selectedGameId}`);
                 const data = await res.json();
                 if (!res.ok || !data.success) throw new Error(data.error || "Fout bij laden");
                 setPoints(data.points);
@@ -74,7 +74,7 @@ export default function GameRoutePoints() {
         if (!window.confirm("Weet je zeker dat je dit punt wilt verwijderen?")) return;
         setMessage("...verwijderen");
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-        const res = await fetch(`${backendHost}/api/games/route-points/${id}`, { method: "DELETE" });
+    const res = await fetch(`${backendHost}/api/game_route_points/${id}`, { method: "DELETE" });
         if (res.ok) setMessage("✅ Punt verwijderd");
         else setMessage("❌ Fout bij verwijderen");
         setEditingId(null);
@@ -86,7 +86,7 @@ export default function GameRoutePoints() {
         setMessage("...opslaan");
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
         const method = editingId ? "PUT" : "POST";
-        const url = editingId ? `${backendHost}/api/games/route-points/${editingId}` : `${backendHost}/api/games/route-points`;
+    const url = editingId ? `${backendHost}/api/game_route_points/${editingId}` : `${backendHost}/api/game_route_points`;
     const body = { ...form, game_id: selectedGameId };
         
         const res = await fetch(url, {

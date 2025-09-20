@@ -12,7 +12,7 @@ export default function AllRoutePointsOverview() {
             setError("");
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                const res = await fetch(`${backendHost}/api/games/route-points`);
+                const res = await fetch(`${backendHost}/api/game_route_points`);
                 const data = await res.json();
                 if (!res.ok || !data.success) throw new Error(data.error || "Fout bij laden");
                 setPoints(data.points);

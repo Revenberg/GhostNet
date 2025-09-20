@@ -33,8 +33,8 @@ export default function CreateRoutePage() {
             setMessage("");
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                // Only fetch from /api/games/routes, which now returns all points with order info
-                const routesRes = await fetch(`${backendHost}/api/games/routes?game_id=${selectedGame.id}`);
+                // Only fetch from /api/game_routes, which now returns all points with order info
+                const routesRes = await fetch(`${backendHost}/api/game_routes?game_id=${selectedGame.id}`);
                 const routesData = await routesRes.json();
                 if (routesRes.ok && routesData.success) {
                     setPoints(routesData.points);
@@ -69,7 +69,7 @@ export default function CreateRoutePage() {
         try {
             await Promise.all(sortedPoints.map(async point => {
                 const order_id = orderMap[point.id];
-                await fetch(`${backendHost}/api/games/routes`, {
+                await fetch(`${backendHost}/api/game_routes`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
