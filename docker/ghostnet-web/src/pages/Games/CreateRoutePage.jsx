@@ -64,6 +64,32 @@ export default function CreateRoutePage() {
         }
     };
 
+    // Sorteer punten op order_id (of id als order_id ontbreekt)
+    const sortedPoints = [...points].sort((a, b) => {
+        const aOrder = orderMap[a.id] !== undefined && orderMap[a.id] !== "" ? Number(orderMap[a.id]) : (a.order_id || a.id);
+        const bOrder = orderMap[b.id] !== undefined && orderMap[b.id] !== "" ? Number(orderMap[b.id]) : (b.order_id || b.id);
+        return aOrder - bOrder;
+    });
+
+    // Opslaan van alle order_id's tegelijk
+    const handleSaveAllOrders = async () => {
+        setMessage("Alles opslaan...");
+        const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+        try {
+            await Promise.all(sortedPoints.map(async point => {
+                const order_id = orderMap[point.id];
+                await fetch(`${backendHost}/api/games/route-points/${point.id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ order_id })
+                });
+            }));
+            setMessage("✅ Alle volgordes opgeslagen");
+        } catch {
+            setMessage("❌ Fout bij opslaan");
+        }
+    };
+
     return (
         <RequireRole role="admin">
             <div className="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow">
@@ -88,6 +114,7 @@ export default function CreateRoutePage() {
                     <div>
                         <h3 className="font-semibold mb-2">Routepunten voor deze game</h3>
                         {loading ? <div>Laden...</div> : (
+                            <>
                             <table className="w-full border-collapse text-xs md:text-sm">
                                 <thead>
                                     <tr>
@@ -101,7 +128,7 @@ export default function CreateRoutePage() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {points.map(point => (
+                                    {sortedPoints.map(point => (
                                         <tr key={point.id}>
                                             <td className="border-b p-2">{point.id}</td>
                                             <td className="border-b p-2">{point.location}</td>
@@ -129,6 +156,12 @@ export default function CreateRoutePage() {
                                     ))}
                                 </tbody>
                             </table>
+                            <div className="mt-4 flex justify-end">
+                                <button className="btn-primary px-4 py-2" onClick={handleSaveAllOrders} disabled={loading}>
+                                    Alle volgordes opslaan
+                                </button>
+                            </div>
+                            </>
                         )}
                     </div>
                 )}
