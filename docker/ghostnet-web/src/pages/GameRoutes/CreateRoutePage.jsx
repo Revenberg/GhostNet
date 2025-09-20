@@ -73,12 +73,12 @@ export default function CreateRoutePage() {
     const handleSaveAllOrders = async () => {
         setMessage("Alles opslaan...");
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-        try {
-            await Promise.all(shownPoints.map(async point => {
-                // For each route, save the order for this point
-                await Promise.all(routes.map(async route => {
-                    const order_id = (point.route_orders && point.route_orders[route.id]) || "";
-                    await fetch(`${backendHost}/api/game_routes/routes`, {
+        let errors = [];
+        await Promise.all(shownPoints.map(async point => {
+            await Promise.all(routes.map(async route => {
+                const order_id = (point.route_orders && point.route_orders[route.id]) || "";
+                try {
+                    const res = await fetch(`${backendHost}/api/game_routes/routes`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -88,11 +88,23 @@ export default function CreateRoutePage() {
                             order_id: order_id
                         })
                     });
-                }));
+                    if (!res.ok) {
+                        let errMsg = `Fout bij punt ${point.id}, route ${route.route_name}`;
+                        try {
+                            const data = await res.json();
+                            if (data && data.error) errMsg += `: ${data.error}`;
+                        } catch {}
+                        errors.push(errMsg);
+                    }
+                } catch (err) {
+                    errors.push(`Netwerkfout bij punt ${point.id}, route ${route.route_name}`);
+                }
             }));
+        }));
+        if (errors.length > 0) {
+            setMessage("❌ Fouten bij opslaan:\n" + errors.join("\n"));
+        } else {
             setMessage("✅ Alle volgordes opgeslagen");
-        } catch {
-            setMessage("❌ Fout bij opslaan");
         }
     };
 
