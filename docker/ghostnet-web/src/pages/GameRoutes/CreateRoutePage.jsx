@@ -226,8 +226,32 @@ export default function CreateRoutePage() {
                                             {routes.map(route => {
                                                 // Zoek order_id voor deze point in deze route
                                                 const order = (point.route_orders && point.route_orders[route.id]) || "";
+                                                // Unieke key per point/route combinatie
+                                                const inputKey = `order-${point.id}-${route.id}`;
                                                 return (
-                                                    <td key={route.id} className="border-b p-2 text-center">{order}</td>
+                                                    <td key={route.id} className="border-b p-2 text-center">
+                                                        <input
+                                                            type="number"
+                                                            className="border px-1 py-0.5 rounded w-14 text-center"
+                                                            value={order}
+                                                            onChange={e => {
+                                                                // Update order in points state
+                                                                const newOrder = e.target.value;
+                                                                setPoints(prevPoints => prevPoints.map(p => {
+                                                                    if (p.id === point.id) {
+                                                                        return {
+                                                                            ...p,
+                                                                            route_orders: {
+                                                                                ...p.route_orders,
+                                                                                [route.id]: newOrder
+                                                                            }
+                                                                        };
+                                                                    }
+                                                                    return p;
+                                                                }));
+                                                            }}
+                                                        />
+                                                    </td>
                                                 );
                                             })}
                                         </tr>
