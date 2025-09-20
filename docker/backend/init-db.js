@@ -12,7 +12,7 @@ export async function ensureTables(pool) {
   // removed duplicate game table creation above
 
   await conn.query(`
-    drop table if exists game_routes_points;
+    drop table if exists game_route_points;
     `);
 
       await conn.query(`
