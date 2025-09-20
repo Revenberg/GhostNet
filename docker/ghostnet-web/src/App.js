@@ -27,6 +27,9 @@ import GamesProgressOverview from "./pages/Games/GamesProgressOverview";
 import GameRoutePoints from "./pages/Games/GameRoutePoints";
 import AllRoutePointsOverview from "./pages/Games/AllRoutePointsOverview";
 import CreateRoutePage from "./pages/Games/CreateRoutePage";
+import GameRoutePoints from './pages/GameRoutes/GameRoutePoints';
+import AllRoutePointsOverview from './pages/GameRoutes/AllRoutePointsOverview';
+import CreateRoutePage from './pages/GameRoutes/CreateRoutePage';
 
 export default function App() {
   return (
