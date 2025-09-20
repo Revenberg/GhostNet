@@ -7,10 +7,17 @@ export default function createGamesRouter(pool) {
   // Create a new game_route_point
   router.post("/route-points", async (req, res) => {
     try {
-      const { game_id, location, latitude, longitude, description, images, hints } = req.body;
+      const { game_id, location, description, images, hints } = req.body;
+      let { latitude, longitude } = req.body;
+      latitude = parseFloat(latitude);
+      if (isNaN(latitude)) latitude = 0;
+      longitude = parseFloat(longitude);
+      if (isNaN(longitude)) longitude = 0;
+
       if (!location || !game_id ) {
         return res.status(400).json({ error: "location and game Id required" });
       }
+      
       const [result] = await pool.query(
         `INSERT INTO game_route_points (game_id, location, latitude, longitude, description, images, hints)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
