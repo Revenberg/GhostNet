@@ -75,10 +75,6 @@ export default function CreateRoutePage() {
         fetchPoints();
     }, [selectedGame, selectedRoute]);
 
-    const handleOrderChange = (id, value) => {
-        setOrderMap({ ...orderMap, [id]: value });
-    };
-
     // Geen sortering, gebruik volgorde uit DB
     const shownPoints = points;
 
@@ -208,9 +204,6 @@ export default function CreateRoutePage() {
                                             <th key={route.id} className="border-b p-2">
                                                 <div>{route.route_name}</div>
                                                 <div className="text-xs text-gray-500 font-normal">Volgorde:</div>
-                                                <div className="text-xs text-gray-700 font-bold">
-                                                    {shownPoints.map(p => (p.route_orders && p.route_orders[route.id]) || "").filter(v => v !== "").join(", ")}
-                                                </div>
                                             </th>
                                         ))}
                                     </tr>
@@ -227,7 +220,6 @@ export default function CreateRoutePage() {
                                                 // Zoek order_id voor deze point in deze route
                                                 const order = (point.route_orders && point.route_orders[route.id]) || "";
                                                 // Unieke key per point/route combinatie
-                                                const inputKey = `order-${point.id}-${route.id}`;
                                                 return (
                                                     <td key={route.id} className="border-b p-2 text-center">
                                                         <input
