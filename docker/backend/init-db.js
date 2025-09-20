@@ -80,10 +80,19 @@ export async function ensureTables(pool) {
         id INT AUTO_INCREMENT PRIMARY KEY,
         route_name VARCHAR(64),
         game_id INT,
-        order_id INT,
-        game_route_points_id INT,
-        FOREIGN KEY (game_route_points_id) REFERENCES game_route_points(id),
         FOREIGN KEY (game_id) REFERENCES game(id),
+        lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS game_route_order (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        game_route_id INT,
+        game_route_points_id INT,
+        order_id INT,
+        FOREIGN KEY (game_route_id) REFERENCES game_routes(id),
+        FOREIGN KEY (game_route_points_id) REFERENCES game_route_points(id),
         lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
