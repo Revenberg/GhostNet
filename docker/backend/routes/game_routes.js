@@ -117,7 +117,7 @@ export default function createGameRoutesRouter(pool) {
       // Compose result: for each point, add order_id if present in routes, else null
       const result = points.map(p => ({
         ...p,
-        order_id: routeMap[p.id]?.order_id ?? null,
+        order_id: routeMap[p.id]?.order_id ?? routeMap[p.id]?.id,
         route_name: routeMap[p.id]?.route_name ?? null,
         game_route_id: routeMap[p.id]?.id ?? null
       }));
