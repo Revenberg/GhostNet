@@ -108,7 +108,7 @@ export default function createGameRoutesRouter(pool) {
       );
       // Get all routes for this game
       const [routes] = await pool.query(
-        `SELECT * FROM game_routes WHERE game_id = ? ORDER BY order_id ASC`,
+        `SELECT * FROM game_routes WHERE game_id = ?`,
         [game_id]
       );
       // Map: pointId -> route row
