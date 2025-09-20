@@ -12,14 +12,6 @@ export async function ensureTables(pool) {
   // removed duplicate game table creation above
 
   await conn.query(`
-    drop table if exists game_routes;
-    `);
-
-    await conn.query(`
-    drop table if exists game_route_points;
-    `);
-
-  await conn.query(`
     CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(64) UNIQUE,
@@ -103,7 +95,16 @@ export async function ensureTables(pool) {
   // Toon alle tabellen na aanmaken
   const [tables] = await conn.query('SHOW TABLES');
   console.log('Alle tabellen in de database:');
-  tables.forEach(row => console.log(Object.values(row)[0]));
+  for (const row of tables) {
+    const tableName = Object.values(row)[0];
+    console.log(tableName);
+    // Toon de definitie van de tabel
+  const [defRows] = await conn.query(`SHOW CREATE TABLE \`${tableName}\``);
+    if (defRows && defRows[0]) {
+      const def = defRows[0][`Create Table`];
+      console.log(def + "\n");
+    }
+  }
   conn.release();
 }
 
