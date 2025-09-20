@@ -87,7 +87,7 @@ export default function GameRoutePoints() {
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
         const method = editingId ? "PUT" : "POST";
         const url = editingId ? `${backendHost}/api/games/route-points/${editingId}` : `${backendHost}/api/games/route-points`;
-        const body = { ...form };
+    const body = { ...form, game_id: selectedGameId };
         
         const res = await fetch(url, {
             method,
