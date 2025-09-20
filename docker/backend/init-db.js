@@ -12,6 +12,10 @@ export async function ensureTables(pool) {
   // removed duplicate game table creation above
 
   await conn.query(`
+    drop table if exists game_routes
+    `);
+
+  await conn.query(`
     CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(64) UNIQUE,
@@ -74,6 +78,7 @@ export async function ensureTables(pool) {
     await conn.query(`
     CREATE TABLE IF NOT EXISTS game_routes (
         id INT AUTO_INCREMENT PRIMARY KEY,
+        route_name VARCHAR(64),
         game_id INT,
         order_id INT,
         game_route_points_id INT,

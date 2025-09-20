@@ -60,23 +60,6 @@ export default function CreateRoutePage() {
         setOrderMap({ ...orderMap, [id]: value });
     };
 
-    const handleSaveOrder = async (id) => {
-        setMessage("Opslaan...");
-        const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-        const order_id = orderMap[id];
-        try {
-            const res = await fetch(`${backendHost}/api/games/route-points/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ order_id })
-            });
-            if (res.ok) setMessage("✅ Volgorde opgeslagen");
-            else setMessage("❌ Fout bij opslaan");
-        } catch {
-            setMessage("❌ Fout bij opslaan");
-        }
-    };
-
     // Sorteer punten op order_id (of id als order_id ontbreekt)
     const sortedPoints = [...points].sort((a, b) => {
     const aOrder = orderMap[a.id] !== undefined && orderMap[a.id] !== "" ? Number(orderMap[a.id]) : a.id;
