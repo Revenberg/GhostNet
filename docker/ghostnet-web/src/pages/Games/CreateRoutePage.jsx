@@ -33,21 +33,15 @@ export default function CreateRoutePage() {
             setMessage("");
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                // Fetch all points for this game
-                const pointsRes = await fetch(`${backendHost}/api/games/route-points/by-game/${selectedGame.id}`);
-                const pointsData = await pointsRes.json();
-                // Fetch current order from routes table
+                // Only fetch from /api/games/routes, which now returns all points with order info
                 const routesRes = await fetch(`${backendHost}/api/games/routes?game_id=${selectedGame.id}`);
                 const routesData = await routesRes.json();
-                if (pointsRes.ok && pointsData.success && routesRes.ok && routesData.success) {
-                    setPoints(pointsData.points);
-                    // Build orderMap from routes table (order_id per point)
+                if (routesRes.ok && routesData.success) {
+                    setPoints(routesData.points);
+                    // Build orderMap from result (order_id per point)
                     const om = {};
-                    // Map: pointId -> order_id from routes
-                    routesData.points?.forEach(r => { om[r.game_route_points_id] = r.order_id; });
-                    // Fallback: if a point is not in routes, use its own order_id or blank
-                    pointsData.points.forEach(p => {
-                        if (om[p.id] === undefined) om[p.id] = p.order_id || "";
+                    routesData.points.forEach(p => {
+                        om[p.id] = p.order_id || "";
                     });
                     setOrderMap(om);
                 }
