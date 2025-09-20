@@ -108,7 +108,7 @@ export default function createGamesRouter(pool) {
   // Create a new game_routes entry
   router.post("/routes", async (req, res) => {
     try {
-      const { game_id, game_route_points_id, order_id } = req.body;
+      const { game_id, route_name, game_route_points_id, order_id } = req.body;
       if (!game_id || !game_route_points_id || !route_name) {
         return res.status(400).json({ error: "route_name, game_id and game_route_points_id required" });
       }
