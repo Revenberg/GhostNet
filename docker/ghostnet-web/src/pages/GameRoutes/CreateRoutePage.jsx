@@ -84,17 +84,20 @@ export default function CreateRoutePage() {
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
         try {
             await Promise.all(shownPoints.map(async point => {
-                const order_id = orderMap[point.id];
-                await fetch(`${backendHost}/api/game_routes/routes`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        game_route_id: game_route_id,
-                        game_id: selectedGame.id,
-                        game_route_points_id: point.id,
-                        order_id: order_id
-                    })                    
-                });
+                // For each route, save the order for this point
+                await Promise.all(routes.map(async route => {
+                    const order_id = (point.route_orders && point.route_orders[route.id]) || "";
+                    await fetch(`${backendHost}/api/game_routes/routes`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            game_route_id: route.id,
+                            game_id: selectedGame.id,
+                            game_route_points_id: point.id,
+                            order_id: order_id
+                        })
+                    });
+                }));
             }));
             setMessage("✅ Alle volgordes opgeslagen");
         } catch {
