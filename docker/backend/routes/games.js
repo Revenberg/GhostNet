@@ -127,15 +127,30 @@ export default function createGamesRouter(pool) {
   router.get("/routes", async (req, res) => {
     try {
       const { game_id } = req.query;
-      let query = `SELECT * FROM game_routes`;
-      let params = [];
-      if (game_id) {
-        query += ` WHERE game_id = ?`;
-        params.push(game_id);
+      if (!game_id) {
+        return res.status(400).json({ error: "game_id required" });
       }
-      query += ` ORDER BY order_id ASC`;
-      const [rows] = await pool.query(query, params);
-      res.json({ success: true, routes: rows });
+      // Get all points for this game
+      const [points] = await pool.query(
+        `SELECT * FROM game_route_points WHERE game_id = ? ORDER BY id ASC`,
+        [game_id]
+      );
+      // Get all routes for this game
+      const [routes] = await pool.query(
+        `SELECT * FROM game_routes WHERE game_id = ? ORDER BY order_id ASC`,
+        [game_id]
+      );
+      // Map: pointId -> route row
+      const routeMap = {};
+      routes.forEach(r => { routeMap[r.game_route_points_id] = r; });
+      // Compose result: for each point, add order_id if present in routes, else null
+      const result = points.map(p => ({
+        ...p,
+        order_id: routeMap[p.id]?.order_id ?? null,
+        route_name: routeMap[p.id]?.route_name ?? null,
+        game_route_id: routeMap[p.id]?.id ?? null
+      }));
+      res.json({ success: true, points: result });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });

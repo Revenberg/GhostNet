@@ -65,10 +65,6 @@ export default function CreateRoutePage() {
     const sortedPoints = [...points].sort((a, b) => {
     const aOrder = orderMap[a.id] !== undefined && orderMap[a.id] !== "" ? Number(orderMap[a.id]) : a.id;
     const bOrder = orderMap[b.id] !== undefined && orderMap[b.id] !== "" ? Number(orderMap[b.id]) : b.id;
-
-    console.log(aOrder);
-    console.log("-------------------------");
-    console.log(bOrder);
     return aOrder - bOrder;
     });
 
