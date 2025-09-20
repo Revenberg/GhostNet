@@ -100,6 +100,10 @@ export async function ensureTables(pool) {
         description TEXT
     )
   `);
+  // Toon alle tabellen na aanmaken
+  const [tables] = await conn.query('SHOW TABLES');
+  console.log('Alle tabellen in de database:');
+  tables.forEach(row => console.log(Object.values(row)[0]));
   conn.release();
 }
 
