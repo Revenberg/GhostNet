@@ -94,7 +94,7 @@ export default function createGameRoutesRouter(pool) {
     }
   });
 
-  // Get all routes for a game
+  // Get all routes for a game 
   router.get("/routes", async (req, res) => {
     try {
       const { game_id } = req.query;
@@ -106,21 +106,39 @@ export default function createGameRoutesRouter(pool) {
         `SELECT * FROM game_route_points WHERE game_id = ? ORDER BY id ASC`,
         [game_id]
       );
-      // Get all routes for this game
-      const [routes] = await pool.query(
-        `SELECT * FROM game_routes WHERE game_id = ?`,
+      // Get all route orders for this game, joined with route_name from game_routes
+      const [orders] = await pool.query(
+        `SELECT gro.*, gr.route_name
+         FROM game_route_order gro
+         JOIN game_routes gr ON gro.game_route_id = gr.id AND gro.game_id = gr.game_id
+         WHERE gro.game_id = ?`,
         [game_id]
       );
-      // Map: pointId -> route row
-      const routeMap = {};
-      routes.forEach(r => { routeMap[r.game_route_points_id] = r; });
-      // Compose result: for each point, add order_id if present in routes, else null
-      const result = points.map(p => ({
-        ...p,
-        order_id: routeMap[p.id]?.order_id ?? routeMap[p.id]?.id,
-        route_name: routeMap[p.id]?.route_name ?? null,
-        game_route_id: routeMap[p.id]?.id ?? null
-      }));
+      // Build a map: { [pointId]: { [routeId]: { order_id, route_name } } }
+      const pointRouteMap = {};
+      orders.forEach(o => {
+        if (!pointRouteMap[o.game_route_points_id]) pointRouteMap[o.game_route_points_id] = {};
+        pointRouteMap[o.game_route_points_id][o.game_route_id] = {
+          order_id: o.order_id,
+          route_name: o.route_name
+        };
+      });
+      // Compose result: for each point, add route_orders: { [routeId]: order_id }, and route_names: { [routeId]: route_name }
+      const result = points.map(p => {
+        const route_orders = {};
+        const route_names = {};
+        if (pointRouteMap[p.id]) {
+          Object.entries(pointRouteMap[p.id]).forEach(([routeId, val]) => {
+            route_orders[routeId] = val.order_id;
+            route_names[routeId] = val.route_name;
+          });
+        }
+        return {
+          ...p,
+          route_orders,
+          route_names
+        };
+      });
       res.json({ success: true, points: result });
     } catch (err) {
       console.error(err);
