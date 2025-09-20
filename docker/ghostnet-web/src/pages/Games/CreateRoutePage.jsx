@@ -8,6 +8,7 @@ export default function CreateRoutePage() {
     const [orderMap, setOrderMap] = useState({});
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
+    const [routeName, setRouteName] = useState("");
 
     useEffect(() => {
         async function fetchGames() {
@@ -78,12 +79,21 @@ export default function CreateRoutePage() {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
+                        route_name: routeName,
                         game_id: selectedGame.id,
                         game_route_points_id: point.id,
                         order_id
-                    })
+                    })                    
                 });
             }));
+            console.log(sortedPoints.map(p => ({
+                        route_name: routeName,
+                        game_id: selectedGame.id,
+                        game_route_points_id: p.id,
+                        order_id: orderMap[p.id]
+            })));
+
+            
             setMessage("✅ Alle volgordes opgeslagen");
         } catch {
             setMessage("❌ Fout bij opslaan");
@@ -109,6 +119,7 @@ export default function CreateRoutePage() {
                             <option key={game.id} value={game.id}>{game.id} - {game.name}</option>
                         ))}
                     </select>
+                    <span className="ml-4">Route naam:</span> <input type="text" className="border px-2 py-1 rounded" value={routeName} onChange={e => setRouteName(e.target.value)} />
                 </div>
                 {selectedGame && (
                     <div>
