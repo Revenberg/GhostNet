@@ -65,6 +65,10 @@ export default function CreateRoutePage() {
     const sortedPoints = [...points].sort((a, b) => {
     const aOrder = orderMap[a.id] !== undefined && orderMap[a.id] !== "" ? Number(orderMap[a.id]) : a.id;
     const bOrder = orderMap[b.id] !== undefined && orderMap[b.id] !== "" ? Number(orderMap[b.id]) : b.id;
+
+    console.log(aOrder);
+    console.log("-------------------------");
+    console.log(bOrder);
     return aOrder - bOrder;
     });
 
@@ -86,14 +90,6 @@ export default function CreateRoutePage() {
                     })                    
                 });
             }));
-            console.log(sortedPoints.map(p => ({
-                        route_name: routeName,
-                        game_id: selectedGame.id,
-                        game_route_points_id: p.id,
-                        order_id: orderMap[p.id]
-            })));
-
-            
             setMessage("✅ Alle volgordes opgeslagen");
         } catch {
             setMessage("❌ Fout bij opslaan");
