@@ -16,12 +16,12 @@ export default function createGameRoutesRouter(pool) {
       if (!location || !game_id ) {
         return res.status(400).json({ error: "location and game Id required" });
       }
-      
       const [result] = await pool.query(
         `INSERT INTO game_route_points (game_id, location, latitude, longitude, description, images, hints)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [game_id, location, latitude, longitude, description, images, hints]
-      );  
+      );
+      res.json({ success: true, id: result.insertId });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });
