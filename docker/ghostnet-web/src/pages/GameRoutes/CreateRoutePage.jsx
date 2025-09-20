@@ -83,13 +83,12 @@ export default function CreateRoutePage() {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             game_route_id: route.id,
-                            game_id: selectedGame.id,
                             game_route_points_id: point.id,
                             order_id: order_id
                         })
                     });
                     if (!res.ok) {
-                        let errMsg = `Fout bij punt ${point.id}, route ${route.route_name}`;
+                        let errMsg = `Fout bij punt ${point.id}, route ${route.id}<br />`;
                         try {
                             const data = await res.json();
                             if (data && data.error) errMsg += `: ${data.error}`;
