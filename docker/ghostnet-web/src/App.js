@@ -25,7 +25,6 @@ import GamesList from "./pages/Games/GamesList";
 import GamesSetStatus from "./pages/Games/GamesSetStatus";
 import GamesProgressOverview from "./pages/Games/GamesProgressOverview";
 import GameRoutePoints from './pages/GameRoutes/GameRoutePoints';
-import AllRoutePointsOverview from './pages/GameRoutes/AllRoutePointsOverview';
 import CreateRoutePage from './pages/GameRoutes/CreateRoutePage';
 
 export default function App() {
@@ -56,8 +55,7 @@ export default function App() {
               <Route path="/games-set-status" element={<GamesSetStatus />} />
               <Route path="/games-list" element={<GamesList />} />
               <Route path="/games-route-points" element={<GameRoutePoints />} />
-              <Route path="/games/all-route-points" element={<AllRoutePointsOverview />} />
-                <Route path="/games/create-route" element={<CreateRoutePage />} />
+              <Route path="/games/create-route" element={<CreateRoutePage />} />
             </>
         </Routes>
       </div>
