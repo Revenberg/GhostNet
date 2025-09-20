@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import RequireRole from "../../components/RequireRole";
 
 export default function GameRoutePoints() {
+    const [games, setGames] = useState([]);
+    const [selectedGameId, setSelectedGameId] = useState(() => {
+        return localStorage.getItem("selectedGameId") || "";
+    });
     const [points, setPoints] = useState([]);
     const [form, setForm] = useState({
         id: "",
@@ -15,18 +19,42 @@ export default function GameRoutePoints() {
     const [message, setMessage] = useState("");
     const [editingId, setEditingId] = useState(null);
 
+    // Fetch games for selection
     useEffect(() => {
-        async function fetchAllPoints() {
+        async function fetchGames() {
+            try {
+                const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+                const res = await fetch(`${backendHost}/api/games`);
+                const data = await res.json();
+                if (res.ok && data.success) setGames(data.games);
+            } catch {}
+        }
+        fetchGames();
+    }, []);
+
+    // Fetch points for selected game
+    useEffect(() => {
+        if (!selectedGameId) return setPoints([]);
+        async function fetchPoints() {
             const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
             try {
-                const res = await fetch(`${backendHost}/api/games/route-points`);
+                const res = await fetch(`${backendHost}/api/games/route-points/by-game/${selectedGameId}`);
                 const data = await res.json();
                 if (!res.ok || !data.success) throw new Error(data.error || "Fout bij laden");
                 setPoints(data.points);
-            } catch { }
+            } catch {
+                setPoints([]);
+            }
         }
-        fetchAllPoints();
-    }, [message]);
+        fetchPoints();
+    }, [selectedGameId, message]);
+
+    // Persist selected game
+    useEffect(() => {
+        if (selectedGameId) {
+            localStorage.setItem("selectedGameId", selectedGameId);
+        }
+    }, [selectedGameId]);
 
     const handleChange = e => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -76,27 +104,41 @@ export default function GameRoutePoints() {
         <RequireRole role="admin">
             <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow">
                 <h2 className="text-xl font-bold mb-4">Route punten beheren</h2>
-                <form className="space-y-2 mb-6" onSubmit={handleSubmit}>
-                    <div className="flex gap-2">
-                        <input type="text" name="location" placeholder="Locatie" value={form.location} onChange={handleChange} className="border px-2 py-1 rounded w-40" required />
-                    </div>
-                    <div className="flex gap-2">
-                        <input type="number" name="latitude" placeholder="Lat" value={form.latitude} onChange={handleChange} className="border px-2 py-1 rounded w-28" step="any"  />
-                        <input type="number" name="longitude" placeholder="Lon" value={form.longitude} onChange={handleChange} className="border px-2 py-1 rounded w-28" step="any"  />
-                    </div>
-                    <textarea name="description" placeholder="Beschrijving" value={form.description} onChange={handleChange} className="border px-2 py-1 rounded w-full" rows={2} />
-                    <input type="text" name="images" placeholder="Afbeeldingen (komma gescheiden)" value={form.images} onChange={handleChange} className="border px-2 py-1 rounded w-full" />
-                    <input type="text" name="hints" placeholder="Hints (komma gescheiden)" value={form.hints} onChange={handleChange} className="border px-2 py-1 rounded w-full" />
-                    <div className="flex gap-2">
-                        <button type="submit" className="btn-primary w-32">{editingId ? "Bijwerken" : "Toevoegen"}</button>
-                        {editingId && <button type="button" className="btn-secondary w-32" onClick={() => { setEditingId(null); setForm({ id: "", route_id: "", latitude: "", longitude: "", description: "", images: "", hints: "" }); }}>Annuleren</button>}
-                    </div>
-                    {message && <div className="text-sm mt-2">{message}</div>}
-                </form>
+                <div className="mb-4">
+                    <label className="font-semibold mr-2">Selecteer game:</label>
+                    <select
+                        className="border px-2 py-1 rounded"
+                        value={selectedGameId}
+                        onChange={e => setSelectedGameId(e.target.value)}
+                    >
+                        <option value="">-- Kies een game --</option>
+                        {games.map(game => (
+                            <option key={game.id} value={game.id}>{game.id} - {game.name}</option>
+                        ))}
+                    </select>
+                </div>
+                {selectedGameId && (
+                    <form className="space-y-2 mb-6" onSubmit={handleSubmit}>
+                        <div className="flex gap-2">
+                            <input type="text" name="location" placeholder="Locatie" value={form.location} onChange={handleChange} className="border px-2 py-1 rounded w-40" required />
+                        </div>
+                        <div className="flex gap-2">
+                            <input type="number" name="latitude" placeholder="Lat" value={form.latitude} onChange={handleChange} className="border px-2 py-1 rounded w-28" step="any" />
+                            <input type="number" name="longitude" placeholder="Lon" value={form.longitude} onChange={handleChange} className="border px-2 py-1 rounded w-28" step="any" />
+                        </div>
+                        <textarea name="description" placeholder="Beschrijving" value={form.description} onChange={handleChange} className="border px-2 py-1 rounded w-full" rows={2} />
+                        <input type="text" name="images" placeholder="Afbeeldingen (komma gescheiden)" value={form.images} onChange={handleChange} className="border px-2 py-1 rounded w-full" />
+                        <input type="text" name="hints" placeholder="Hints (komma gescheiden)" value={form.hints} onChange={handleChange} className="border px-2 py-1 rounded w-full" />
+                        <div className="flex gap-2">
+                            <button type="submit" className="btn-primary w-32">{editingId ? "Bijwerken" : "Toevoegen"}</button>
+                            {editingId && <button type="button" className="btn-secondary w-32" onClick={() => { setEditingId(null); setForm({ id: "", latitude: "", longitude: "", location: "", description: "", images: "", hints: "" }); }}>Annuleren</button>}
+                        </div>
+                        {message && <div className="text-sm mt-2">{message}</div>}
+                    </form>
+                )}
                 <table className="w-full border-collapse">
                     <thead>
                         <tr>
-                            {/* <th className="border-b p-2">Route ID</th> */}
                             <th className="border-b p-2">Locatie</th>
                             <th className="border-b p-2">Lat</th>
                             <th className="border-b p-2">Lon</th>
@@ -109,7 +151,6 @@ export default function GameRoutePoints() {
                     <tbody>
                         {points.map(point => (
                             <tr key={point.id}>
-                                {/* <td className="border-b p-2">{point.route_id}</td> */}
                                 <td className="border-b p-2">{point.location || point.route_location || ""}</td>
                                 <td className="border-b p-2">{point.latitude}</td>
                                 <td className="border-b p-2">{point.longitude}</td>
