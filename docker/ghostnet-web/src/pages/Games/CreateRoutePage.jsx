@@ -124,6 +124,7 @@ export default function CreateRoutePage() {
                                         <th className="border-b p-2">Lon</th>
                                         <th className="border-b p-2">Beschrijving</th>
                                         <th className="border-b p-2">Volgorde</th>
+                                        <th className="border-b p-2">Huidige order_id</th>
                                         <th className="border-b p-2">Opslaan</th>
                                     </tr>
                                 </thead>
@@ -143,6 +144,7 @@ export default function CreateRoutePage() {
                                                     onChange={e => handleOrderChange(point.id, e.target.value)}
                                                 />
                                             </td>
+                                            <td className="border-b p-2 text-center">{point.order_id ?? ''}</td>
                                             <td className="border-b p-2">
                                                 <button
                                                     className="btn-primary px-2 py-1 text-xs"
