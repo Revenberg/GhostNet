@@ -79,12 +79,8 @@ export default function CreateRoutePage() {
         setOrderMap({ ...orderMap, [id]: value });
     };
 
-    // Sorteer punten op order_id (of id als order_id ontbreekt)
-    const sortedPoints = [...points].sort((a, b) => {
-    const aOrder = orderMap[a.id] !== undefined && orderMap[a.id] !== "" ? Number(orderMap[a.id]) : a.id;
-    const bOrder = orderMap[b.id] !== undefined && orderMap[b.id] !== "" ? Number(orderMap[b.id]) : b.id;
-    return aOrder - bOrder;
-    });
+    // Geen sortering, gebruik volgorde uit DB
+    const shownPoints = points;
 
     // Opslaan van alle order_id's tegelijk
     const handleSaveAllOrders = async () => {
@@ -208,27 +204,26 @@ export default function CreateRoutePage() {
                                         <th className="border-b p-2">Lat</th>
                                         <th className="border-b p-2">Lon</th>
                                         <th className="border-b p-2">Beschrijving</th>
-                                        <th className="border-b p-2">Volgorde</th>
-                                        <th className="border-b p-2">Huidige order_id</th>
+                                        {routes.map(route => (
+                                            <th key={route.id} className="border-b p-2">{route.route_name}</th>
+                                        ))}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sortedPoints.map(point => (
+                                    {shownPoints.map(point => (
                                         <tr key={point.id}>
                                             <td className="border-b p-2">{point.id}</td>
                                             <td className="border-b p-2">{point.location}</td>
                                             <td className="border-b p-2">{point.latitude}</td>
                                             <td className="border-b p-2">{point.longitude}</td>
                                             <td className="border-b p-2">{point.description}</td>
-                                            <td className="border-b p-2">
-                                                <input
-                                                    type="number"
-                                                    className="border px-2 py-1 rounded w-16"
-                                                    value={orderMap[point.id] || ""}
-                                                    onChange={e => handleOrderChange(point.id, e.target.value)}
-                                                />
-                                            </td>
-                                            <td className="border-b p-2 text-center">{point.order_id ?? ''}</td>
+                                            {routes.map(route => {
+                                                // Zoek order_id voor deze point in deze route
+                                                const order = (point.route_orders && point.route_orders[route.id]) || "";
+                                                return (
+                                                    <td key={route.id} className="border-b p-2 text-center">{order}</td>
+                                                );
+                                            })}
                                         </tr>
                                     ))}
                                 </tbody>
