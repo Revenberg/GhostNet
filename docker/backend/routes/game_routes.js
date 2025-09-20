@@ -84,7 +84,7 @@ export default function createGameRoutesRouter(pool) {
         return res.status(400).json({ error: "route_name, game_id and game_route_points_id required" });
       }
       const [result] = await pool.query(
-        `INSERT INTO game_routes (game_id, route_name, game_route_points_id, order_id) VALUES (?, ?, ?, ?)` ,
+        `INSERT INTO game_route_order (game_id, route_name, game_route_points_id, order_id) VALUES (?, ?, ?, ?)` ,
         [game_id, route_name, game_route_points_id, order_id || 0]
       );
       res.json({ success: true, id: result.insertId });
