@@ -87,7 +87,7 @@ export default function CreateRoutePage() {
         setMessage("Alles opslaan...");
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
         try {
-            await Promise.all(sortedPoints.map(async point => {
+            await Promise.all(shownPoints.map(async point => {
                 const order_id = orderMap[point.id];
                 await fetch(`${backendHost}/api/game_routes`, {
                     method: "POST",
