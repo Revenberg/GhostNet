@@ -89,10 +89,10 @@ export default function CreateRoutePage() {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        route_name: routeName,
+                        game_route_id: game_route_id,
                         game_id: selectedGame.id,
                         game_route_points_id: point.id,
-                        order_id
+                        order_id: order_id
                     })                    
                 });
             }));
