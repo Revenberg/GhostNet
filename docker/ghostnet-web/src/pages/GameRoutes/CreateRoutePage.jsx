@@ -205,7 +205,13 @@ export default function CreateRoutePage() {
                                         <th className="border-b p-2">Lon</th>
                                         <th className="border-b p-2">Beschrijving</th>
                                         {routes.map(route => (
-                                            <th key={route.id} className="border-b p-2">{route.route_name}</th>
+                                            <th key={route.id} className="border-b p-2">
+                                                <div>{route.route_name}</div>
+                                                <div className="text-xs text-gray-500 font-normal">Volgorde:</div>
+                                                <div className="text-xs text-gray-700 font-bold">
+                                                    {shownPoints.map(p => (p.route_orders && p.route_orders[route.id]) || "").filter(v => v !== "").join(", ")}
+                                                </div>
+                                            </th>
                                         ))}
                                     </tr>
                                 </thead>
