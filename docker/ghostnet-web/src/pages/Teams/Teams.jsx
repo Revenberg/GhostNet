@@ -9,7 +9,7 @@ function Teams() {
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
-  const [form, setForm] = useState({ teamname: '', teamcode: '' });
+  const [form, setForm] = useState({ teamname: '' });
 
   // Fetch teams
   useEffect(() => {
@@ -52,7 +52,7 @@ function Teams() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed to register team');
-      setForm({ teamname: '', teamcode: '' });
+      setForm({ teamname: '' });
       setShowRegister(false);
       fetchTeams();
     } catch (err) {
@@ -71,7 +71,7 @@ function Teams() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed to update team');
-      setForm({ teamname: '', teamcode: '' });
+      setForm({ teamname: '' });
       setShowUpdate(false);
       setSelectedTeam(null);
       fetchTeams();
@@ -98,14 +98,14 @@ function Teams() {
 
   // UI Handlers
   const openRegister = () => {
-    setForm({ teamname: '', teamcode: '' });
+    setForm({ teamname: '' });
     setShowRegister(true);
     setShowUpdate(false);
     setShowDelete(false);
     setSelectedTeam(null);
   };
   const openUpdate = (team) => {
-    setForm({ teamname: team.teamname, teamcode: team.teamcode });
+    setForm({ teamname: team.teamname });
     setSelectedTeam(team);
     setShowUpdate(true);
     setShowRegister(false);
@@ -122,7 +122,7 @@ function Teams() {
     setShowUpdate(false);
     setShowDelete(false);
     setSelectedTeam(null);
-    setForm({ teamname: '', teamcode: '' });
+    setForm({ teamname: '' });
   };
 
 
@@ -142,15 +142,6 @@ function Teams() {
                 placeholder="Teamnaam"
                 value={form.teamname}
                 onChange={e => setForm({ ...form, teamname: e.target.value })}
-                className="w-full border px-3 py-2 rounded mb-2"
-                required
-              />
-              <input
-                type="text"
-                name="teamcode"
-                placeholder="Teamcode"
-                value={form.teamcode}
-                onChange={e => setForm({ ...form, teamcode: e.target.value })}
                 className="w-full border px-3 py-2 rounded mb-2"
                 required
               />
