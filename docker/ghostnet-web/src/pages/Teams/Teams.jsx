@@ -11,6 +11,7 @@ function Teams() {
   const [showDelete, setShowDelete] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [form, setForm] = useState({ teamname: '', game_id: 0 });
+  const [filterGameId, setFilterGameId] = useState('');
 
   // Fetch teams
 
@@ -189,6 +190,19 @@ function Teams() {
               </div>
             </form>
             <h3 className="text-lg font-semibold mb-2 mt-6">Alle teams</h3>
+            <div className="mb-4">
+              <label className="mr-2">Filter op game:</label>
+              <select
+                value={filterGameId}
+                onChange={e => setFilterGameId(e.target.value)}
+                className="border px-3 py-2 rounded"
+              >
+                <option value="">Alle games</option>
+                {games.map(game => (
+                  <option key={game.id} value={game.id}>{game.name}</option>
+                ))}
+              </select>
+            </div>
             <table className="w-full border-collapse">
               <thead>
                 <tr>
@@ -200,21 +214,23 @@ function Teams() {
                 </tr>
               </thead>
               <tbody>
-                {teams.map((team) => {
-                  const game = games.find(g => g.id === team.game_id);
-                  return (
-                    <tr key={team.id}>
-                      <td className="border-b p-2">{team.id}</td>
-                      <td className="border-b p-2">{team.teamname}</td>
-                      <td className="border-b p-2">{team.teamcode}</td>
-                      <td className="border-b p-2">{game ? game.name : ''}</td>
-                      <td className="border-b p-2">
-                        <button className="btn-primary mr-2" onClick={() => openUpdate(team)}>Aanpassen</button>
-                        <button className="btn-secondary" onClick={() => openDelete(team)}>Verwijderen</button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {teams
+                  .filter(team => !filterGameId || String(team.game_id) === String(filterGameId))
+                  .map((team) => {
+                    const game = games.find(g => g.id === team.game_id);
+                    return (
+                      <tr key={team.id}>
+                        <td className="border-b p-2">{team.id}</td>
+                        <td className="border-b p-2">{team.teamname}</td>
+                        <td className="border-b p-2">{team.teamcode}</td>
+                        <td className="border-b p-2">{game ? game.name : ''}</td>
+                        <td className="border-b p-2">
+                          <button className="btn-primary mr-2" onClick={() => openUpdate(team)}>Aanpassen</button>
+                          <button className="btn-secondary" onClick={() => openDelete(team)}>Verwijderen</button>
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </>
