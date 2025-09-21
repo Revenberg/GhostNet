@@ -19,11 +19,10 @@ import TeamDelete from "./pages/Teams/TeamDelete";
 import TeamsOverview from "./pages/Teams/TeamsOverview";
 import TeamDetails from "./pages/Team/TeamDetails";
 import TeamSendEvent from "./pages/Team/TeamSendEvent";
-import GamesCreate from "./pages/Games/GamesCreate";
 import GamesUpdate from "./pages/Games/GamesUpdate";
-import GamesList from "./pages/Games/GamesList";
 import GamesSetStatus from "./pages/Games/GamesSetStatus";
 import GamesProgressOverview from "./pages/Games/GamesProgressOverview";
+import GamesManage from "./pages/Games/GamesManage";
 import GameRoutePoints from './pages/GameRoutes/GameRoutePoints';
 import CreateRoutePage from './pages/GameRoutes/CreateRoutePage';
 import AllRoutesMap from './pages/GameRoutes/AllRoutesMap';
@@ -51,11 +50,10 @@ export default function App() {
               <Route path="/teams-overview" element={<TeamsOverview />} />
               <Route path="/team-details/:teamId" element={<TeamDetails />} />
               <Route path="/team-send-event" element={<TeamSendEvent />} />
-              <Route path="/games-create" element={<GamesCreate />} />
+              <Route path="/games-manage" element={<GamesManage />} />
               <Route path="/games-update" element={<GamesUpdate />} />
               <Route path="/games-progress-overview" element={<GamesProgressOverview />} />
               <Route path="/games-set-status" element={<GamesSetStatus />} />
-              <Route path="/games-list" element={<GamesList />} />
               <Route path="/games-route-points" element={<GameRoutePoints />} />
               <Route path="/games/create-route" element={<CreateRoutePage />} />
               <Route path="/games/all-routes-map" element={<AllRoutesMap />} />
