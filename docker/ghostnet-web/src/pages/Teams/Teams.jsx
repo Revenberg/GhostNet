@@ -3,18 +3,36 @@ import RequireRole from '../../components/RequireRole';
 
 function Teams() {
   const [teams, setTeams] = useState([]);
+  const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
-  const [form, setForm] = useState({ teamname: '' });
+  const [form, setForm] = useState({ teamname: '', game_id: '' });
 
   // Fetch teams
+
   useEffect(() => {
     fetchTeams();
+    fetchGames();
   }, []);
+
+  const fetchGames = async () => {
+    try {
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      const res = await fetch(`${backendHost}/api/games`);
+      const data = await res.json();
+      if (data.success) {
+        setGames(data.games);
+      } else {
+        setGames([]);
+      }
+    } catch (err) {
+      setGames([]);
+    }
+  };
 
   const fetchTeams = async () => {
     setLoading(true);
@@ -52,7 +70,7 @@ function Teams() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed to register team');
-      setForm({ teamname: '' });
+      setForm({ teamname: '', game_id: '' });
       setShowRegister(false);
       fetchTeams();
     } catch (err) {
@@ -71,7 +89,7 @@ function Teams() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed to update team');
-      setForm({ teamname: '' });
+      setForm({ teamname: '', game_id: '' });
       setShowUpdate(false);
       setSelectedTeam(null);
       fetchTeams();
@@ -98,14 +116,14 @@ function Teams() {
 
   // UI Handlers
   const openRegister = () => {
-    setForm({ teamname: '' });
+    setForm({ teamname: '', game_id: games.length > 0 ? games[0].id : '' });
     setShowRegister(true);
     setShowUpdate(false);
     setShowDelete(false);
     setSelectedTeam(null);
   };
   const openUpdate = (team) => {
-    setForm({ teamname: team.teamname });
+    setForm({ teamname: team.teamname, game_id: team.game_id || (games.length > 0 ? games[0].id : '') });
     setSelectedTeam(team);
     setShowUpdate(true);
     setShowRegister(false);
@@ -122,7 +140,7 @@ function Teams() {
     setShowUpdate(false);
     setShowDelete(false);
     setSelectedTeam(null);
-    setForm({ teamname: '' });
+    setForm({ teamname: '', game_id: '' });
   };
 
 
@@ -145,6 +163,18 @@ function Teams() {
                 className="w-full border px-3 py-2 rounded mb-2"
                 required
               />
+              <select
+                name="game_id"
+                value={form.game_id}
+                onChange={e => setForm({ ...form, game_id: e.target.value })}
+                className="w-full border px-3 py-2 rounded mb-2"
+                required
+              >
+                <option value="" disabled>Kies een game</option>
+                {games.map(game => (
+                  <option key={game.id} value={game.id}>{game.name}</option>
+                ))}
+              </select>
               <div className="flex gap-2">
                 <button type="submit" className="btn-primary flex-1">Aanmaken</button>
                 <button type="button" className="btn-secondary flex-1" onClick={closeModals}>Annuleren</button>
@@ -157,21 +187,26 @@ function Teams() {
                   <th className="border-b p-2 text-left">ID</th>
                   <th className="border-b p-2 text-left">Teamnaam</th>
                   <th className="border-b p-2 text-left">Teamcode</th>
+                  <th className="border-b p-2 text-left">Game</th>
                   <th className="border-b p-2 text-left">Acties</th>
                 </tr>
               </thead>
               <tbody>
-                {teams.map((team) => (
-                  <tr key={team.id}>
-                    <td className="border-b p-2">{team.id}</td>
-                    <td className="border-b p-2">{team.teamname}</td>
-                    <td className="border-b p-2">{team.teamcode}</td>
-                    <td className="border-b p-2">
-                      <button className="btn-primary mr-2" onClick={() => openUpdate(team)}>Aanpassen</button>
-                      <button className="btn-secondary" onClick={() => openDelete(team)}>Verwijderen</button>
-                    </td>
-                  </tr>
-                ))}
+                {teams.map((team) => {
+                  const game = games.find(g => g.id === team.game_id);
+                  return (
+                    <tr key={team.id}>
+                      <td className="border-b p-2">{team.id}</td>
+                      <td className="border-b p-2">{team.teamname}</td>
+                      <td className="border-b p-2">{team.teamcode}</td>
+                      <td className="border-b p-2">{game ? game.name : ''}</td>
+                      <td className="border-b p-2">
+                        <button className="btn-primary mr-2" onClick={() => openUpdate(team)}>Aanpassen</button>
+                        <button className="btn-secondary" onClick={() => openDelete(team)}>Verwijderen</button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </>
@@ -191,13 +226,18 @@ function Teams() {
                 className="w-full border px-3 py-2 rounded"
                 required
               />
-              <input
-                type="text"
-                name="teamcode"
-                value={form.teamcode}
-                readOnly
-                className="w-full border px-3 py-2 rounded bg-gray-100 text-gray-400"
-              />
+              <select
+                name="game_id"
+                value={form.game_id}
+                onChange={e => setForm({ ...form, game_id: e.target.value })}
+                className="w-full border px-3 py-2 rounded"
+                required
+              >
+                <option value="" disabled>Kies een game</option>
+                {games.map(game => (
+                  <option key={game.id} value={game.id}>{game.name}</option>
+                ))}
+              </select>
               <div className="flex gap-2">
                 <button type="submit" className="btn-primary flex-1">Opslaan</button>
                 <button type="button" className="btn-secondary flex-1" onClick={closeModals}>Annuleren</button>
