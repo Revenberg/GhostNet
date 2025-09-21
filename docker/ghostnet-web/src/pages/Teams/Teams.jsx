@@ -162,33 +162,6 @@ function Teams() {
           <div>Laden...</div>
         ) : (
           <>
-            <form className="space-y-4 mb-8" onSubmit={handleRegister}>
-              <input
-                type="text"
-                name="teamname"
-                placeholder="Teamnaam"
-                value={form.teamname}
-                onChange={e => setForm({ ...form, teamname: e.target.value })}
-                className="w-full border px-3 py-2 rounded mb-2"
-                required
-              />
-              <select
-                name="game_id"
-                value={form.game_id}
-                onChange={e => setForm({ ...form, game_id: e.target.value })}
-                className="w-full border px-3 py-2 rounded mb-2"
-                required
-              >
-                <option value="" disabled>Kies een game</option>
-                {games.map(game => (
-                  <option key={game.id} value={game.id}>{game.name}</option>
-                ))}
-              </select>
-              <div className="flex gap-2">
-                <button type="submit" className="btn-primary flex-1">Aanmaken</button>
-                <button type="button" className="btn-secondary flex-1" onClick={closeModals}>Annuleren</button>
-              </div>
-            </form>
             <h3 className="text-lg font-semibold mb-2 mt-6">Alle teams</h3>
             <div className="mb-4">
               <label className="mr-2">Filter op game:</label>
@@ -233,6 +206,33 @@ function Teams() {
                   })}
               </tbody>
             </table>
+            <form className="space-y-4 mb-8" onSubmit={handleRegister}>
+              <input
+                type="text"
+                name="teamname"
+                placeholder="Teamnaam"
+                value={form.teamname}
+                onChange={e => setForm({ ...form, teamname: e.target.value })}
+                className="w-full border px-3 py-2 rounded mb-2"
+                required
+              />
+              <select
+                name="game_id"
+                value={form.game_id}
+                onChange={e => setForm({ ...form, game_id: e.target.value })}
+                className="w-full border px-3 py-2 rounded mb-2"
+                required
+              >
+                <option value="" disabled>Kies een game</option>
+                {games.map(game => (
+                  <option key={game.id} value={game.id}>{game.name}</option>
+                ))}
+              </select>
+              <div className="flex gap-2">
+                <button type="submit" className="btn-primary flex-1">Aanmaken</button>
+                <button type="button" className="btn-secondary flex-1" onClick={closeModals}>Annuleren</button>
+              </div>
+            </form>
           </>
         )}
 
