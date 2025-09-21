@@ -28,7 +28,6 @@ import GameRoutePoints from './pages/GameRoutes/GameRoutePoints';
 import CreateRoutePage from './pages/GameRoutes/CreateRoutePage';
 import AllRoutesMap from './pages/GameRoutes/AllRoutesMap';
 import RouteTeamsPage from './pages/GameRoutes/RouteTeamsPage';
-import RouteTeamsPage from './pages/GameRoutes/RouteTeamsPage';
 
 export default function App() {
   return (
