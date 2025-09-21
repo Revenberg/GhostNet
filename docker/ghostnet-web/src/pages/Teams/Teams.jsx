@@ -131,7 +131,7 @@ function Teams() {
     setSelectedTeam(null);
   };
   const openUpdate = (team) => {
-    setForm({ teamname: team.teamname, game_id: team.game_id || (games.length > 0 ? games[0].id : ) });
+    setForm({ teamname: team.teamname, game_id: team.game_id || (games.length > 0 ? games[0].id : 0) });
     setSelectedTeam(team);
     setShowUpdate(true);
     setShowRegister(false);
