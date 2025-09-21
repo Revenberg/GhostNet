@@ -233,7 +233,9 @@ function Teams() {
                 className="w-full border px-3 py-2 rounded"
                 required
               />
+              <label htmlFor="teamcode" className="block font-medium">Teamcode</label>
               <input
+                id="teamcode"
                 type="text"
                 name="teamcode"
                 placeholder="Teamcode"
