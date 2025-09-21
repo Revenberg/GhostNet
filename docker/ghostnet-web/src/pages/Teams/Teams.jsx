@@ -241,7 +241,9 @@ function Teams() {
           <div style={modalStyle}>
             <h2 className="text-xl font-bold mb-4">Team aanpassen</h2>
             <form onSubmit={handleUpdate} className="space-y-4 mb-4">
+              <label htmlFor="teamname" className="block font-medium">Teamnaam</label>
               <input
+                id="teamname"
                 type="text"
                 name="teamname"
                 placeholder="Teamnaam"
