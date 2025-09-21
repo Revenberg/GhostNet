@@ -63,11 +63,6 @@ function Teams() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError(null);
-    
-    
-    console.log("Registering team with data:", form);
-
-
     const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
     try {
       const res = await fetch(`${backendHost}/api/teams`, {
@@ -88,6 +83,10 @@ function Teams() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     setError(null);
+
+
+    console.log("Updating team with data:", form);
+
     try {
       const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
       const res = await fetch(`${backendHost}/api/teams/${selectedTeam.id}`, {
