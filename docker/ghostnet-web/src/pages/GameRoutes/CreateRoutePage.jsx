@@ -283,16 +283,19 @@ function fixDoubles(pointsList, routeId) {
                     nextnr++;
                 }
                 changed = true;
-                // Gebruik een for-loop om closure te vermijden
+                // Gebruik een for-loop om closure en map te vermijden
                 pointsList = pointsList.map(p => {
-                    if (p.id !== pid) return p;
-                    return {
-                        ...p,
-                        route_orders: {
-                            ...p.route_orders,
-                            [routeId]: nextnr
-                        }
-                    };
+                    if (p.id === pid) {
+                        // Direct muteren is veilig omdat pointsList direct wordt vervangen
+                        return {
+                            ...p,
+                            route_orders: {
+                                ...p.route_orders,
+                                [routeId]: nextnr
+                            }
+                        };
+                    }
+                    return p;
                 });
             }
         }
