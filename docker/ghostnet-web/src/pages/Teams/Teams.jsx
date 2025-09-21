@@ -27,7 +27,12 @@ function Teams() {
       
       if (!res.ok) throw new Error('Failed to fetch teams');
       const data = await res.json();
-      console.log(data);
+      console.log("Fetched teams data:", data);
+      console.log("data.success:", data.success);
+
+      console.log("Is data.teams an array?", Array.isArray(data.teams));
+      console.log("data.teams:", data.teams);
+
       if (data.success && Array.isArray(data.teams)) {
         console.log(data.teams);
         setTeams(data.teams);
