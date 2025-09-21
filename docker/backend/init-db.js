@@ -23,6 +23,12 @@ export async function ensureTables(pool) {
     )
   `);
 
+    await conn.query(`
+    ALTER TABLE teams
+        ADD COLUMN game_id INT,
+        ADD CONSTRAINT fk_teams_game FOREIGN KEY (game_id) REFERENCES game(id)
+    `);
+
   await conn.query(`
     CREATE TABLE IF NOT EXISTS teams (
         id INT AUTO_INCREMENT PRIMARY KEY,
