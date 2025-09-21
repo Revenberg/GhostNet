@@ -1,3 +1,8 @@
+import React, { useEffect, useState } from "react";
+import RequireRole from "../../components/RequireRole";
+import React, { useEffect, useState } from "react";
+import RequireRole from "../../components/RequireRole";
+
 // Zorgt dat alle order_id's > 0 uniek zijn binnen een route door dubbelen te verhogen
 function fixDoubles(pointsList, routeId) {
     let changed = false;
@@ -36,8 +41,6 @@ function fixDoubles(pointsList, routeId) {
     }
     return { pointsList: newPoints, changed: false };
 }
-import React, { useEffect, useState } from "react";
-import RequireRole from "../../components/RequireRole";
 
 export default function CreateRoutePage() {
     // ...existing state...
@@ -270,18 +273,24 @@ export default function CreateRoutePage() {
                                                                     let newOrder = e.target.value;
                                                                     if (newOrder === "" || isNaN(Number(newOrder))) newOrder = 99;
                                                                     else newOrder = Number(newOrder);
-                                                                    setPoints(prevPoints => prevPoints.map(p => {
-                                                                        if (p.id === point.id) {
-                                                                            return {
-                                                                                ...p,
-                                                                                route_orders: {
-                                                                                    ...p.route_orders,
-                                                                                    [route.id]: newOrder
-                                                                                }
-                                                                            };
-                                                                        }
-                                                                        return p;
-                                                                    }));
+                                                                    setPoints(prevPoints => {
+                                                                        // Eerst aanpassen
+                                                                        let updatedPoints = prevPoints.map(p => {
+                                                                            if (p.id === point.id) {
+                                                                                return {
+                                                                                    ...p,
+                                                                                    route_orders: {
+                                                                                        ...p.route_orders,
+                                                                                        [route.id]: newOrder
+                                                                                    }
+                                                                                };
+                                                                            }
+                                                                            return p;
+                                                                        });
+                                                                        // Daarna dubbelen oplossen
+                                                                        let result = fixDoubles(updatedPoints, route.id);
+                                                                        return result.pointsList;
+                                                                    });
                                                                 }}
                                                             />
                                                         </td>
