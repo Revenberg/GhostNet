@@ -27,6 +27,8 @@ import GamesProgressOverview from "./pages/Games/GamesProgressOverview";
 import GameRoutePoints from './pages/GameRoutes/GameRoutePoints';
 import CreateRoutePage from './pages/GameRoutes/CreateRoutePage';
 import AllRoutesMap from './pages/GameRoutes/AllRoutesMap';
+import RouteTeamsPage from './pages/GameRoutes/RouteTeamsPage';
+import RouteTeamsPage from './pages/GameRoutes/RouteTeamsPage';
 
 export default function App() {
   return (
@@ -58,6 +60,8 @@ export default function App() {
               <Route path="/games-route-points" element={<GameRoutePoints />} />
               <Route path="/games/create-route" element={<CreateRoutePage />} />
               <Route path="/games/all-routes-map" element={<AllRoutesMap />} />
+              <Route path="/games/route-teams" element={<RouteTeamsPage />} />
+              <Route path="/games/route-teams" element={<RouteTeamsPage />} />
             </>
         </Routes>
       </div>
