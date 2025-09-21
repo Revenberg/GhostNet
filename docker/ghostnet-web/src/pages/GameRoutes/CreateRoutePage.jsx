@@ -282,19 +282,17 @@ function fixDoubles(pointsList, routeId) {
                 while (pointsList.some(pp => pp.route_orders?.[routeId] === nextnr)) {
                     nextnr++;
                 }
-                const safeNext = nextnr;
                 changed = true;
+                // Gebruik een for-loop om closure te vermijden
                 pointsList = pointsList.map(p => {
-                    if (p.id === pid) {
-                        return {
-                            ...p,
-                            route_orders: {
-                                ...p.route_orders,
-                                [routeId]: safeNext
-                            }
-                        };
-                    }
-                    return p;
+                    if (p.id !== pid) return p;
+                    return {
+                        ...p,
+                        route_orders: {
+                            ...p.route_orders,
+                            [routeId]: nextnr
+                        }
+                    };
                 });
             }
         }
