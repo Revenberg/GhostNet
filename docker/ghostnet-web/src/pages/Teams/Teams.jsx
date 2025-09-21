@@ -122,13 +122,14 @@ function Teams() {
   };
 
   // UI Handlers
-  const openRegister = () => {
+/*  const openRegister = () => {
     setForm({ teamname: '', game_id: games.length > 0 ? games[0].id : 0 });
   //  setShowRegister(true);
     setShowUpdate(false);
     setShowDelete(false);
     setSelectedTeam(null);
   };
+  */
   const openUpdate = (team) => {
     setForm({
       teamname: team.teamname,
