@@ -130,7 +130,11 @@ function Teams() {
     setSelectedTeam(null);
   };
   const openUpdate = (team) => {
-    setForm({ teamname: team.teamname, game_id: team.game_id || (games.length > 0 ? games[0].id : 0) });
+    setForm({
+      teamname: team.teamname,
+      teamcode: team.teamcode || '',
+      game_id: team.game_id || (games.length > 0 ? games[0].id : 0)
+    });
     setSelectedTeam(team);
     setShowUpdate(true);
     setShowRegister(false);
@@ -222,7 +226,7 @@ function Teams() {
         {/* Update Modal */}
         {showUpdate && selectedTeam && (
           <div style={modalStyle}>
-            <h2 className="text-xl font-bold mb-4">Teamnaam aanpassen</h2>
+            <h2 className="text-xl font-bold mb-4">Team aanpassen</h2>
             <form onSubmit={handleUpdate} className="space-y-4 mb-4">
               <input
                 type="text"
@@ -230,6 +234,15 @@ function Teams() {
                 placeholder="Teamnaam"
                 value={form.teamname}
                 onChange={e => setForm({ ...form, teamname: e.target.value })}
+                className="w-full border px-3 py-2 rounded"
+                required
+              />
+              <input
+                type="text"
+                name="teamcode"
+                placeholder="Teamcode"
+                value={form.teamcode || ''}
+                onChange={e => setForm({ ...form, teamcode: e.target.value })}
                 className="w-full border px-3 py-2 rounded"
                 required
               />
