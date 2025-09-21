@@ -1,3 +1,41 @@
+// Zorgt dat alle order_id's > 0 uniek zijn binnen een route door dubbelen te verhogen
+function fixDoubles(pointsList, routeId) {
+    let changed = false;
+    // Kopieer de lijst zodat we niet muteren
+    let newPoints = pointsList.map(p => ({ ...p, route_orders: { ...p.route_orders } }));
+    // Verzamel alle order_id's > 0
+    let used = {};
+    for (let idx = 0; idx < newPoints.length; idx++) {
+        const p = newPoints[idx];
+        const oid = p.route_orders?.[routeId];
+        if (oid > 0) {
+            if (!used[oid]) used[oid] = [];
+            used[oid].push(idx);
+        }
+    }
+    // Zoek dubbele
+    for (const [oid, idxs] of Object.entries(used)) {
+        if (idxs.length > 1) {
+            // Laat de eerste staan, verhoog de rest
+            for (let i = 1; i < idxs.length; i++) {
+                let next = Number(oid) + 1;
+                // Zoek een vrij nummer
+                while (used[next] && used[next].length > 0) {
+                    next++;
+                }
+                newPoints[idxs[i]].route_orders[routeId] = next;
+                if (!used[next]) used[next] = [];
+                used[next].push(idxs[i]);
+                changed = true;
+            }
+        }
+    }
+    // Als er iets veranderd is, recursief opnieuw controleren
+    if (changed) {
+        return fixDoubles(newPoints, routeId);
+    }
+    return { pointsList: newPoints, changed: false };
+}
 import React, { useEffect, useState } from "react";
 import RequireRole from "../../components/RequireRole";
 
