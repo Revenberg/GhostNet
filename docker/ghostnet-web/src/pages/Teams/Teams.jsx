@@ -63,8 +63,14 @@ function Teams() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError(null);
+    
+    
+    console.log("Registering team with data:", form);
+
+
+    const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
     try {
-      const res = await fetch('/api/teams', {
+      const res = await fetch(`${backendHost}/api/teams`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -83,7 +89,8 @@ function Teams() {
     e.preventDefault();
     setError(null);
     try {
-      const res = await fetch(`/api/teams/${selectedTeam.id}`, {
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      const res = await fetch(`${backendHost}/api/teams/${selectedTeam.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -102,7 +109,8 @@ function Teams() {
   const handleDelete = async (teamId) => {
     setError(null);
     try {
-      const res = await fetch(`/api/teams/${teamId}`, {
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      const res = await fetch(`${backendHost}/api/teams/${teamId}`, {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error('Failed to delete team');
