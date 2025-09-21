@@ -277,10 +277,10 @@ function fixDoubles(pointsList, routeId) {
             // Laat de eerste staan, verhoog de rest
             for (let i = 1; i < ids.length; i++) {
                 const pid = ids[i];
-                let next = Number(oid) + 1;
+                let nextnr = Number(oid) + 1;
                 // Zoek een vrij nummer
-                while (pointsList.some(pp => pp.route_orders?.[routeId] === next)) {
-                    next++;
+                while (pointsList.some(pp => pp.route_orders?.[routeId] === nextnr)) {
+                    nextnr++;
                 }
                 changed = true;
                 pointsList = pointsList.map(p => {
@@ -289,7 +289,7 @@ function fixDoubles(pointsList, routeId) {
                             ...p,
                             route_orders: {
                                 ...p.route_orders,
-                                [routeId]: next
+                                [routeId]: nextnr
                             }
                         };
                     }
