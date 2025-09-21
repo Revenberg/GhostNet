@@ -22,11 +22,20 @@ export async function ensureTables(pool) {
         last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )
   `);
+
+    await conn.query(`
+    ALTER TABLE teams
+        ADD COLUMN game_id INT,
+        ADD CONSTRAINT fk_teams_game FOREIGN KEY (game_id) REFERENCES game(id)
+    `);
+
   await conn.query(`
     CREATE TABLE IF NOT EXISTS teams (
         id INT AUTO_INCREMENT PRIMARY KEY,
         teamname VARCHAR(64) UNIQUE,
-        teamcode VARCHAR(64) UNIQUE
+        teamcode VARCHAR(64) UNIQUE,
+        game_id INT,
+        FOREIGN KEY (game_id) REFERENCES game(id)
     )
   `);
   await conn.query(`

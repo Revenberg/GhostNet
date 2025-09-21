@@ -63,14 +63,14 @@ export default function createTeamsRouter(pool) {
   // Add team
   router.post("/", async (req, res) => {
     try {
-      const { teamname } = req.body;
-      if (!teamname ) {
+      const { teamname, game_id } = req.body;
+      if (!teamname) {
         return res.status(400).json({ error: "Team name is required" });
       }
       const teamcode = Math.random().toString(36).substring(2, 8).toUpperCase();
       const [result] = await pool.query(
-        "INSERT INTO teams (teamname, teamcode) VALUES (?, ?)",
-        [teamname, teamcode]
+        "INSERT INTO teams (teamname, teamcode, game_id) VALUES (?, ?, ?)",
+        [teamname, teamcode, game_id || null]
       );
       // Create a team event for creation
       const team_id = result.insertId;
@@ -89,13 +89,13 @@ export default function createTeamsRouter(pool) {
   router.put("/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const { teamname, teamcode } = req.body;
+      const { teamname, teamcode, game_id } = req.body;
       if (!teamname || !teamcode) {
         return res.status(400).json({ error: "Team name and code required" });
       }
       const [result] = await pool.query(
-        "UPDATE teams SET teamname = ?, teamcode = ? WHERE id = ?",
-        [teamname, teamcode, id]
+        "UPDATE teams SET teamname = ?, teamcode = ?, game_id = ? WHERE id = ?",
+        [teamname, teamcode, game_id || null, id]
       );
       if (result.affectedRows === 0) {
         return res.status(404).json({ error: "Team not found" });
