@@ -100,7 +100,17 @@ export default function createTeamsRouter(pool) {
     }
   });
 
-  // Delete team
+  /**
+   * DELETE /api/teams/:id
+   * Verwijder een team op basis van id.
+   *
+   * Request params:
+   *   - id: het team-id (number)
+   * Response:
+   *   - 200: { success: true }
+   *   - 404: { error: "Team not found" }
+   *   - 500: { error: "Database error" }
+   */
   router.delete("/:id", async (req, res) => {
     try {
       const { id } = req.params;
