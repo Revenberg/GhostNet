@@ -192,7 +192,7 @@ function Teams() {
       {/* Update Modal */}
       {showUpdate && selectedTeam && (
         <div style={modalStyle}>
-          <h2>Update Team</h2>
+          <h2>Teamnaam aanpassen</h2>
           <form onSubmit={handleUpdate}>
             <div>
               <label>Teamnaam: </label>
@@ -208,12 +208,12 @@ function Teams() {
               <input
                 type="text"
                 value={form.teamcode}
-                onChange={e => setForm({ ...form, teamcode: e.target.value })}
-                required
+                readOnly
+                style={{ background: '#f3f4f6', color: '#888' }}
               />
             </div>
-            <button type="submit">Update</button>
-            <button type="button" onClick={closeModals}>Cancel</button>
+            <button type="submit" className="btn btn-primary" style={{marginRight: 8}}>Opslaan</button>
+            <button type="button" className="btn btn-secondary" onClick={closeModals}>Annuleren</button>
           </form>
         </div>
       )}
