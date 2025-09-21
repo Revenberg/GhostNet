@@ -282,6 +282,7 @@ function fixDoubles(pointsList, routeId) {
                 while (pointsList.some(pp => pp.route_orders?.[routeId] === nextnr)) {
                     nextnr++;
                 }
+                const safeNext = nextnr;
                 changed = true;
                 pointsList = pointsList.map(p => {
                     if (p.id === pid) {
@@ -289,7 +290,7 @@ function fixDoubles(pointsList, routeId) {
                             ...p,
                             route_orders: {
                                 ...p.route_orders,
-                                [routeId]: nextnr
+                                [routeId]: safeNext
                             }
                         };
                     }
