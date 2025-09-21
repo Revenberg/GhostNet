@@ -221,8 +221,8 @@ function Teams() {
       {/* Delete Modal */}
       {showDelete && selectedTeam && (
         <div style={modalStyle}>
-          <h2>Delete Team</h2>
-          <p>Are you sure you want to delete team "{selectedTeam.teamname}"?</p>
+            <h2>Team verwijderen</h2>
+            <p>Weet je zeker dat je team "{selectedTeam.teamname}" wilt verwijderen?</p>
           <button onClick={() => handleDelete(selectedTeam.id)}>Delete</button>
           <button onClick={closeModals}>Cancel</button>
         </div>
