@@ -3,6 +3,83 @@ import express from "express";
 export default function createGameRoutesRouter(pool) {
   const router = express.Router();
 
+  // Ophalen van alle teams (details) voor een game_route_id
+  router.get("/route-teams/details", async (req, res) => {
+    try {
+      const { game_route_id } = req.query;
+      if (!game_route_id) {
+        return res.status(400).json({ error: "game_route_id required" });
+      }
+      const [rows] = await pool.query(
+        `SELECT t.* FROM game_route_team grt
+         JOIN teams t ON grt.team_id = t.id
+         WHERE grt.game_route_id = ?`,
+        [game_route_id]
+      );
+      res.json({ success: true, teams: rows });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  // Ophalen van alle team_ids voor een game_route_id
+  router.get("/route-teams", async (req, res) => {
+    try {
+      const { game_route_id } = req.query;
+      if (!game_route_id) {
+        return res.status(400).json({ error: "game_route_id required" });
+      }
+      const [rows] = await pool.query(
+        `SELECT team_id FROM game_route_team WHERE game_route_id = ?`,
+        [game_route_id]
+      );
+      res.json({ success: true, team_ids: rows.map(r => r.team_id) });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  // Set team_ids for a game_route_id (replace all, insert new, delete missing)
+  router.post("/route-teams", async (req, res) => {
+    try {
+      const { game_route_id, team_ids } = req.body;
+      if (!game_route_id || !Array.isArray(team_ids)) {
+        return res.status(400).json({ error: "game_route_id and team_ids[] required" });
+      }
+      // 1. Haal bestaande team_ids op voor deze route
+      const [rows] = await pool.query(
+        `SELECT team_id FROM game_route_team WHERE game_route_id = ?`,
+        [game_route_id]
+      );
+      const existing = new Set(rows.map(r => r.team_id));
+      const wanted = new Set(team_ids.map(Number));
+      // 2. Voeg toe wat nog niet bestaat
+      for (const tid of wanted) {
+        if (!existing.has(tid)) {
+          await pool.query(
+            `INSERT INTO game_route_team (game_route_id, team_id) VALUES (?, ?)`,
+            [game_route_id, tid]
+          );
+        }
+      }
+      // 3. Verwijder wat niet meer gewenst is
+      for (const tid of existing) {
+        if (!wanted.has(tid)) {
+          await pool.query(
+            `DELETE FROM game_route_team WHERE game_route_id = ? AND team_id = ?`,
+            [game_route_id, tid]
+          );
+        }
+      }
+      res.json({ success: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
     // Create a new game_route_point
   router.post("/points", async (req, res) => {
     try {

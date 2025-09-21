@@ -46,21 +46,24 @@ export default function CreateRoutePage() {
 
     useEffect(() => {
         if (!selectedGame) {
-            setPoints([]);
+    useEffect(() => {
+        if (!routes || !Array.isArray(routes) || routes.length === 0) {
+            setRouteTeams({});
             return;
         }
-        async function fetchPoints() {
-            setLoading(true);
-            setMessage("");
-            try {
-                const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                // Fetch points for each route
-                const allRoutePoints = {};
-                await Promise.all(routes.map(async route => {
-                    const res = await fetch(`${backendHost}/api/game_routes/route?game_route_id=${route.id}`);
-                    const data = await res.json();
-                    if (res.ok && data.success) {
-                        allRoutePoints[route.id] = data.points;
+        const fetchRouteTeams = async () => {
+            const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+            const newRouteTeams = {};
+            await Promise.all((routes || []).map(async route => {
+                const res = await fetch(`${backendHost}/api/game_routes/route-teams?game_route_id=${route.id}`);
+                const data = await res.json();
+                if (res.ok && data.success) newRouteTeams[route.id] = data.team_ids;
+                else newRouteTeams[route.id] = [];
+            }));
+            setRouteTeams(newRouteTeams);
+        };
+        fetchRouteTeams();
+    }, [routes]);
                     } else {
                         allRoutePoints[route.id] = [];
                     }

@@ -92,6 +92,18 @@ export async function ensureTables(pool) {
         lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS game_route_team (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        game_route_id INT,
+        team_id INT,
+        FOREIGN KEY (game_route_id) REFERENCES game_routes(id),
+        FOREIGN KEY (team_id) REFERENCES teams(id),
+        lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   await conn.query(`
     CREATE TABLE IF NOT EXISTS lora_nodes (
         id INT AUTO_INCREMENT PRIMARY KEY,
