@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import RequireRole from "../../components/RequireRole";
 
 export default function RouteTeamsPage() {
+    const [games, setGames] = useState([]);
+    const [selectedGame, setSelectedGame] = useState(null);
     const [routes, setRoutes] = useState([]);
     const [teams, setTeams] = useState([]);
     const [routeTeams, setRouteTeams] = useState({});
@@ -9,24 +11,27 @@ export default function RouteTeamsPage() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        async function fetchRoutesAndTeams() {
+        async function fetchGamesTeamsRoutes() {
             setLoading(true);
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                const [routesRes, teamsRes] = await Promise.all([
-                    fetch(`${backendHost}/api/game_routes`),
-                    fetch(`${backendHost}/api/teams`)
+                const [gamesRes, teamsRes, routesRes] = await Promise.all([
+                    fetch(`${backendHost}/api/games`),
+                    fetch(`${backendHost}/api/teams`),
+                    fetch(`${backendHost}/api/game_routes`)
                 ]);
-                const routesData = await routesRes.json();
+                const gamesData = await gamesRes.json();
                 const teamsData = await teamsRes.json();
-                if (routesData.success) setRoutes(routesData.routes);
+                const routesData = await routesRes.json();
+                if (gamesData.success) setGames(gamesData.games);
                 if (teamsData.success) setTeams(teamsData.teams);
+                if (routesData.success) setRoutes(routesData.routes);
             } catch (err) {
                 setMessage("Fout bij ophalen van data");
             }
             setLoading(false);
         }
-        fetchRoutesAndTeams();
+        fetchGamesTeamsRoutes();
     }, []);
 
     useEffect(() => {
@@ -75,10 +80,29 @@ export default function RouteTeamsPage() {
         setLoading(false);
     };
 
+    // Filter routes op geselecteerde game
+    const shownRoutes = selectedGame ? routes.filter(r => r.game_id === selectedGame.id) : [];
+
     return (
         <RequireRole role="admin">
             <div className="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow">
                 <h2 className="text-xl font-bold mb-4">Teams per route beheren</h2>
+                <div className="mb-4">
+                    <label className="font-semibold mr-2">Selecteer game:</label>
+                    <select
+                        className="border px-2 py-1 rounded"
+                        value={selectedGame ? selectedGame.id : ''}
+                        onChange={e => {
+                            const game = games.find(g => g.id === Number(e.target.value));
+                            setSelectedGame(game || null);
+                        }}
+                    >
+                        <option value="">-- Kies een game --</option>
+                        {games.map(game => (
+                            <option key={game.id} value={game.id}>{game.id} - {game.name}</option>
+                        ))}
+                    </select>
+                </div>
                 {loading ? <div>Laden...</div> : (
                     <>
                     <table className="w-full border-collapse text-xs md:text-sm">
@@ -91,7 +115,7 @@ export default function RouteTeamsPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {routes.map(route => (
+                            {shownRoutes.map(route => (
                                 <tr key={route.id}>
                                     <td className="border-b p-2 font-semibold">{route.route_name}</td>
                                     {teams.map(team => (
