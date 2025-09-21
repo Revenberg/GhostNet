@@ -45,25 +45,34 @@ export default function RouteTeamsPage() {
         fetchAllRouteTeams();
     }, [routes]);
 
-    const handleToggleTeam = async (routeId, teamId) => {
+    // Wijzigingen alleen lokaal bijhouden
+    const handleToggleTeam = (routeId, teamId) => {
         const current = routeTeams[routeId] || [];
         const newSet = current.includes(teamId)
             ? current.filter(id => id !== teamId)
             : [...current, teamId];
         setRouteTeams(rt => ({ ...rt, [routeId]: newSet }));
-        // Direct opslaan
+    };
+
+    // Opslaan van alle wijzigingen
+    const handleSaveAll = async () => {
+        setMessage("");
+        setLoading(true);
         try {
             const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-            const res = await fetch(`${backendHost}/api/game_routes/route-teams`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ game_route_id: routeId, team_ids: newSet })
-            });
-            const data = await res.json();
-            if (!data.success) setMessage("Fout bij opslaan");
+            // Sla alle routes in parallel op
+            await Promise.all(Object.entries(routeTeams).map(async ([routeId, teamIds]) => {
+                await fetch(`${backendHost}/api/game_routes/route-teams`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ game_route_id: routeId, team_ids: teamIds })
+                });
+            }));
+            setMessage("✅ Opgeslagen");
         } catch {
             setMessage("Fout bij opslaan");
         }
+        setLoading(false);
     };
 
     return (
@@ -71,6 +80,7 @@ export default function RouteTeamsPage() {
             <div className="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow">
                 <h2 className="text-xl font-bold mb-4">Teams per route beheren</h2>
                 {loading ? <div>Laden...</div> : (
+                    <>
                     <table className="w-full border-collapse text-xs md:text-sm">
                         <thead>
                             <tr>
@@ -97,6 +107,12 @@ export default function RouteTeamsPage() {
                             ))}
                         </tbody>
                     </table>
+                    <div className="mt-4 flex justify-end">
+                        <button className="btn-primary px-4 py-2" onClick={handleSaveAll} disabled={loading}>
+                            Opslaan
+                        </button>
+                    </div>
+                    </>
                 )}
                 {message && <div className="mt-4 text-sm text-red-600">{message}</div>}
             </div>
