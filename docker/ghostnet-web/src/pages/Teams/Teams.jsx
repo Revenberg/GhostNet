@@ -53,68 +53,69 @@ function Teams() {
         setError('No teams found');
       }
     } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Register team
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setError(null);
-    
-    
-    console.log("Registering team with data:", form);
-
-
-    const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-    try {
-      const res = await fetch(`${backendHost}/api/teams`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) throw new Error('Failed to register team');
-      setForm({ teamname: '', game_id: 0 });
-      setShowRegister(false);
-      fetchTeams();
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  // Update team
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    setError(null);
-    try {
-      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-      const res = await fetch(`${backendHost}/api/teams/${selectedTeam.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) throw new Error('Failed to update team');
-      setForm({ teamname: '', game_id: 0 });
-      setShowUpdate(false);
-      setSelectedTeam(null);
-      fetchTeams();
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  // Delete team
-  const handleDelete = async (teamId) => {
-    setError(null);
-    try {
-      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-      const res = await fetch(`${backendHost}/api/teams/${teamId}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Failed to delete team');
-      setShowDelete(false);
+        {loading ? (
+          <div>Laden...</div>
+        ) : (
+          <>
+            <h3 className="text-lg font-semibold mb-2 mt-6">Alle teams</h3>
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <th className="border-b p-2 text-left">ID</th>
+                  <th className="border-b p-2 text-left">Teamnaam</th>
+                  <th className="border-b p-2 text-left">Teamcode</th>
+                  <th className="border-b p-2 text-left">Game</th>
+                  <th className="border-b p-2 text-left">Acties</th>
+                </tr>
+              </thead>
+              <tbody>
+                {teams.map((team) => {
+                  const game = games.find(g => String(g.id) === String(team.game_id));
+                  return (
+                    <tr key={team.id}>
+                      <td className="border-b p-2">{team.id}</td>
+                      <td className="border-b p-2">{team.teamname}</td>
+                      <td className="border-b p-2">{team.teamcode}</td>
+                      <td className="border-b p-2">{game ? game.name : ''}</td>
+                      <td className="border-b p-2">
+                        <button className="btn-primary mr-2" onClick={() => openUpdate(team)}>Aanpassen</button>
+                        <button className="btn-secondary" onClick={() => openDelete(team)}>Verwijderen</button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <h3 className="text-lg font-semibold mb-2 mt-6">Nieuw team aanmaken</h3>
+            <form className="space-y-4 mb-8" onSubmit={handleRegister}>
+              <input
+                type="text"
+                name="teamname"
+                placeholder="Teamnaam"
+                value={form.teamname}
+                onChange={e => setForm({ ...form, teamname: e.target.value })}
+                className="w-full border px-3 py-2 rounded mb-2"
+                required
+              />
+              <select
+                name="game_id"
+                value={form.game_id}
+                onChange={e => setForm({ ...form, game_id: e.target.value })}
+                className="w-full border px-3 py-2 rounded mb-2"
+                required
+              >
+                <option value="" disabled>Kies een game</option>
+                {games.map(game => (
+                  <option key={game.id} value={game.id}>{game.name}</option>
+                ))}
+              </select>
+              <div className="flex gap-2">
+                <button type="submit" className="btn-primary flex-1">Aanmaken</button>
+                <button type="button" className="btn-secondary flex-1" onClick={closeModals}>Annuleren</button>
+              </div>
+            </form>
+          </>
+        )}
       setSelectedTeam(null);
       fetchTeams();
     } catch (err) {
