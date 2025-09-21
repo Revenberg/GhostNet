@@ -127,9 +127,11 @@ function Teams() {
     setForm({ teamname: '', teamcode: '' });
   };
 
+
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto', padding: 24 }}>
-      <h1>Teams</h1>
+
+    <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
+      <h2>Teams</h2>
       {error && <div style={{ color: 'red' }}>{error}</div>}
       {loading ? (
         <div>Loading teams...</div>
@@ -223,7 +225,7 @@ function Teams() {
         <div style={modalStyle}>
             <h2>Team verwijderen</h2>
             <p>Weet je zeker dat je team "{selectedTeam.teamname}" wilt verwijderen?</p>
-          <button type="button" className="btn btn-danger" style={{marginRight: 8}} onClick={() => handleDelete(selectedTeam.id)}>Verwijderen</button>
+          <button type="submit" className="btn btn-primary" style={{marginRight: 8}} onClick={() => handleDelete(selectedTeam.id)}>Verwijderen</button>
           <button type="button" className="btn btn-secondary" onClick={closeModals}>Annuleren</button>
         </div>
       )}
