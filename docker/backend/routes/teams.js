@@ -34,17 +34,6 @@ export default function createTeamsRouter(pool) {
     }
   });
 
-  // Get all teams
-  router.get("/", async (req, res) => {
-    try {
-      const [rows] = await pool.query("SELECT id, teamname, teamcode FROM teams");
-      res.json({ success: true, teams: rows });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-    }
-  });
-
 // Get team by teamcode
   router.get("/by-code/:teamcode", async (req, res) => {
     try {
@@ -123,6 +112,17 @@ export default function createTeamsRouter(pool) {
         return res.status(404).json({ error: "Team not found" });
       }
       res.json({ success: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+    // Get all teams
+  router.get("/", async (req, res) => {
+    try {
+      const [rows] = await pool.query("SELECT id, game_id, teamname, teamcode FROM teams");
+      res.json({ success: true, teams: rows });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });
