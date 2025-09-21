@@ -243,7 +243,7 @@ export default function CreateRoutePage() {
                                                 {routes.map(route => {
                                                     // Zoek order_id voor deze point in deze route
                                                     let order = (point.route_orders && point.route_orders[route.id]);
-                                                    if (order === undefined || order === null || order === "") order = 99;
+                                                    if (order === undefined || order === null || order === "" || Number(order) <= 0) order = "";
                                                     // Unieke key per point/route combinatie
                                                     return (
                                                         <td key={route.id} className="border-b p-2 text-center">
