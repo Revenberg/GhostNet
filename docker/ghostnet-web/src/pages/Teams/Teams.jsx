@@ -205,6 +205,7 @@ function Teams() {
               </tbody>
             </table>
             <form className="space-y-4 mb-8" onSubmit={handleRegister}>
+              <h2 className="text-xl font-bold mb-4">Nieuw team aanmaken</h2>
               <label htmlFor="teamname" className="block font-medium">Teamnaam</label>
               <input
                 id="teamname"
