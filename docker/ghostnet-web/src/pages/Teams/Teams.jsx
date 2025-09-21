@@ -223,8 +223,8 @@ function Teams() {
         <div style={modalStyle}>
             <h2>Team verwijderen</h2>
             <p>Weet je zeker dat je team "{selectedTeam.teamname}" wilt verwijderen?</p>
-          <button onClick={() => handleDelete(selectedTeam.id)}>Delete</button>
-          <button onClick={closeModals}>Cancel</button>
+          <button className="btn btn-danger" style={{marginRight: 8}} onClick={() => handleDelete(selectedTeam.id)}>Verwijderen</button>
+          <button className="btn btn-secondary" onClick={closeModals}>Annuleren</button>
         </div>
       )}
     </div>
