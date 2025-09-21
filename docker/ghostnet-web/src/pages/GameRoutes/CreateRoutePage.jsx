@@ -177,39 +177,15 @@ export default function CreateRoutePage() {
                             <option key={game.id} value={game.id}>{game.id} - {game.name}</option>
                         ))}
                     </select>
-                    <span className="ml-4">Selecteer route:</span>
-                    <select
-                        className="border px-2 py-1 rounded ml-2"
-                        value={selectedRoute ? selectedRoute.id : "new"}
-                        onChange={e => {
-                            if (e.target.value === "new") {
-                                setSelectedRoute(null);
-                                setRouteName("");
-                            } else {
-                                const route = routes.find(r => r.id === Number(e.target.value));
-                                setSelectedRoute(route || null);
-                                setRouteName(route ? route.route_name : "");
-                            }
-                        }}
+                    <span className="ml-4">Route naam:</span>
+                    <input type="text" className="border px-2 py-1 rounded" value={routeName} onChange={e => setRouteName(e.target.value)} />
+                    <button
+                        className="btn-primary px-3 py-1 ml-2"
+                        onClick={handleSaveRoute}
+                        disabled={savingRoute || !routeName || !selectedGame}
                     >
-                        <option value="new">-- Nieuwe route --</option>
-                        {routes.map(route => (
-                            <option key={route.id} value={route.id}>{route.route_name}</option>
-                        ))}
-                    </select>
-                    {(!selectedRoute || !selectedRoute.id) && (
-                        <>
-                            <span className="ml-4">Route naam:</span>
-                            <input type="text" className="border px-2 py-1 rounded" value={routeName} onChange={e => setRouteName(e.target.value)} />
-                            <button
-                                className="btn-primary px-3 py-1 ml-2"
-                                onClick={handleSaveRoute}
-                                disabled={savingRoute || !routeName || !selectedGame}
-                            >
-                                Route opslaan
-                            </button>
-                        </>
-                    )}
+                        Route opslaan
+                    </button>
                 </div>
                 {selectedGame && (
                     <div>
