@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import RequireRole from "../../components/RequireRole";
-import React, { useEffect, useState } from "react";
-import RequireRole from "../../components/RequireRole";
 
 // Zorgt dat alle order_id's > 0 uniek zijn binnen een route door dubbelen te verhogen
 function fixDoubles(pointsList, routeId) {
