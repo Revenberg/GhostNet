@@ -258,27 +258,30 @@ function fixDoubles(pointsList, routeId) {
     let changed = false;
     // Verzamel alle order_id's > 0 voor deze route
     let used = {};
-    pointsList.forEach(p => {
+    for (let idx = 0; idx < pointsList.length; idx++) {
+        const p = pointsList[idx];
         const oid = p.route_orders?.[routeId];
         if (oid > 0) {
             if (!used[oid]) used[oid] = [];
             used[oid].push(p.id);
         }
-    });
+    }
     // Zoek dubbele
-    Object.entries(used).forEach(([oid, ids]) => {
+    const usedEntries = Object.entries(used);
+    for (let ue = 0; ue < usedEntries.length; ue++) {
+        const [oid, ids] = usedEntries[ue];
         if (ids.length > 1) {
             // Laat de eerste staan, verhoog de rest
             for (let i = 1; i < ids.length; i++) {
                 const pid = ids[i];
+                let next = Number(oid) + 1;
+                // Zoek een vrij nummer
+                while (pointsList.some(pp => pp.route_orders?.[routeId] === next)) {
+                    next++;
+                }
+                changed = true;
                 pointsList = pointsList.map(p => {
                     if (p.id === pid) {
-                        let next = Number(oid) + 1;
-                        // Zoek een vrij nummer
-                        while (pointsList.some(pp => pp.route_orders?.[routeId] === next)) {
-                            next++;
-                        }
-                        changed = true;
                         return {
                             ...p,
                             route_orders: {
@@ -291,7 +294,7 @@ function fixDoubles(pointsList, routeId) {
                 });
             }
         }
-    });
+    }
     return { pointsList, changed };
 }
                                                                 }}
