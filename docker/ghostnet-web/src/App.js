@@ -13,10 +13,7 @@ import UsersOverview from "./pages/Users/UsersOverview";
 import UsersLogout from "./pages/Users/UsersLogout";
 import UsersUpdate from "./pages/Users/UsersUpdate";
 
-import TeamRegister from "./pages/Teams/TeamRegister";
-import TeamsUpdate from "./pages/Teams/TeamsUpdate";
-import TeamDelete from "./pages/Teams/TeamDelete";
-import TeamsOverview from "./pages/Teams/TeamsOverview";
+import Teams from "./pages/Teams/Teams";
 import TeamDetails from "./pages/Team/TeamDetails";
 import TeamSendEvent from "./pages/Team/TeamSendEvent";
 import GamesUpdate from "./pages/Games/GamesUpdate";
@@ -44,10 +41,7 @@ export default function App() {
               <Route path="/users-logout" element={<UsersLogout />} />
               <Route path="/update-user" element={<UsersUpdate />} />
               <Route path="/update-password" element={<UpdatePassword />} />
-              <Route path="/add-team" element={<TeamRegister />} />
-              <Route path="/update-team" element={<TeamsUpdate />} />
-              <Route path="/delete-team" element={<TeamDelete />} />
-              <Route path="/teams-overview" element={<TeamsOverview />} />
+              <Route path="/teams" element={<Teams />} />
               <Route path="/team-details/:teamId" element={<TeamDetails />} />
               <Route path="/team-send-event" element={<TeamSendEvent />} />
               <Route path="/games-manage" element={<GamesManage />} />
