@@ -54,10 +54,28 @@ export default function CreateRoutePage() {
             setMessage("");
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                const res = await fetch(`${backendHost}/api/game_routes/points/by-game/${selectedGame.id}`);
-                const data = await res.json();
-                if (!res.ok || !data.success) throw new Error(data.error || "Fout bij laden");
-                setPoints(data.points);
+                // Fetch points for each route
+                const allRoutePoints = {};
+                await Promise.all(routes.map(async route => {
+                    const res = await fetch(`${backendHost}/api/game_routes/route?game_route_id=${route.id}`);
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        allRoutePoints[route.id] = data.points;
+                    } else {
+                        allRoutePoints[route.id] = [];
+                    }
+                }));
+                // Merge all points by point id, collect order_id per route
+                const pointsMap = {};
+                routes.forEach(route => {
+                    (allRoutePoints[route.id] || []).forEach(p => {
+                        if (!pointsMap[p.id]) {
+                            pointsMap[p.id] = { ...p, route_orders: {} };
+                        }
+                        pointsMap[p.id].route_orders[route.id] = p.order_id;
+                    });
+                });
+                setPoints(Object.values(pointsMap));
             } catch {
                 setPoints([]);
             }
