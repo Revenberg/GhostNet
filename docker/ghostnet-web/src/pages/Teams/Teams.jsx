@@ -32,6 +32,9 @@ function Teams() {
         setError('No teams found');
       }
     } catch (err) {
+      // debugging line
+        console.log(err);
+        console.error(err);
       setError(err.message);
     } finally {
       setLoading(false);
