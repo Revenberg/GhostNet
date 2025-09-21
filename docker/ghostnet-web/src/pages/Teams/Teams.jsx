@@ -23,18 +23,19 @@ function Teams() {
     setError(null);
     try {
       const res = await fetch('/api/teams');
+      console.log(res);
+      
       if (!res.ok) throw new Error('Failed to fetch teams');
       const data = await res.json();
+      console.log(data);
       if (data.success && Array.isArray(data.teams)) {
+        console.log(data.teams);
         setTeams(data.teams);
       } else {
         setTeams([]);
         setError('No teams found');
       }
     } catch (err) {
-      // debugging line
-        console.log(err);
-        console.error(err);
       setError(err.message);
     } finally {
       setLoading(false);
