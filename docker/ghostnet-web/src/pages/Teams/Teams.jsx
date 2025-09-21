@@ -10,7 +10,7 @@ function Teams() {
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
-  const [form, setForm] = useState({ teamname: '', game_id: '' });
+  const [form, setForm] = useState({ teamname: '', game_id: 0 });
 
   // Fetch teams
 
@@ -76,7 +76,7 @@ function Teams() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed to register team');
-      setForm({ teamname: '', game_id: '' });
+      setForm({ teamname: '', game_id: 0 });
       setShowRegister(false);
       fetchTeams();
     } catch (err) {
@@ -96,7 +96,7 @@ function Teams() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed to update team');
-      setForm({ teamname: '', game_id: '' });
+      setForm({ teamname: '', game_id: 0 });
       setShowUpdate(false);
       setSelectedTeam(null);
       fetchTeams();
@@ -124,14 +124,14 @@ function Teams() {
 
   // UI Handlers
   const openRegister = () => {
-    setForm({ teamname: '', game_id: games.length > 0 ? games[0].id : '' });
+    setForm({ teamname: '', game_id: games.length > 0 ? games[0].id : 0 });
     setShowRegister(true);
     setShowUpdate(false);
     setShowDelete(false);
     setSelectedTeam(null);
   };
   const openUpdate = (team) => {
-    setForm({ teamname: team.teamname, game_id: team.game_id || (games.length > 0 ? games[0].id : '') });
+    setForm({ teamname: team.teamname, game_id: team.game_id || (games.length > 0 ? games[0].id : 0) });
     setSelectedTeam(team);
     setShowUpdate(true);
     setShowRegister(false);
@@ -148,7 +148,7 @@ function Teams() {
     setShowUpdate(false);
     setShowDelete(false);
     setSelectedTeam(null);
-    setForm({ teamname: '', game_id: '' });
+    setForm({ teamname: '', game_id: 0 });
   };
 
 
