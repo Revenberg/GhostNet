@@ -6,7 +6,6 @@ function Teams() {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showRegister, setShowRegister] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
@@ -72,7 +71,6 @@ function Teams() {
       });
       if (!res.ok) throw new Error('Failed to register team');
       setForm({ teamname: '', game_id: 0 });
-      setShowRegister(false);
       fetchTeams();
     } catch (err) {
       setError(err.message);
@@ -137,7 +135,6 @@ function Teams() {
     });
     setSelectedTeam(team);
     setShowUpdate(true);
-    setShowRegister(false);
     setShowDelete(false);
   };
   const openDelete = (team) => {
@@ -147,7 +144,6 @@ function Teams() {
     setShowUpdate(false);
   };
   const closeModals = () => {
-    setShowRegister(false);
     setShowUpdate(false);
     setShowDelete(false);
     setSelectedTeam(null);
