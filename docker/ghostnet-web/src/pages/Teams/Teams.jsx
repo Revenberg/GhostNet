@@ -129,7 +129,6 @@ function Teams() {
 
 
   return (
-
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
       <h2>Teams</h2>
       {error && <div style={{ color: 'red' }}>{error}</div>}
@@ -164,9 +163,12 @@ function Teams() {
 
       {/* Register Modal */}
       {showRegister && (
-        <div style={modalStyle}>
+        /* <div style={modalStyle}> */
+        <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
+            <h2 className="text-xl font-bold mb-4">Register Team</h2>
+
           <h2>Register Team</h2>
-          <form onSubmit={handleRegister}>
+          <form className="space-y-4 mb-8" onSubmit={handleRegister}>
             <div>
               <label>Teamnaam: </label>
               <input
