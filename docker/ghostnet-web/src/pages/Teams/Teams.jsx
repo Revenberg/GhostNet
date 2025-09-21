@@ -11,7 +11,7 @@ function Teams() {
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
-  const [form, setForm] = useState({ name: '', description: '' });
+  const [form, setForm] = useState({ teamname: '', teamcode: '' });
 
   // Fetch teams
   useEffect(() => {
@@ -25,7 +25,12 @@ function Teams() {
       const res = await fetch('/api/teams');
       if (!res.ok) throw new Error('Failed to fetch teams');
       const data = await res.json();
-      setTeams(data);
+      if (data.success && Array.isArray(data.teams)) {
+        setTeams(data.teams);
+      } else {
+        setTeams([]);
+        setError('No teams found');
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -44,7 +49,7 @@ function Teams() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed to register team');
-      setForm({ name: '', description: '' });
+      setForm({ teamname: '', teamcode: '' });
       setShowRegister(false);
       fetchTeams();
     } catch (err) {
@@ -57,13 +62,13 @@ function Teams() {
     e.preventDefault();
     setError(null);
     try {
-      const res = await fetch(`/api/teams/${selectedTeam._id}`, {
+      const res = await fetch(`/api/teams/${selectedTeam.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed to update team');
-      setForm({ name: '', description: '' });
+      setForm({ teamname: '', teamcode: '' });
       setShowUpdate(false);
       setSelectedTeam(null);
       fetchTeams();
@@ -90,14 +95,14 @@ function Teams() {
 
   // UI Handlers
   const openRegister = () => {
-    setForm({ name: '', description: '' });
+    setForm({ teamname: '', teamcode: '' });
     setShowRegister(true);
     setShowUpdate(false);
     setShowDelete(false);
     setSelectedTeam(null);
   };
   const openUpdate = (team) => {
-    setForm({ name: team.name, description: team.description });
+    setForm({ teamname: team.teamname, teamcode: team.teamcode });
     setSelectedTeam(team);
     setShowUpdate(true);
     setShowRegister(false);
@@ -114,7 +119,7 @@ function Teams() {
     setShowUpdate(false);
     setShowDelete(false);
     setSelectedTeam(null);
-    setForm({ name: '', description: '' });
+    setForm({ teamname: '', teamcode: '' });
   };
 
   return (
@@ -129,16 +134,16 @@ function Teams() {
           <table border="1" cellPadding="8" style={{ width: '100%', marginTop: 16 }}>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Description</th>
+                <th>Teamnaam</th>
+                <th>Teamcode</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {teams.map((team) => (
-                <tr key={team._id}>
-                  <td>{team.name}</td>
-                  <td>{team.description}</td>
+                <tr key={team.id}>
+                  <td>{team.teamname}</td>
+                  <td>{team.teamcode}</td>
                   <td>
                     <button onClick={() => openUpdate(team)}>Update</button>{' '}
                     <button onClick={() => openDelete(team)}>Delete</button>
@@ -156,20 +161,21 @@ function Teams() {
           <h2>Register Team</h2>
           <form onSubmit={handleRegister}>
             <div>
-              <label>Name: </label>
+              <label>Teamnaam: </label>
               <input
                 type="text"
-                value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })}
+                value={form.teamname}
+                onChange={e => setForm({ ...form, teamname: e.target.value })}
                 required
               />
             </div>
             <div>
-              <label>Description: </label>
+              <label>Teamcode: </label>
               <input
                 type="text"
-                value={form.description}
-                onChange={e => setForm({ ...form, description: e.target.value })}
+                value={form.teamcode}
+                onChange={e => setForm({ ...form, teamcode: e.target.value })}
+                required
               />
             </div>
             <button type="submit">Register</button>
@@ -184,20 +190,21 @@ function Teams() {
           <h2>Update Team</h2>
           <form onSubmit={handleUpdate}>
             <div>
-              <label>Name: </label>
+              <label>Teamnaam: </label>
               <input
                 type="text"
-                value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })}
+                value={form.teamname}
+                onChange={e => setForm({ ...form, teamname: e.target.value })}
                 required
               />
             </div>
             <div>
-              <label>Description: </label>
+              <label>Teamcode: </label>
               <input
                 type="text"
-                value={form.description}
-                onChange={e => setForm({ ...form, description: e.target.value })}
+                value={form.teamcode}
+                onChange={e => setForm({ ...form, teamcode: e.target.value })}
+                required
               />
             </div>
             <button type="submit">Update</button>
@@ -210,8 +217,8 @@ function Teams() {
       {showDelete && selectedTeam && (
         <div style={modalStyle}>
           <h2>Delete Team</h2>
-          <p>Are you sure you want to delete team "{selectedTeam.name}"?</p>
-          <button onClick={() => handleDelete(selectedTeam._id)}>Delete</button>
+          <p>Are you sure you want to delete team "{selectedTeam.teamname}"?</p>
+          <button onClick={() => handleDelete(selectedTeam.id)}>Delete</button>
           <button onClick={closeModals}>Cancel</button>
         </div>
       )}
