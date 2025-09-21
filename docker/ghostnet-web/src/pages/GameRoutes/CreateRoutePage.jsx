@@ -20,7 +20,7 @@ export default function CreateRoutePage() {
                 const res = await fetch(`${backendHost}/api/games`);
                 const data = await res.json();
                 if (res.ok && data.success) setGames(data.games);
-            } catch {}
+            } catch { }
         }
         fetchGames();
     }, []);
@@ -39,7 +39,7 @@ export default function CreateRoutePage() {
                 const res = await fetch(`${backendHost}/api/game_routes?game_id=${selectedGame.id}`);
                 const data = await res.json();
                 if (res.ok && data.success) setRoutes(data.routes);
-            } catch {}
+            } catch { }
         }
         fetchRoutes();
     }, [selectedGame]);
@@ -103,21 +103,15 @@ export default function CreateRoutePage() {
                         body: JSON.stringify({
                             game_route_id: route.id,
                             game_route_points_id: point.id,
-                            order_id: order_id 
+                            order_id: order_id
                         })
-                    });
-                    console.log('Response for point', point.id, 'route', route.id, ':', res);
-                    console.log('Request body:', {
-                        game_route_id: route.id,
-                        game_route_points_id: point.id,
-                        order_id: order_id 
                     });
                     if (!res.ok) {
                         let errMsg = `Fout bij punt ${point.id}, route ${route.id}<br />`;
                         try {
                             const data = await res.json();
                             if (data && data.error) errMsg += `: ${data.error}`;
-                        } catch {}
+                        } catch { }
                         errors.push(errMsg);
                     }
                 } catch (err) {
@@ -222,69 +216,72 @@ export default function CreateRoutePage() {
                         <h3 className="font-semibold mb-2">Routepunten voor deze game</h3>
                         {loading ? <div>Laden...</div> : (
                             <>
-                            <table className="w-full border-collapse text-xs md:text-sm">
-                                <thead>
-                                    <tr>
-                                        <th className="border-b p-2">ID</th>
-                                        <th className="border-b p-2">Locatie</th>
-                                        <th className="border-b p-2">Lat</th>
-                                        <th className="border-b p-2">Lon</th>
-                                        <th className="border-b p-2">Beschrijving</th>
-                                        {routes.map(route => (
-                                            <th key={route.id} className="border-b p-2">
-                                                <div>{route.route_name}</div>
-                                                <div className="text-xs text-gray-500 font-normal">Volgorde:</div>
-                                            </th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {shownPoints.map(point => (
-                                        <tr key={point.id}>
-                                            <td className="border-b p-2">{point.id}</td>
-                                            <td className="border-b p-2">{point.location}</td>
-                                            <td className="border-b p-2">{point.latitude}</td>
-                                            <td className="border-b p-2">{point.longitude}</td>
-                                            <td className="border-b p-2">{point.description}</td>
-                                            {routes.map(route => {
-                                                // Zoek order_id voor deze point in deze route
-                                                const order = (point.route_orders && point.route_orders[route.id]) || "";
-                                                // Unieke key per point/route combinatie
-                                                return (
-                                                    <td key={route.id} className="border-b p-2 text-center">
-                                                        <input
-                                                            type="number"
-                                                            className="border px-1 py-0.5 rounded w-14 text-center"
-                                                            value={order}
-                                                            onChange={e => {
-                                                                // Update order in points state
-                                                                const newOrder = e.target.value;
-                                                                setPoints(prevPoints => prevPoints.map(p => {
-                                                                    if (p.id === point.id) {
-                                                                        return {
-                                                                            ...p,
-                                                                            route_orders: {
-                                                                                ...p.route_orders,
-                                                                                [route.id]: newOrder
-                                                                            }
-                                                                        };
-                                                                    }
-                                                                    return p;
-                                                                }));
-                                                            }}
-                                                        />
-                                                    </td>
-                                                );
-                                            })}
+                                <table className="w-full border-collapse text-xs md:text-sm">
+                                    <thead>
+                                        <tr>
+                                            <th className="border-b p-2">ID</th>
+                                            <th className="border-b p-2">Locatie</th>
+                                            <th className="border-b p-2">Lat</th>
+                                            <th className="border-b p-2">Lon</th>
+                                            <th className="border-b p-2">Beschrijving</th>
+                                            {routes.map(route => (
+                                                <th key={route.id} className="border-b p-2">
+                                                    <div>{route.route_name}</div>
+                                                    <div className="text-xs text-gray-500 font-normal">Volgorde:</div>
+                                                </th>
+                                            ))}
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                            <div className="mt-4 flex justify-end">
-                                <button className="btn-primary px-4 py-2" onClick={handleSaveAllOrders} disabled={loading}>
-                                    Alle volgordes opslaan
-                                </button>
-                            </div>
+                                    </thead>
+                                    <tbody>
+                                        {shownPoints.map(point => (
+                                            <tr key={point.id}>
+                                                <td className="border-b p-2">{point.id}</td>
+                                                <td className="border-b p-2">{point.location}</td>
+                                                <td className="border-b p-2">{point.latitude}</td>
+                                                <td className="border-b p-2">{point.longitude}</td>
+                                                <td className="border-b p-2">{point.description}</td>
+                                                {routes.map(route => {
+                                                    // Zoek order_id voor deze point in deze route
+                                                    let order = (point.route_orders && point.route_orders[route.id]);
+                                                    if (order === undefined || order === null || order === "") order = 99;
+                                                    // Unieke key per point/route combinatie
+                                                    return (
+                                                        <td key={route.id} className="border-b p-2 text-center">
+                                                            <input
+                                                                type="number"
+                                                                className="border px-1 py-0.5 rounded w-14 text-center"
+                                                                value={order}
+                                                                onChange={e => {
+                                                                    // Update order in points state
+                                                                    let newOrder = e.target.value;
+                                                                    if (newOrder === "" || isNaN(Number(newOrder))) newOrder = 99;
+                                                                    else newOrder = Number(newOrder);
+                                                                    setPoints(prevPoints => prevPoints.map(p => {
+                                                                        if (p.id === point.id) {
+                                                                            return {
+                                                                                ...p,
+                                                                                route_orders: {
+                                                                                    ...p.route_orders,
+                                                                                    [route.id]: newOrder
+                                                                                }
+                                                                            };
+                                                                        }
+                                                                        return p;
+                                                                    }));
+                                                                }}
+                                                            />
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                <div className="mt-4 flex justify-end">
+                                    <button className="btn-primary px-4 py-2" onClick={handleSaveAllOrders} disabled={loading}>
+                                        Alle volgordes opslaan
+                                    </button>
+                                </div>
                             </>
                         )}
                     </div>

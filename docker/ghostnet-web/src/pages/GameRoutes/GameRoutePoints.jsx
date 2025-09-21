@@ -27,7 +27,7 @@ export default function GameRoutePoints() {
                 const res = await fetch(`${backendHost}/api/games`);
                 const data = await res.json();
                 if (res.ok && data.success) setGames(data.games);
-            } catch {}
+            } catch { }
         }
         fetchGames();
     }, []);
@@ -74,7 +74,7 @@ export default function GameRoutePoints() {
         if (!window.confirm("Weet je zeker dat je dit punt wilt verwijderen?")) return;
         setMessage("...verwijderen");
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-    const res = await fetch(`${backendHost}/api/game_routes/points/${id}`, { method: "DELETE" });
+        const res = await fetch(`${backendHost}/api/game_routes/points/${id}`, { method: "DELETE" });
         if (res.ok) setMessage("✅ Punt verwijderd");
         else setMessage("❌ Fout bij verwijderen");
         setEditingId(null);
@@ -88,7 +88,7 @@ export default function GameRoutePoints() {
         const method = editingId ? "PUT" : "POST";
         const url = editingId ? `${backendHost}/api/game_routes/points/${editingId}` : `${backendHost}/api/game_routes/points`;
         const body = { ...form, game_id: selectedGameId };
-        
+
         const res = await fetch(url, {
             method,
             headers: { "Content-Type": "application/json" },
@@ -168,5 +168,5 @@ export default function GameRoutePoints() {
             </div>
         </RequireRole>
     );
-    
+
 }
