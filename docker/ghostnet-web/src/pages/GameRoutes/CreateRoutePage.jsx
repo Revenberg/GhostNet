@@ -44,8 +44,24 @@ export default function CreateRoutePage() {
         fetchRoutes();
     }, [selectedGame]);
 
+
     useEffect(() => {
         if (!selectedGame) {
+            setPoints([]);
+            return;
+        }
+        async function fetchPoints() {
+            setLoading(true);
+            try {
+                const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+                const allRoutePoints = {};
+                await Promise.all((routes || []).map(async route => {
+                    const res = await fetch(`${backendHost}/api/game_routes/route-points?game_route_id=${route.id}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        allRoutePoints[route.id] = data.points || [];
+
+
     useEffect(() => {
         if (!routes || !Array.isArray(routes) || routes.length === 0) {
             setRouteTeams({});
