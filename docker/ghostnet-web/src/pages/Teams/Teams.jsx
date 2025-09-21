@@ -22,20 +22,16 @@ function Teams() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/teams');
-      console.log(res);
-      
-      if (!res.ok) throw new Error('Failed to fetch teams');
-      const data = await res.json();
-      console.log("Fetched teams data:", data);
-      console.log("data.success:", data.success);
+        const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+        const [teamsRes] = await Promise.all([
+            fetch(`${backendHost}/api/teams`),
+        ]);
+        const teamsData = await teamsRes.json();
 
-      console.log("Is data.teams an array?", Array.isArray(data.teams));
-      console.log("data.teams:", data.teams);
+        console.log("Fetched teams data:", teamsData);
 
-      if (data.success && Array.isArray(data.teams)) {
-        console.log(data.teams);
-        setTeams(data.teams);
+    if (teamsData.success) {
+        setTeams(teamsData.teams);
       } else {
         setTeams([]);
         setError('No teams found');
