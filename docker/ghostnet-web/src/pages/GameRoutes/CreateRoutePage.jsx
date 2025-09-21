@@ -13,7 +13,6 @@ export default function CreateRoutePage() {
     const [loading, setLoading] = useState(false);
     const [routeName, setRouteName] = useState("");
 
-
     useEffect(() => {
         async function fetchGames() {
             try {
@@ -45,8 +44,6 @@ export default function CreateRoutePage() {
         fetchRoutes();
     }, [selectedGame]);
 
-
-
     useEffect(() => {
         if (!selectedGame) {
             setPoints([]);
@@ -54,14 +51,16 @@ export default function CreateRoutePage() {
         }
         async function fetchPoints() {
             setLoading(true);
+            setMessage("");
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+                // Fetch points for each route
                 const allRoutePoints = {};
-                await Promise.all((routes || []).map(async route => {
-                    const res = await fetch(`${backendHost}/api/game_routes/points?game_route_id=${route.id}`);
-                    if (res.ok) {
-                        const data = await res.json();
-                        allRoutePoints[route.id] = data.points || [];
+                await Promise.all(routes.map(async route => {
+                    const res = await fetch(`${backendHost}/api/game_routes/route?game_route_id=${route.id}`);
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        allRoutePoints[route.id] = data.points;
                     } else {
                         allRoutePoints[route.id] = [];
                     }
@@ -84,8 +83,6 @@ export default function CreateRoutePage() {
         }
         fetchPoints();
     }, [selectedGame, selectedRoute, routes]);
-
-
 
     // Geen sortering, gebruik volgorde uit DB
     const shownPoints = points;
@@ -231,77 +228,22 @@ export default function CreateRoutePage() {
                                                                 className="border px-1 py-0.5 rounded w-14 text-center"
                                                                 value={order}
                                                                 onChange={e => {
+                                                                    // Update order in points state
                                                                     let newOrder = e.target.value;
                                                                     if (newOrder === "" || isNaN(Number(newOrder))) newOrder = 99;
                                                                     else newOrder = Number(newOrder);
-                                                                    setPoints(prevPoints => {
-                                                                        // Stap 1: wijzig het order_id van het geselecteerde punt
-                                                                        let updatedPoints = prevPoints.map(p => {
-                                                                            if (p.id === point.id) {
-                                                                                return {
-                                                                                    ...p,
-                                                                                    route_orders: {
-                                                                                        ...p.route_orders,
-                                                                                        [route.id]: newOrder
-                                                                                    }
-                                                                                };
-                                                                            }
-                                                                            return p;
-                                                                        });
-
-                                                                        let result = fixDoubles(updatedPoints, route.id);
-                                                                        // Herhaal tot alles uniek is
-                                                                        while (result.changed) {
-                                                                            result = fixDoubles(result.pointsList, route.id);
+                                                                    setPoints(prevPoints => prevPoints.map(p => {
+                                                                        if (p.id === point.id) {
+                                                                            return {
+                                                                                ...p,
+                                                                                route_orders: {
+                                                                                    ...p.route_orders,
+                                                                                    [route.id]: newOrder
+                                                                                }
+                                                                            };
                                                                         }
-                                                                        return result.pointsList;
-                                                                    });
-// Los dubbele order_id's op binnen een route (buiten de render/loop gedefinieerd)
-function fixDoubles(pointsList, routeId) {
-    let changed = false;
-    // Verzamel alle order_id's > 0 voor deze route
-    let used = {};
-    for (let idx = 0; idx < pointsList.length; idx++) {
-        const p = pointsList[idx];
-        const oid = p.route_orders?.[routeId];
-        if (oid > 0) {
-            if (!used[oid]) used[oid] = [];
-            used[oid].push(p.id);
-        }
-    }
-    // Zoek dubbele
-    const usedEntries = Object.entries(used);
-    for (let ue = 0; ue < usedEntries.length; ue++) {
-        const [oid, ids] = usedEntries[ue];
-        if (ids.length > 1) {
-            // Laat de eerste staan, verhoog de rest
-            for (let i = 1; i < ids.length; i++) {
-                const pid = ids[i];
-                let nextnr = Number(oid) + 1;
-                // Zoek een vrij nummer
-                while (pointsList.some(pp => pp.route_orders?.[routeId] === nextnr)) {
-                    nextnr++;
-                }
-                changed = true;
-                // Gebruik een expliciete for-loop om closure en map te vermijden
-                pointsList = pointsList.map(p => ({ ...p })); // shallow copy
-                for (let j = 0; j < pointsList.length; j++) {
-                    if (pointsList[j].id === pid) {
-                        pointsList[j] = {
-                            ...pointsList[j],
-                            route_orders: {
-                                ...pointsList[j].route_orders,
-                                [routeId]: nextnr
-                            }
-                        };
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    return { pointsList, changed };
-}
+                                                                        return p;
+                                                                    }));
                                                                 }}
                                                             />
                                                         </td>
