@@ -134,7 +134,7 @@ export default function CreateRoutePage() {
         await Promise.all(shownPoints.map(async point => {
             await Promise.all(routes.map(async route => {
                 let order_id = (point.route_orders && point.route_orders[route.id]) || "";
-                if (order_id === undefined || order_id === null || order_id === "") order_id = 99;
+                if (order_id === undefined || order_id === null || order_id === "") order_id = 1;
                 try {
                     const res = await fetch(`${backendHost}/api/game_routes/routes`, {
                         method: "POST",
