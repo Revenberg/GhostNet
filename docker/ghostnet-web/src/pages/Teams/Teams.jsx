@@ -44,9 +44,6 @@ function Teams() {
             fetch(`${backendHost}/api/teams`),
         ]);
         const teamsData = await teamsRes.json();
-
-        console.log("Fetched teams data:", teamsData);
-
     if (teamsData.success) {
         setTeams(teamsData.teams);
       } else {
@@ -208,7 +205,9 @@ function Teams() {
               </tbody>
             </table>
             <form className="space-y-4 mb-8" onSubmit={handleRegister}>
+              <label htmlFor="teamname" className="block font-medium">Teamnaam</label>
               <input
+                id="teamname"
                 type="text"
                 name="teamname"
                 placeholder="Teamnaam"
@@ -217,7 +216,9 @@ function Teams() {
                 className="w-full border px-3 py-2 rounded mb-2"
                 required
               />
+              <label htmlFor="game_id" className="block font-medium">Game</label>
               <select
+                id="game_id"
                 name="game_id"
                 value={form.game_id}
                 onChange={e => setForm({ ...form, game_id: e.target.value })}
