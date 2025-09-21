@@ -228,22 +228,73 @@ export default function CreateRoutePage() {
                                                                 className="border px-1 py-0.5 rounded w-14 text-center"
                                                                 value={order}
                                                                 onChange={e => {
-                                                                    // Update order in points state
                                                                     let newOrder = e.target.value;
                                                                     if (newOrder === "" || isNaN(Number(newOrder))) newOrder = 99;
                                                                     else newOrder = Number(newOrder);
-                                                                    setPoints(prevPoints => prevPoints.map(p => {
-                                                                        if (p.id === point.id) {
-                                                                            return {
-                                                                                ...p,
-                                                                                route_orders: {
-                                                                                    ...p.route_orders,
-                                                                                    [route.id]: newOrder
+                                                                    setPoints(prevPoints => {
+                                                                        // Stap 1: wijzig het order_id van het geselecteerde punt
+                                                                        let updatedPoints = prevPoints.map(p => {
+                                                                            if (p.id === point.id) {
+                                                                                return {
+                                                                                    ...p,
+                                                                                    route_orders: {
+                                                                                        ...p.route_orders,
+                                                                                        [route.id]: newOrder
+                                                                                    }
+                                                                                };
+                                                                            }
+                                                                            return p;
+                                                                        });
+
+                                                                        // Stap 2: los dubbele order_id's op binnen deze route
+                                                                        function fixDoubles(pointsList) {
+                                                                            let changed = false;
+                                                                            // Verzamel alle order_id's > 0 voor deze route
+                                                                            let used = {};
+                                                                            pointsList.forEach(p => {
+                                                                                const oid = p.route_orders?.[route.id];
+                                                                                if (oid > 0) {
+                                                                                    if (!used[oid]) used[oid] = [];
+                                                                                    used[oid].push(p.id);
                                                                                 }
-                                                                            };
+                                                                            });
+                                                                            // Zoek dubbele
+                                                                            Object.entries(used).forEach(([oid, ids]) => {
+                                                                                if (ids.length > 1) {
+                                                                                    // Laat de eerste staan, verhoog de rest
+                                                                                    for (let i = 1; i < ids.length; i++) {
+                                                                                        const pid = ids[i];
+                                                                                        pointsList = pointsList.map(p => {
+                                                                                            if (p.id === pid) {
+                                                                                                let next = Number(oid) + 1;
+                                                                                                // Zoek een vrij nummer
+                                                                                                while (pointsList.some(pp => pp.route_orders?.[route.id] === next)) {
+                                                                                                    next++;
+                                                                                                }
+                                                                                                changed = true;
+                                                                                                return {
+                                                                                                    ...p,
+                                                                                                    route_orders: {
+                                                                                                        ...p.route_orders,
+                                                                                                        [route.id]: next
+                                                                                                    }
+                                                                                                };
+                                                                                            }
+                                                                                            return p;
+                                                                                        });
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                            return { pointsList, changed };
                                                                         }
-                                                                        return p;
-                                                                    }));
+
+                                                                        let result = fixDoubles(updatedPoints);
+                                                                        // Herhaal tot alles uniek is
+                                                                        while (result.changed) {
+                                                                            result = fixDoubles(result.pointsList);
+                                                                        }
+                                                                        return result.pointsList;
+                                                                    });
                                                                 }}
                                                             />
                                                         </td>
