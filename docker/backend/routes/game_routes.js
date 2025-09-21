@@ -89,6 +89,35 @@ export default function createGameRoutesRouter(pool) {
         [game_route_id, game_route_points_id]
       );
       let result;
+        // Alleen insert/update als order_id > 0, anders clear of skip
+        if (Number(order_id) > 0) {
+          if (rows.length > 0) {
+            // Update bestaande entry
+            [result] = await pool.query(
+              `UPDATE game_route_order SET order_id = ? WHERE game_route_id = ? AND game_route_points_id = ?`,
+              [order_id, game_route_id, game_route_points_id]
+            );
+            return res.json({ success: true, updated: true });
+          } else {
+            // Insert nieuwe entry
+            [result] = await pool.query(
+              `INSERT INTO game_route_order (game_route_id, game_route_points_id, order_id) VALUES (?, ?, ?)`,
+              [game_route_id, game_route_points_id, order_id]
+            );
+            return res.json({ success: true, id: result.insertId });
+          }
+        } else {
+          // order_id <= 0: clear bestaande entry, geen insert
+          if (rows.length > 0) {
+            [result] = await pool.query(
+              `UPDATE game_route_order SET order_id = 0 WHERE game_route_id = ? AND game_route_points_id = ?`,
+              [game_route_id, game_route_points_id]
+            );
+            return res.json({ success: true, cleared: true });
+          } else {
+            return res.json({ success: true, skipped: true });
+          }
+        }
       if (rows.length > 0) {
         // Update existing
         [result] = await pool.query(
@@ -98,6 +127,7 @@ export default function createGameRoutesRouter(pool) {
         res.json({ success: true, updated: true });
       } else {
         // Insert new
+     
         [result] = await pool.query(
           `INSERT INTO game_route_order (game_route_id, game_route_points_id, order_id) VALUES (?, ?, ?)`,
           [game_route_id, game_route_points_id, order_id]

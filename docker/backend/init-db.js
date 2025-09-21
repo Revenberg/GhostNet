@@ -81,10 +81,6 @@ export async function ensureTables(pool) {
     )
   `);
 
-  await conn.query(` 
-    drop table if exists game_route_order;
-  `);
-
   await conn.query(`
     CREATE TABLE IF NOT EXISTS game_route_order (
         id INT AUTO_INCREMENT PRIMARY KEY,
