@@ -231,48 +231,6 @@ export default function CreateRoutePage() {
                                                                     let newOrder = e.target.value;
                                                                     if (newOrder === "" || isNaN(Number(newOrder))) newOrder = 99;
                                                                     else newOrder = Number(newOrder);
-                                                                    // Los dubbele order_id's op binnen deze route
-                                                                    function fixDoubles(pointsList, routeId) {
-                                                                        let changed = false;
-                                                                        // Verzamel alle order_id's > 0 voor deze route
-                                                                        let used = {};
-                                                                        pointsList.forEach(p => {
-                                                                            const oid = p.route_orders?.[routeId];
-                                                                            if (oid > 0) {
-                                                                                if (!used[oid]) used[oid] = [];
-                                                                                used[oid].push(p.id);
-                                                                            }
-                                                                        });
-                                                                        // Zoek dubbele
-                                                                        Object.entries(used).forEach(([oid, ids]) => {
-                                                                            if (ids.length > 1) {
-                                                                                // Laat de eerste staan, verhoog de rest
-                                                                                for (let i = 1; i < ids.length; i++) {
-                                                                                    const pid = ids[i];
-                                                                                    pointsList = pointsList.map(p => {
-                                                                                        if (p.id === pid) {
-                                                                                            let next = Number(oid) + 1;
-                                                                                            // Zoek een vrij nummer
-                                                                                            while (pointsList.some(pp => pp.route_orders?.[routeId] === next)) {
-                                                                                                next++;
-                                                                                            }
-                                                                                            changed = true;
-                                                                                            return {
-                                                                                                ...p,
-                                                                                                route_orders: {
-                                                                                                    ...p.route_orders,
-                                                                                                    [routeId]: next
-                                                                                                }
-                                                                                            };
-                                                                                        }
-                                                                                        return p;
-                                                                                    });
-                                                                                }
-                                                                            }
-                                                                        });
-                                                                        return { pointsList, changed };
-                                                                    }
-
                                                                     setPoints(prevPoints => {
                                                                         // Stap 1: wijzig het order_id van het geselecteerde punt
                                                                         let updatedPoints = prevPoints.map(p => {
@@ -295,6 +253,47 @@ export default function CreateRoutePage() {
                                                                         }
                                                                         return result.pointsList;
                                                                     });
+// Los dubbele order_id's op binnen een route (buiten de render/loop gedefinieerd)
+function fixDoubles(pointsList, routeId) {
+    let changed = false;
+    // Verzamel alle order_id's > 0 voor deze route
+    let used = {};
+    pointsList.forEach(p => {
+        const oid = p.route_orders?.[routeId];
+        if (oid > 0) {
+            if (!used[oid]) used[oid] = [];
+            used[oid].push(p.id);
+        }
+    });
+    // Zoek dubbele
+    Object.entries(used).forEach(([oid, ids]) => {
+        if (ids.length > 1) {
+            // Laat de eerste staan, verhoog de rest
+            for (let i = 1; i < ids.length; i++) {
+                const pid = ids[i];
+                pointsList = pointsList.map(p => {
+                    if (p.id === pid) {
+                        let next = Number(oid) + 1;
+                        // Zoek een vrij nummer
+                        while (pointsList.some(pp => pp.route_orders?.[routeId] === next)) {
+                            next++;
+                        }
+                        changed = true;
+                        return {
+                            ...p,
+                            route_orders: {
+                                ...p.route_orders,
+                                [routeId]: next
+                            }
+                        };
+                    }
+                    return p;
+                });
+            }
+        }
+    });
+    return { pointsList, changed };
+}
                                                                 }}
                                                             />
                                                         </td>
