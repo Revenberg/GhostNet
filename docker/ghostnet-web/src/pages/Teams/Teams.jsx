@@ -6,7 +6,7 @@ function Teams() {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showRegister, setShowRegister] = useState(false);
+//  const [showRegister, setShowRegister] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
@@ -124,7 +124,7 @@ function Teams() {
   // UI Handlers
   const openRegister = () => {
     setForm({ teamname: '', game_id: games.length > 0 ? games[0].id : 0 });
-    setShowRegister(true);
+  //  setShowRegister(true);
     setShowUpdate(false);
     setShowDelete(false);
     setSelectedTeam(null);
@@ -142,7 +142,7 @@ function Teams() {
   const openDelete = (team) => {
     setSelectedTeam(team);
     setShowDelete(true);
-    setShowRegister(false);
+//    setShowRegister(false);
     setShowUpdate(false);
   };
   const closeModals = () => {
