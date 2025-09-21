@@ -80,14 +80,30 @@ export default function createGameRoutesRouter(pool) {
   router.post("/routes", async (req, res) => {
     try {
       const { game_route_id, game_route_points_id, order_id } = req.body;
-      if (!game_route_points_id || !game_route_id || !order_id) {
+      if (!game_route_points_id || !game_route_id || order_id === undefined) {
         return res.status(400).json({ error: "game_route_id, game_route_points_id and order_id required" });
       }
-      const [result] = await pool.query(
-        `INSERT INTO game_route_order (game_route_id, game_route_points_id, order_id) VALUES (?, ?, ?)`,
-        [game_route_id, game_route_points_id, order_id || 0]
+      // Check if entry exists
+      const [rows] = await pool.query(
+        `SELECT id FROM game_route_order WHERE game_route_id = ? AND game_route_points_id = ?`,
+        [game_route_id, game_route_points_id]
       );
-      res.json({ success: true, id: result.insertId });
+      let result;
+      if (rows.length > 0) {
+        // Update existing
+        [result] = await pool.query(
+          `UPDATE game_route_order SET order_id = ? WHERE game_route_id = ? AND game_route_points_id = ?`,
+          [order_id, game_route_id, game_route_points_id]
+        );
+        res.json({ success: true, updated: true });
+      } else {
+        // Insert new
+        [result] = await pool.query(
+          `INSERT INTO game_route_order (game_route_id, game_route_points_id, order_id) VALUES (?, ?, ?)`,
+          [game_route_id, game_route_points_id, order_id]
+        );
+        res.json({ success: true, id: result.insertId });
+      }
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });
