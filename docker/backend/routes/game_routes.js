@@ -94,58 +94,32 @@ export default function createGameRoutesRouter(pool) {
     }
   });
 
-  // Get all routes for a game 
-  router.get("/routes", async (req, res) => {
+  // Get route by game_route_id 
+  router.get("/route", async (req, res) => {
     try {
-      const { game_id } = req.query;
-      if (!game_id) {
-        return res.status(400).json({ error: "game_id required" });
+      const { game_route_id } = req.query;
+      if (!game_route_id) {
+        return res.status(400).json({ error: "game_route_id required" });
       }
-      // Get all points for this game
-      const [points] = await pool.query(
-        `SELECT * FROM game_route_points WHERE game_id = ? ORDER BY id ASC`,
-        [game_id]
+      // 1. Get game_id for this route
+      const [[routeRow]] = await pool.query(
+        `SELECT game_id FROM game_routes WHERE id = ?`,
+        [game_route_id]
       );
-      // Get all route orders for this game, joined with route_name from game_routes
-      const [orders] = await pool.query(
-        `SELECT gro.*, gr.route_name
-         FROM game_route_order gro
-         JOIN game_routes gr ON gro.game_route_id = gr.id 
-         WHERE gr.game_id = ?`,
-        [game_id]
+      if (!routeRow) {
+        return res.status(404).json({ error: "Route not found" });
+      }
+      const game_id = routeRow.game_id;
+      const [rows] = await pool.query(
+        `SELECT p.*, COALESCE(o.order_id, -1) AS order_id
+         FROM game_route_points p
+         LEFT JOIN game_route_order o
+           ON o.game_route_points_id = p.id AND o.game_route_id = ?
+         WHERE p.game_id = ?
+         ORDER BY order_id ASC, p.id ASC`,
+        [game_route_id, game_id]
       );
-      // Build a map: { [pointId]: [{ order_id, route_name }] }
-      const pointRouteArr = {};
-      orders.forEach(o => {
-        if (!pointRouteArr[o.game_route_points_id]) pointRouteArr[o.game_route_points_id] = [];
-        pointRouteArr[o.game_route_points_id].push({
-          order_id: o.order_id,
-          route_name: o.route_name
-        });
-      });
-      // Compose result: for each point, if only one route, flatten; else, keep as array
-      const result = points.map(p => {
-        const routes = pointRouteArr[p.id] || [];
-        if (routes.length === 1) {
-          return {
-            ...p,
-            route_orders: routes[0].order_id,
-            route_name: routes[0].route_name
-          };
-        } else if (routes.length > 1) {
-          // If multiple routes, return arrays (or objects if needed)
-          return {
-            ...p,
-            route_orders: routes.map(r => r.order_id),
-            route_names: routes.map(r => r.route_name)
-          };
-        } else {
-          return {
-            ...p
-          };
-        }
-      });
-      res.json({ success: true, points: result });
+      res.json({ success: true, points: rows });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });
