@@ -82,7 +82,7 @@ export default function CreateRoutePage() {
             setLoading(false);
         }
         fetchPoints();
-    }, [selectedGame, selectedRoute]);
+    }, [selectedGame, selectedRoute, routes]);
 
     // Geen sortering, gebruik volgorde uit DB
     const shownPoints = points;
