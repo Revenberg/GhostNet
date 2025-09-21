@@ -60,7 +60,6 @@ export default function App() {
               <Route path="/games/create-route" element={<CreateRoutePage />} />
               <Route path="/games/all-routes-map" element={<AllRoutesMap />} />
               <Route path="/games/route-teams" element={<RouteTeamsPage />} />
-              <Route path="/games/route-teams" element={<RouteTeamsPage />} />
             </>
         </Routes>
       </div>

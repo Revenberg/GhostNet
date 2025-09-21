@@ -71,16 +71,23 @@ export function NavbarAdmin() {
       </div>
 
       <div className="relative group">
-        <button className="hover:underline focus:outline-none">Games ▾</button>
+        <button className="hover:underline focus:outline-none">Games voorbereiding ▾</button>
         <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
           <Link to="/games-list" className="block px-4 py-2 hover:bg-purple-100">Alle games</Link>
           <Link to="/games-create" className="block px-4 py-2 hover:bg-purple-100">Game aanmaken</Link>
-          <Link to="/games-update" className="block px-4 py-2 hover:bg-purple-100">Game status bijwerken</Link>
-          <Link to="/games-set-status" className="block px-4 py-2 hover:bg-purple-100">Status instellen (per team)</Link>
-          <Link to="/games-progress-overview" className="block px-4 py-2 hover:bg-purple-100">Voortgang overzicht</Link>
           <Link to="/games-route-points" className="block px-4 py-2 hover:bg-purple-100">Route punten beheren</Link>
           <Link to="/games/create-route" className="block px-4 py-2 hover:bg-purple-100">Route aanmaken/beheren</Link>
           <Link to="/games/all-routes-map" className="block px-4 py-2 hover:bg-purple-100">Kaart: alle routes</Link>
+          <Link to="/games/route-teams" className="block px-4 py-2 hover:bg-purple-100">Teams per route</Link>
+        </div>
+      </div>
+
+      <div className="relative group">
+        <button className="hover:underline focus:outline-none">Games ▾</button>
+        <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
+          <Link to="/games-update" className="block px-4 py-2 hover:bg-purple-100">Game status bijwerken</Link>
+          <Link to="/games-set-status" className="block px-4 py-2 hover:bg-purple-100">Status instellen (per team)</Link>
+          <Link to="/games-progress-overview" className="block px-4 py-2 hover:bg-purple-100">Voortgang overzicht</Link>
         </div>
       </div>
 
