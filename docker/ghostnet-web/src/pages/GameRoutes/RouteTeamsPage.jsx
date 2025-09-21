@@ -76,7 +76,7 @@ export default function RouteTeamsPage() {
                             <tr>
                                 <th className="border-b p-2">Route</th>
                                 {teams.map(team => (
-                                    <th key={team.id} className="border-b p-2">{team.name}</th>
+                                    <th key={team.id} className="border-b p-2">{team.teamname}</th>
                                 ))}
                             </tr>
                         </thead>
