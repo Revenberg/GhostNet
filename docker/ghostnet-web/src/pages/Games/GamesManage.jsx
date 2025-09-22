@@ -7,12 +7,7 @@ export default function GamesManage() {
   const [error, setError] = useState("");
   const [form, setForm] = useState({ name: "" });
   const [message, setMessage] = useState("");
-  const [selectedGameId, setSelectedGameId] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('filterGameId') || '';
-    }
-    return '';
-  });
+  // removed selectedGameId state (was unused)
   const [editModal, setEditModal] = useState({ open: false, id: null, name: "" });
   const [deleteModal, setDeleteModal] = useState({ open: false, id: null, name: "" });
 
