@@ -150,9 +150,6 @@ export default function GameEngine() {
                     </td>
                     {teams.map(team => {
                       const point = team.points[i];
-                      
-                      console.log("Rendering point for team", team.teamname, point);
-                      
                       if (!point) return <td key={team.team_id} className="border-b p-2"></td>;
                       if (point.status === "target") {
                         return (
