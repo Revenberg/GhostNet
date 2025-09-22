@@ -140,8 +140,8 @@ export function NavbarAdmin() {
 
   // Clear all timers on unmount (fix React warning)
   React.useEffect(() => {
+    const timersCopy = timers.current;
     return () => {
-      const timersCopy = timers.current;
       Object.values(timersCopy).forEach(clearTimeout);
     };
   }, []);
