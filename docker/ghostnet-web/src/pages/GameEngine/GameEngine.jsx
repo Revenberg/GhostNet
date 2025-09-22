@@ -150,13 +150,14 @@ export default function GameEngine() {
                       if (point.status === "target") {
                         return (
                           <td key={team.team_id} className="border-b p-2 text-center">
-                            <a
-                              href="#"
-                              className="text-blue-600 underline cursor-pointer"
-                              onClick={e => { e.preventDefault(); handleTargetDone(team.team_id, point.game_route_points_id); }}
+                            <button
+                              type="button"
+                              className="text-blue-600 underline cursor-pointer bg-transparent border-0 p-0 m-0"
+                              style={{ background: "none" }}
+                              onClick={() => handleTargetDone(team.team_id, point.game_route_points_id)}
                             >
                               {point.status}
-                            </a>
+                            </button>
                           </td>
                         );
                       }
