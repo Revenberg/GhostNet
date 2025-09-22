@@ -2,6 +2,7 @@ import express from "express";
 
 export default function createGameEngineRoutesRouter(pool) {
     const router = express.Router();
+    
     // Get game_engine_ranking for a game
     router.get("/ranking", async (req, res) => {
         try {
