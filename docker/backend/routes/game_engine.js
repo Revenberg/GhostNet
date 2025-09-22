@@ -144,38 +144,41 @@ export default function createGameEngineRoutesRouter(pool) {
                 // Select all unique routes for this team
                 const [routes] = await pool.query(
                     `SELECT DISTINCT gr.id as route_id FROM game_routes gr
-           JOIN game_route_team grt ON grt.game_route_id = gr.id
-           WHERE gr.game_id = ? AND grt.team_id = ?`,
+                     JOIN game_route_team grt ON grt.game_route_id = gr.id
+                     WHERE gr.game_id = ? AND grt.team_id = ?`,
                     [game_id, team.id]
                 );
+                
+                // Delete old game_engine_points for this route and team
+                await pool.query(
+                    `DELETE gep FROM game_engine_points gep
+                     JOIN game_route_order o ON gep.game_route_points_id = o.game_route_points_id
+                     WHERE o.game_route_id = ? AND gep.team_id = ? AND gep.game_id = ?`,
+                    [route.route_id, team.id, game_id]
+                );
+                
                 for (const route of routes) {
                     // Select all points for this route, ordered
                     const [points] = await pool.query(
                         `SELECT p.id as point_id FROM game_route_order o
-             JOIN game_route_points p ON o.game_route_points_id = p.id
-             WHERE o.game_route_id = ?
-             ORDER BY o.order_id ASC` ,
+                            JOIN game_route_points p ON o.game_route_points_id = p.id
+                            WHERE o.game_route_id = ?
+                            ORDER BY o.order_id ASC` ,
                         [route.route_id]
                     );
                     // Insert each point for this team into game_engine_points
                     for (const point of points) {
                         await pool.query(
                             `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status)
-               VALUES (?, ?, ?, 'todo')`,
+                               VALUES (?, ?, ?, 'todo')`,
                             [game_id, team.id, point.point_id]
                         );
                     }
                 }
-                // Insert a row for team/game with game_points = 0 if not exists
-                await pool.query(
-                    `INSERT IGNORE INTO game_engine_ranking (game_id, team_id, game_route_points_id, game_points)
-           VALUES (?, ?, 0, 0)`,
-                    [game_id, team.id]
-                );
                 // Send event: you joined game (insert into team_events)
                 await pool.query(
                     `INSERT INTO team_events (team_id, event_type, event_message)
-           VALUES (?, 'message', JSON_OBJECT('game_id', ?, 'game_name', (SELECT name FROM game WHERE id = ?)))`,
+                       VALUES (?, 'message', JSON_OBJECT('game_id', ?, 'game_name', (SELECT name FROM game WHERE id = ?)))`,
                     [team.id, game_id, game_id]
                 );
             }
