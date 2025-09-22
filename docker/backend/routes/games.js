@@ -94,6 +94,8 @@ export default function createGamesRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
+
+  // Create a new game (status = 'new')
   router.post("/", async (req, res) => {
     try {
       const { name } = req.body;
@@ -105,6 +107,46 @@ export default function createGamesRouter(pool) {
         [name, 'new']
       );
       res.json({ success: true, id: result.insertId });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  // Update game name
+  router.put("/:id/name", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { name } = req.body;
+      if (!name) {
+        return res.status(400).json({ error: "name required" });
+      }
+      const [result] = await pool.query(
+        "UPDATE game SET name = ? WHERE id = ?",
+        [name, id]
+      );
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Game not found" });
+      }
+      res.json({ success: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  // Delete a game
+  router.delete("/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const [result] = await pool.query(
+        "DELETE FROM game WHERE id = ?",
+        [id]
+      );
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Game not found" });
+      }
+      res.json({ success: true });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });
