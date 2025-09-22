@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 
 const API_BASE = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000/api/game_engine";
-const STATUS_OPTIONS = ["init", "start", "finished"];
+const STATUS_OPTIONS = ["", "init", "start", "finished"];
 
 
 export default function GameEngine() {
@@ -46,12 +46,12 @@ export default function GameEngine() {
     if (selectedGame) fetchTeams(selectedGame);
   }, [selectedGame]);
 
-  // Handle status change
-  const handleStatusChange = async (e) => {
-    const newStatus = e.target.value;
-    setStatus(newStatus);
+
+  // Store status when button is clicked
+  const handleStoreStatus = async () => {
     setMessage("");
-    if (newStatus === "start" && selectedGame) {
+    if (!status || !selectedGame || STATUS_OPTIONS.length === 0) return;
+    if (status === "start") {
       setLoading(true);
       try {
         const res = await fetch(`${API_BASE}/start`, {
@@ -107,12 +107,20 @@ export default function GameEngine() {
           ))}
         </select>
         <label className="font-semibold ml-6 mr-2">Status:</label>
-        <select value={status} onChange={handleStatusChange} className="border px-2 py-1 rounded">
+        <select value={status} onChange={e => setStatus(e.target.value)} className="border px-2 py-1 rounded">
           {STATUS_OPTIONS.map(opt => (
             <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>
+        <button
+          className="btn-primary px-4 py-1 ml-2"
+          onClick={handleStoreStatus}
+          disabled={!status || !selectedGame || STATUS_OPTIONS.length === 0}
+        >
+          Opslaan
+        </button>
       </div>
+      Opslaan
       {loading ? <div>Laden...</div> : (
         <table className="w-full border-collapse text-xs md:text-sm">
           <thead>
