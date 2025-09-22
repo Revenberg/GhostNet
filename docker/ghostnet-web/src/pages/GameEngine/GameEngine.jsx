@@ -161,7 +161,7 @@ export default function GameEngine() {
                           </td>
                         );
                       }
-                      return <td key={team.team_id} className="border-b p-2 text-center">{point.status}</td>;
+                      return <td key={team.team_id} className="border-b p-2 text-center">({point.order_id}) {point.status}</td>;
                     })}
                   </tr>
                 );
