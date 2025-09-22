@@ -211,6 +211,7 @@ export function NavbarAdmin() {
             <Link to="/games-update" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Game status bijwerken</Link>
             <Link to="/games-set-status" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Status instellen (per team)</Link>
             <Link to="/games-progress-overview" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Voortgang overzicht</Link>
+            <Link to="/game-engine" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Game Engine</Link>
           </div>
         )}
       </div>

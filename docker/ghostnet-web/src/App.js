@@ -1,3 +1,4 @@
+import GameEngine from "./pages/GameEngine/GameEngine";
 import UpdatePassword from "./pages/Users/UpdatePassword";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
@@ -52,6 +53,7 @@ export default function App() {
               <Route path="/games/create-route" element={<CreateRoutePage />} />
               <Route path="/games/all-routes-map" element={<AllRoutesMap />} />
               <Route path="/games/route-teams" element={<RouteTeamsPage />} />
+              <Route path="/game-engine" element={<GameEngine />} />
             </>
         </Routes>
       </div>
