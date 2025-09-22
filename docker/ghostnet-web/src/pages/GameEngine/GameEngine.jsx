@@ -156,7 +156,7 @@ export default function GameEngine() {
                               style={{ background: "none" }}
                               onClick={() => handleTargetDone(team.team_id, point.game_route_points_id)}
                             >
-                              {point.status}
+                              {point.status} - {point.description}
                             </button>
                           </td>
                         );
