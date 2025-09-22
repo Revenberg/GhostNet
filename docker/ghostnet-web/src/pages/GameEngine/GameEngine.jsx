@@ -61,10 +61,10 @@ export default function GameEngine() {
         });
         const data = await res.json();
         if (data.success) setMessage("Game started!");
-        else setMessage("Failed to start game 1");
+        else setMessage("Failed to start game: " + (data.error || "Unknown error"));
         fetchTeams(selectedGame);
-      } catch {
-        setMessage("Failed to start game 2");
+      } catch (err) {
+        setMessage("Failed to start game: " + (err?.message || "Unknown error"));
       }
       setLoading(false);
     }
