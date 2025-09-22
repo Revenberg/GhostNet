@@ -51,13 +51,13 @@ export default function GameEngine() {
   const handleStoreStatus = async () => {
     setMessage("");
     if (!status || !selectedGame || STATUS_OPTIONS.length === 0) return;
-    if (status === "start") {
+    if (status === "init" || status === "start") {
       setLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/start`, {
+        const res = await fetch(`${API_BASE}/${status}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ "game_id": selectedGame })
+          body: JSON.stringify({ game_id: selectedGame })
         });
         const data = await res.json();
         if (data.success) setMessage("Game started!");
