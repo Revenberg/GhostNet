@@ -112,7 +112,6 @@ export function NavbarAdmin() {
   const [userMgmtDropdownOpen, setUserMgmtDropdownOpen] = React.useState(false);
   const [orgDropdownOpen, setOrgDropdownOpen] = React.useState(false);
   const [beheerDropdownOpen, setBeheerDropdownOpen] = React.useState(false);
-  const [gamesVoorDropdownOpen, setGamesVoorDropdownOpen] = React.useState(false);
   const [gamesDropdownOpen, setGamesDropdownOpen] = React.useState(false);
   const [teamDropdownOpen, setTeamDropdownOpen] = React.useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
@@ -122,7 +121,6 @@ export function NavbarAdmin() {
     setUserMgmtDropdownOpen(false);
     setOrgDropdownOpen(false);
     setBeheerDropdownOpen(false);
-    setGamesVoorDropdownOpen(false);
     setGamesDropdownOpen(false);
     setTeamDropdownOpen(false);
     setUserDropdownOpen(false);
