@@ -148,6 +148,7 @@ export default function GameRoutePoints() {
                 </table>
                 {selectedGameId && (
                     <form className="space-y-2 mb-6" onSubmit={handleSubmit}>
+                        <h2 className="text-lg font-bold mt-6">{editingId ? "Punt bewerken" : "Nieuw punt toevoegen"}</h2>
                         <div className="flex gap-2">
                             <input type="text" name="location" placeholder="Locatie" value={form.location} onChange={handleChange} className="border px-2 py-1 rounded w-40" required />
                         </div>

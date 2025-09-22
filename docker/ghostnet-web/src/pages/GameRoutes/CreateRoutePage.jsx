@@ -44,7 +44,13 @@ export default function CreateRoutePage() {
     // ...existing state...
     const [savingRoute, setSavingRoute] = useState(false);
     const [games, setGames] = useState([]);
-    const [selectedGame, setSelectedGame] = useState(null);
+    const [selectedGame, setSelectedGame] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const stored = sessionStorage.getItem('filterGameId');
+            return stored ? { id: Number(stored) } : null;
+        }
+        return null;
+    });
     const [routes, setRoutes] = useState([]);
     const [selectedRoute, setSelectedRoute] = useState(null); // route object or null
     const [points, setPoints] = useState([]);
@@ -58,7 +64,17 @@ export default function CreateRoutePage() {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
                 const res = await fetch(`${backendHost}/api/games`);
                 const data = await res.json();
-                if (res.ok && data.success) setGames(data.games);
+                if (res.ok && data.success) {
+                    setGames(data.games);
+                    // If no selectedGame but sessionStorage has a value, set the full game object
+                    if (!selectedGame && typeof window !== 'undefined') {
+                        const stored = sessionStorage.getItem('filterGameId');
+                        if (stored) {
+                            const found = data.games.find(g => String(g.id) === String(stored));
+                            if (found) setSelectedGame(found);
+                        }
+                    }
+                }
             } catch { }
         }
         fetchGames();
@@ -209,6 +225,9 @@ export default function CreateRoutePage() {
                         onChange={e => {
                             const game = games.find(g => g.id === Number(e.target.value));
                             setSelectedGame(game || null);
+                            if (typeof window !== 'undefined') {
+                                sessionStorage.setItem('filterGameId', e.target.value);
+                            }
                         }}
                     >
                         <option value="">-- Kies een game --</option>
