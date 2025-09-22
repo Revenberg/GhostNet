@@ -163,8 +163,8 @@ export function NavbarAdmin() {
         </button>
         {userMgmtDropdownOpen && (
           <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-10">
-            <Link to="/users-register" className="block px-4 py-2 hover:bg-purple-100">Register</Link>
-            <Link to="/update-user" className="block px-4 py-2 hover:bg-purple-100">Profiel bijwerken</Link>
+            <Link to="/users-register" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Register</Link>
+            <Link to="/update-user" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Profiel bijwerken</Link>
           </div>
         )}
       </div>
@@ -178,8 +178,8 @@ export function NavbarAdmin() {
         </button>
         {orgDropdownOpen && (
           <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg z-10">
-            <Link to="/users-overview" className="block px-4 py-2 hover:bg-purple-100">Gebruikers overzicht</Link>
-            <Link to="/teams" className="block px-4 py-2 hover:bg-purple-100">Teams beheer</Link>
+            <Link to="/users-overview" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Gebruikers overzicht</Link>
+            <Link to="/teams" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Teams beheer</Link>
             <div className="border-t my-1"></div>
             <div className="relative">
               <button
@@ -190,10 +190,10 @@ export function NavbarAdmin() {
               </button>
               {beheerDropdownOpen && (
                 <div className="absolute left-full top-0 mt-0 w-56 bg-white text-black rounded shadow-lg z-20">
-                  <Link to="/games-manage" className="block px-4 py-2 hover:bg-purple-100">Games beheren</Link>
-                  <Link to="/games-route-points" className="block px-4 py-2 hover:bg-purple-100">Route punten beheren</Link>
-                  <Link to="/games/create-route" className="block px-4 py-2 hover:bg-purple-100">Route aanmaken/beheren</Link>
-                  <Link to="/games/route-teams" className="block px-4 py-2 hover:bg-purple-100">Teams per route</Link>
+                  <Link to="/games-manage" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Games beheren</Link>
+                  <Link to="/games-route-points" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Route punten beheren</Link>
+                  <Link to="/games/create-route" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Route aanmaken/beheren</Link>
+                  <Link to="/games/route-teams" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Teams per route</Link>
                 </div>
               )}
             </div>
@@ -210,7 +210,7 @@ export function NavbarAdmin() {
         </button>
         {gamesVoorDropdownOpen && (
           <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg z-10">
-            <Link to="/games/all-routes-map" className="block px-4 py-2 hover:bg-purple-100">Kaart: alle routes</Link>
+            <Link to="/games/all-routes-map" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Kaart: alle routes</Link>
           </div>
         )}
       </div>
@@ -224,9 +224,9 @@ export function NavbarAdmin() {
         </button>
         {gamesDropdownOpen && (
           <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg z-10">
-            <Link to="/games-update" className="block px-4 py-2 hover:bg-purple-100">Game status bijwerken</Link>
-            <Link to="/games-set-status" className="block px-4 py-2 hover:bg-purple-100">Status instellen (per team)</Link>
-            <Link to="/games-progress-overview" className="block px-4 py-2 hover:bg-purple-100">Voortgang overzicht</Link>
+            <Link to="/games-update" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Game status bijwerken</Link>
+            <Link to="/games-set-status" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Status instellen (per team)</Link>
+            <Link to="/games-progress-overview" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Voortgang overzicht</Link>
           </div>
         )}
       </div>
@@ -240,8 +240,8 @@ export function NavbarAdmin() {
         </button>
         {teamDropdownOpen && (
           <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-10">
-            <Link to={`/team-details/${user.teamId}`} className="block px-4 py-2 hover:bg-purple-100">{user.teamname}</Link>
-            <Link to="/team-send-event" className="block px-4 py-2 hover:bg-purple-100">Stuur bericht</Link>
+            <Link to={`/team-details/${user.teamId}`} className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>{user.teamname}</Link>
+            <Link to="/team-send-event" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Stuur bericht</Link>
           </div>
         )}
       </div>
@@ -255,8 +255,8 @@ export function NavbarAdmin() {
         </button>
         {userDropdownOpen && (
           <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-10">
-            <Link to="/update-password" className="block px-4 py-2 hover:bg-purple-100">Wachtwoord bijwerken</Link>
-            <Link to="/users-logout" className="block px-4 py-2 hover:bg-purple-100">Logout</Link>
+            <Link to="/update-password" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Wachtwoord bijwerken</Link>
+            <Link to="/users-logout" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Logout</Link>
           </div>
         )}
       </div>
