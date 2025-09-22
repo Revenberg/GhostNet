@@ -1,6 +1,7 @@
 import express from "express";
 
 export default function createGameEngineRoutesRouter(pool) {
+    const router = express.Router();
     // Get game_engine_ranking for a game
     router.get("/ranking", async (req, res) => {
         try {
@@ -54,7 +55,6 @@ export default function createGameEngineRoutesRouter(pool) {
             res.status(500).json({ error: "Database error" });
         }
     });
-    const router = express.Router();
 
     // Mark a point as completed and advance to next target
     router.post("/target", async (req, res) => {
