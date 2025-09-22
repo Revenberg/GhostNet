@@ -119,24 +119,6 @@ export default function GamesManage() {
     <RequireRole role="admin">
       <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
         <h2 className="text-xl font-bold mb-4">Games beheren</h2>
-        <div className="mb-4">
-          <label className="mr-2">Selecteer game:</label>
-          <select
-            value={selectedGameId}
-            onChange={e => {
-              setSelectedGameId(e.target.value);
-              if (typeof window !== 'undefined') {
-                sessionStorage.setItem('filterGameId', e.target.value);
-              }
-            }}
-            className="border px-3 py-2 rounded"
-          >
-            <option value="">Alle games</option>
-            {games.map(game => (
-              <option key={game.id} value={game.id}>{game.name}</option>
-            ))}
-          </select>
-        </div>
         <form className="space-y-4 mb-8" onSubmit={handleSubmit}>
           <input
             type="text"
