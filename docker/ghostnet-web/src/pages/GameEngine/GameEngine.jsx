@@ -53,8 +53,6 @@ export default function GameEngine() {
     if (!status || !selectedGame || STATUS_OPTIONS.length === 0) return;
     if (status === "init" || status === "start") {
       setLoading(true);
-      console.log("Storing status:", status, "for game:", selectedGame);
-      console.log(JSON.stringify({ game_id: selectedGame }));
 
       try {
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
@@ -64,11 +62,10 @@ export default function GameEngine() {
           body: JSON.stringify({ game_id: selectedGame })
         });
         const data = await res.json();
-        if (data.success) setMessage("Game started!");
+        if (data.success) setMessage(`Game ${status} !`);
         else setMessage("Failed to change game status: " + (data.error || "Unknown error"));
         fetchTeams(selectedGame);
       } catch (err) {
-        console.error(err);
         setMessage("Failed to change game status: " + (err?.message || "Unknown error"));
       }
       setLoading(false);
