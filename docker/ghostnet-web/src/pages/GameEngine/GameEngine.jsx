@@ -61,10 +61,11 @@ export default function GameEngine() {
         });
         const data = await res.json();
         if (data.success) setMessage("Game started!");
-        else setMessage("Failed to start game: " + (data.error || "Unknown error"));
+        else setMessage("Failed to change game status: " + (data.error || "Unknown error"));
         fetchTeams(selectedGame);
       } catch (err) {
-        setMessage("Failed to start game: " + (err?.message || "Unknown error"));
+        console.error(err);
+        setMessage("Failed to change game status: " + (err?.message || "Unknown error"));
       }
       setLoading(false);
     }
