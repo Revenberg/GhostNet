@@ -24,54 +24,14 @@ export default function UsersOverview() {
     } catch (err) {
       setError("Server error");
     }
-    setLoading(false);
-  };
-  useEffect(() => { fetchUsers(); }, []);
-
-  const handleEdit = (user) => {
-    setEditModal({ open: true, id: user.id, username: user.username, role: user.role });
-  };
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
-    setMessage("...bijwerken");
-    try {
-      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-      const res = await fetch(`${backendHost}/api/users/${editModal.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: editModal.username, role: editModal.role }),
-      });
-      if (res.ok) {
-        setMessage("✅ Gebruiker bijgewerkt!");
-        setEditModal({ open: false, id: null, username: "", role: "user" });
-        fetchUsers();
-      } else {
-        setMessage("❌ Fout bij bijwerken");
-      }
-    } catch {
-      setMessage("❌ Serverfout");
-    }
-  };
-  const handleDelete = (user) => {
-    setDeleteModal({ open: true, id: user.id, username: user.username });
-  };
-  const handleDeleteConfirm = async () => {
-    setMessage("...verwijderen");
-    try {
-      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-      const res = await fetch(`${backendHost}/api/users/${deleteModal.id}`, { method: "DELETE" });
-      if (res.ok) {
-        setMessage("✅ Gebruiker verwijderd!");
-        setDeleteModal({ open: false, id: null, username: "" });
-        fetchUsers();
-      } else {
-        setMessage("❌ Fout bij verwijderen");
-      }
-    } catch {
-      setMessage("❌ Serverfout");
-    }
   };
 
+  // ...existing code...
+
+  return (
+    <RequireRole role="admin">
+      <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
+        <h2 className="text-xl font-bold mb-4">Gebruikers overzicht</h2>
         {loading ? (
           <p>Loading...</p>
         ) : error ? (
@@ -154,10 +114,6 @@ export default function UsersOverview() {
               </div>
             )}
           </>
-        )}
-              ))}
-            </tbody>
-          </table>
         )}
       </div>
     </RequireRole>
