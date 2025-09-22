@@ -65,11 +65,15 @@ export function NavbarAdmin() {
           <Link to="/users-overview" className="block px-4 py-2 hover:bg-purple-100">Gebruikers overzicht</Link>
           <Link to="/teams" className="block px-4 py-2 hover:bg-purple-100">Teams beheer</Link>
           <div className="border-t my-1"></div>
-          <div className="px-2 py-1 text-xs text-gray-500">Beheer</div>
-          <Link to="/games-manage" className="block px-4 py-2 hover:bg-purple-100">Games beheren</Link>
-          <Link to="/games-route-points" className="block px-4 py-2 hover:bg-purple-100">Route punten beheren</Link>
-          <Link to="/games/create-route" className="block px-4 py-2 hover:bg-purple-100">Route aanmaken/beheren</Link>
-          <Link to="/games/route-teams" className="block px-4 py-2 hover:bg-purple-100">Teams per route</Link>
+          <div className="relative group">
+            <button className="block w-full text-left px-4 py-2 hover:bg-purple-100 focus:outline-none">Beheer ▾</button>
+            <div className="absolute left-full top-0 mt-0 w-56 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-20">
+              <Link to="/games-manage" className="block px-4 py-2 hover:bg-purple-100">Games beheren</Link>
+              <Link to="/games-route-points" className="block px-4 py-2 hover:bg-purple-100">Route punten beheren</Link>
+              <Link to="/games/create-route" className="block px-4 py-2 hover:bg-purple-100">Route aanmaken/beheren</Link>
+              <Link to="/games/route-teams" className="block px-4 py-2 hover:bg-purple-100">Teams per route</Link>
+            </div>
+          </div>
         </div>
       </div>
 
