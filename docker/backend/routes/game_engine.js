@@ -157,18 +157,18 @@ export default function createGameEngineRoutesRouter(pool) {
              ORDER BY o.order_id ASC` ,
                         [route.route_id]
                     );
-                    // Insert each point for this team into game_engine_points, status = 'todo'
+                    // Insert each point for this team into game_engine_points
                     for (const point of points) {
                         await pool.query(
-                            `INSERT INTO game_engine_ranking (game_id, team_id, game_route_points_id, status, game_points)
-               VALUES (?, ?, ?, 'todo', 0)`,
+                            `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status)
+               VALUES (?, ?, ?, 'todo')`,
                             [game_id, team.id, point.point_id]
                         );
                     }
                 }
                 // Insert a row for team/game with game_points = 0 if not exists
                 await pool.query(
-                    `INSERT IGNORE INTO game_engine_points (game_id, team_id, status, game_points)
+                    `INSERT IGNORE INTO game_engine_ranking (game_id, team_id, status, game_points)
            VALUES (?, ?, 'summary', 0)`,
                     [game_id, team.id]
                 );
