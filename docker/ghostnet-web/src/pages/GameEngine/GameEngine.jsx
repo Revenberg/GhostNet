@@ -77,7 +77,7 @@ export default function GameEngine() {
     setMessage("");
     try {
       const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-      const res = await fetch(`${backendHost}/api/target`, {
+      const res = await fetch(`${backendHost}/api/game_engine/target`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ game_id: selectedGame, team_id: team_id, game_point_id: game_point_id })
