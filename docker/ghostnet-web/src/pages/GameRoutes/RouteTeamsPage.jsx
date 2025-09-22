@@ -21,20 +21,14 @@ export default function RouteTeamsPage() {
             setLoading(true);
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                // Fetch teams for selected game only (if selected)
-                const teamsUrl = selectedGame && selectedGame.id
-                    ? `${backendHost}/api/teams?game_id=${selectedGame.id}`
-                    : `${backendHost}/api/teams`;
-                const [gamesRes, teamsRes, routesRes] = await Promise.all([
+                // Always fetch games and routes, but only fetch teams if a game is selected
+                const [gamesRes, routesRes] = await Promise.all([
                     fetch(`${backendHost}/api/games`),
-                    fetch(teamsUrl),
                     fetch(`${backendHost}/api/game_routes`)
                 ]);
                 const gamesData = await gamesRes.json();
-                const teamsData = await teamsRes.json();
                 const routesData = await routesRes.json();
                 if (gamesData.success) setGames(gamesData.games);
-                if (teamsData.success) setTeams(teamsData.teams);
                 if (routesData.success) setRoutes(routesData.routes);
                 // Na laden games, koppel geselecteerde game object als er een id in sessionStorage staat
                 if (gamesData.success && gamesData.games && typeof window !== 'undefined') {
@@ -44,8 +38,18 @@ export default function RouteTeamsPage() {
                         if (found) setSelectedGame(found);
                     }
                 }
+                // Fetch teams for selected game only
+                if (selectedGame && selectedGame.id) {
+                    const teamsRes = await fetch(`${backendHost}/api/teams?game_id=${selectedGame.id}`);
+                    const teamsData = await teamsRes.json();
+                    if (teamsData.success) setTeams(teamsData.teams);
+                    else setTeams([]);
+                } else {
+                    setTeams([]);
+                }
             } catch (err) {
                 setMessage("Fout bij ophalen van data");
+                setTeams([]);
             }
             setLoading(false);
         }
