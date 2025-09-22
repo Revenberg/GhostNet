@@ -127,6 +127,7 @@ export default function GameEngine() {
           <thead>
             <tr>
               <th className="border-b p-2">Routepunt</th>
+              <th className="border-b p-2">Omschrijving</th>
               {teams.map(team => (
                 <th key={team.team_id} className="border-b p-2 text-center">{team.teamname}</th>
               ))}
@@ -142,10 +143,14 @@ export default function GameEngine() {
                   <tr key={i}>
                     {/* First column: route point description (from first team that has it) */}
                     <td className="border-b p-2 font-semibold">
+                      {teams.find(t => t.points[i])?.points[i]?.location || ''}
+                    </td>
+                    <td className="border-b p-2 font-semibold">
                       {teams.find(t => t.points[i])?.points[i]?.description || ''}
                     </td>
                     {teams.map(team => {
                       const point = team.points[i];
+                      console.log("Rendering point for team", team.teamname, point);
                       if (!point) return <td key={team.team_id} className="border-b p-2"></td>;
                       if (point.status === "target") {
                         return (
