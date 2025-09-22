@@ -21,9 +21,13 @@ export default function RouteTeamsPage() {
             setLoading(true);
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+                // Fetch teams for selected game only (if selected)
+                const teamsUrl = selectedGame && selectedGame.id
+                    ? `${backendHost}/api/teams?game_id=${selectedGame.id}`
+                    : `${backendHost}/api/teams`;
                 const [gamesRes, teamsRes, routesRes] = await Promise.all([
                     fetch(`${backendHost}/api/games`),
-                    fetch(`${backendHost}/api/teams`),
+                    fetch(teamsUrl),
                     fetch(`${backendHost}/api/game_routes`)
                 ]);
                 const gamesData = await gamesRes.json();
@@ -46,7 +50,7 @@ export default function RouteTeamsPage() {
             setLoading(false);
         }
         fetchGamesTeamsRoutes();
-    }, []);
+    }, [selectedGame]);
 
     useEffect(() => {
         async function fetchAllRouteTeams() {
