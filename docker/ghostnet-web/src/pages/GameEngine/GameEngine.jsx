@@ -54,7 +54,8 @@ export default function GameEngine() {
     if (status === "init" || status === "start") {
       setLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/${status}`, {
+        const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+        const res = await fetch(`${backendHost}/${status}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ game_id: selectedGame })
