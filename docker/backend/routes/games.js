@@ -1,7 +1,6 @@
 import express from "express";
 
 export default function createGamesRouter(pool) {
-  // Create a new game (status = 'new')
   const router = express.Router();
   
   router.get("/progress/by-game-latest/:game_id", async (req, res) => {

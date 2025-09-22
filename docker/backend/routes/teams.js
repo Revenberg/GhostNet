@@ -2,7 +2,6 @@ import express from "express";
 
 export default function createTeamsRouter(pool) {
   const router = express.Router();
-  // ...existing code...
 
   // Get team by id (must be last)
   router.get("/:id", async (req, res) => {
