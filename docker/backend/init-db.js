@@ -9,7 +9,6 @@ const dbConfig = {
 
 export async function ensureTables(pool) {
   const conn = await pool.getConnection();
-  // removed duplicate game table creation above
 
   await conn.query(`
     CREATE TABLE IF NOT EXISTS users (
@@ -22,7 +21,14 @@ export async function ensureTables(pool) {
         last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )
   `);
-
+  await conn.query(`
+    CREATE TABLE IF NOT EXISTS game (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(64) UNIQUE,
+      status VARCHAR(64),
+      lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);  
   await conn.query(`
     CREATE TABLE IF NOT EXISTS teams (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -40,14 +46,6 @@ export async function ensureTables(pool) {
         event_message VARCHAR(255),
         event_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (team_id) REFERENCES teams(id)
-    )
-  `);  
-  await conn.query(`
-    CREATE TABLE IF NOT EXISTS game (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(64) UNIQUE,
-      status VARCHAR(64),
-      lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);  
   await conn.query(`
