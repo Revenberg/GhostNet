@@ -143,19 +143,17 @@ export default function GamesManage() {
               </tr>
             </thead>
             <tbody>
-              {games
-                .filter(game => !selectedGameId || String(game.id) === String(selectedGameId))
-                .map((game) => (
-                  <tr key={game.id}>
-                    <td className="border-b p-2">{game.id}</td>
-                    <td className="border-b p-2">{game.name}</td>
-                    <td className="border-b p-2">{game.status}</td>
-                    <td className="border-b p-2">
-                      <button className="btn-secondary mr-2" onClick={() => handleEditGame(game)}>Naam wijzigen</button>
-                      <button className="btn-danger" onClick={() => handleDeleteGame(game)}>Verwijderen</button>
-                    </td>
-                  </tr>
-                ))}
+              {games.map((game) => (
+                <tr key={game.id}>
+                  <td className="border-b p-2">{game.id}</td>
+                  <td className="border-b p-2">{game.name}</td>
+                  <td className="border-b p-2">{game.status}</td>
+                  <td className="border-b p-2">
+                    <button className="btn-secondary mr-2" onClick={() => handleEditGame(game)}>Naam wijzigen</button>
+                    <button className="btn-danger" onClick={() => handleDeleteGame(game)}>Verwijderen</button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         )}
