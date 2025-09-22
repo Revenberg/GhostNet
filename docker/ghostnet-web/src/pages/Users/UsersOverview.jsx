@@ -158,7 +158,9 @@ export default function UsersOverview() {
                       className="w-full border px-3 py-2 rounded mb-4"
                       required
                     >
+                      <option value="guest">guest</option>
                       <option value="user">user</option>
+                      <option value="operator">operator</option>
                       <option value="admin">admin</option>
                     </select>
                     <div className="flex justify-end space-x-2">
