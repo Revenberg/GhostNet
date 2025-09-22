@@ -68,10 +68,12 @@ function Teams() {
     setError(null);
     const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
     try {
+      // Use filterGameId as the game_id for new team
+      const payload = { ...form, game_id: filterGameId };
       const res = await fetch(`${backendHost}/api/teams`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error('Failed to register team');
       setForm({ teamname: '', game_id: 0 });
@@ -227,20 +229,6 @@ function Teams() {
                 className="w-full border px-3 py-2 rounded mb-2"
                 required
               />
-              <label htmlFor="game_id" className="block font-medium">Game</label>
-              <select
-                id="game_id"
-                name="game_id"
-                value={form.game_id}
-                onChange={e => setForm({ ...form, game_id: e.target.value })}
-                className="w-full border px-3 py-2 rounded mb-2"
-                required
-              >
-                <option value="" disabled>Kies een game</option>
-                {games.map(game => (
-                  <option key={game.id} value={game.id}>{game.name}</option>
-                ))}
-              </select>
               <div className="flex gap-2">
                 <button type="submit" className="btn-primary flex-1">Aanmaken</button>
                 <button type="button" className="btn-secondary flex-1" onClick={closeModals}>Annuleren</button>
