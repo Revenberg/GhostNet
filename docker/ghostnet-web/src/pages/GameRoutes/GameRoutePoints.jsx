@@ -103,6 +103,20 @@ export default function GameRoutePoints() {
     return (
         <RequireRole role="admin">
             <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow">
+                <h2 className="text-xl font-bold mb-4">Route punten beheren</h2>
+                <div className="mb-4">
+                    <label className="font-semibold mr-2">Selecteer game:</label>
+                    <select
+                        className="border px-2 py-1 rounded"
+                        value={selectedGameId}
+                        onChange={e => setSelectedGameId(e.target.value)}
+                    >
+                        <option value="">-- Kies een game --</option>
+                        {games.map(game => (
+                            <option key={game.id} value={game.id}>{game.id} - {game.name}</option>
+                        ))}
+                    </select>
+                </div>
                 <table className="w-full border-collapse">
                     <thead>
                         <tr>
@@ -132,20 +146,6 @@ export default function GameRoutePoints() {
                         ))}
                     </tbody>
                 </table>
-                <h2 className="text-xl font-bold mb-4">Route punten beheren</h2>
-                <div className="mb-4">
-                    <label className="font-semibold mr-2">Selecteer game:</label>
-                    <select
-                        className="border px-2 py-1 rounded"
-                        value={selectedGameId}
-                        onChange={e => setSelectedGameId(e.target.value)}
-                    >
-                        <option value="">-- Kies een game --</option>
-                        {games.map(game => (
-                            <option key={game.id} value={game.id}>{game.id} - {game.name}</option>
-                        ))}
-                    </select>
-                </div>
                 {selectedGameId && (
                     <form className="space-y-2 mb-6" onSubmit={handleSubmit}>
                         <div className="flex gap-2">
