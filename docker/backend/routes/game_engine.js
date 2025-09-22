@@ -197,26 +197,22 @@ export default function createGameEngineRoutesRouter(pool) {
                 return res.status(400).json({ error: "game_id required" });
             }
 
-            // 1. Set game state to 'started'
             await pool.query(
                 `UPDATE game SET status = 'started' WHERE id = ? and status = 'initialized'`,
                 [game_id]
             );
 
-            // 2. Get all teams for this game
             const [teams] = await pool.query(
                 `SELECT t.* FROM teams t WHERE t.game_id = ?`,
                 [game_id]
             );
 
-            // 3. Get game name
             const [[gameRow]] = await pool.query(
                 `SELECT name FROM game WHERE id = ?`,
                 [game_id]
             );
             const gameName = gameRow ? gameRow.name : "";
 
-            // 4. For each team, find their first point and set as target
             const results = [];
             for (const team of teams) {
                 // Find the first point for this team (lowest order_id)

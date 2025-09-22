@@ -79,10 +79,11 @@ export default function GameEngine() {
     setLoading(true);
     setMessage("");
     try {
-      const res = await fetch(`${API_BASE}/target`, {
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      const res = await fetch(`${backendHost}/api/target`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ game_id: selectedGame, team_id, game_point_id })
+        body: JSON.stringify({ game_id: selectedGame, team_id: team_id, game_point_id: game_point_id })
       });
       const data = await res.json();
       if (data.success) setMessage("Target marked as done");
