@@ -2,6 +2,22 @@ import React, { useEffect, useState } from "react";
 import RequireRole from "../../components/RequireRole";
 
 export default function GameRoutePoints() {
+    // Fill lat/lon from browser geolocation
+    function handleFillFromBrowser() {
+        if (!navigator.geolocation) {
+            setMessage("Geolocatie niet ondersteund door deze browser.");
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                setForm(f => ({ ...f, latitude: pos.coords.latitude, longitude: pos.coords.longitude }));
+                setMessage("");
+            },
+            (err) => {
+                setMessage("Kon locatie niet ophalen: " + err.message);
+            }
+        );
+    }
     const [games, setGames] = useState([]);
     const [selectedGameId, setSelectedGameId] = useState(() => {
         return localStorage.getItem("selectedGameId") || "";
@@ -152,9 +168,12 @@ export default function GameRoutePoints() {
                         <div className="flex gap-2">
                             <input type="text" name="location" placeholder="Locatie" value={form.location} onChange={handleChange} className="border px-2 py-1 rounded w-40" required />
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 items-center">
                             <input type="number" name="latitude" placeholder="Lat" value={form.latitude} onChange={handleChange} className="border px-2 py-1 rounded w-28" step="any" />
                             <input type="number" name="longitude" placeholder="Lon" value={form.longitude} onChange={handleChange} className="border px-2 py-1 rounded w-28" step="any" />
+                            <button type="button" className="btn-secondary" onClick={handleFillFromBrowser}>
+                                Gebruik mijn locatie
+                            </button>
                         </div>
                         <textarea name="description" placeholder="Beschrijving" value={form.description} onChange={handleChange} className="border px-2 py-1 rounded w-full" rows={2} />
                         <input type="text" name="images" placeholder="Afbeeldingen (komma gescheiden)" value={form.images} onChange={handleChange} className="border px-2 py-1 rounded w-full" />
