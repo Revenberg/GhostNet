@@ -14,19 +14,16 @@ export default function GameEngine() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Fetch games
   useEffect(() => {
     async function fetchGames() {
       try {
-        const res = await fetch(GAMES_API);
+        const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+        const res = await fetch(`${backendHost}/api/games`);
         const data = await res.json();
-        if (data.success) {
+        if (res.ok && data.success) {
           setGames(data.games);
-          if (!selectedGame && data.games.length > 0) setSelectedGame(data.games[0].id);
         }
-      } catch {
-        setGames([]);
-      }
+      } catch {}
     }
     fetchGames();
   }, []);
