@@ -128,10 +128,20 @@ export default function createTeamsRouter(pool) {
     }
   });
 
-    // Get all teams
+
+  // Get all teams, or by game_id if provided
   router.get("/", async (req, res) => {
     try {
-      const [rows] = await pool.query("SELECT id, game_id, teamname, teamcode FROM teams");
+      const { game_id } = req.query;
+      let rows;
+      if (game_id) {
+        [rows] = await pool.query(
+          "SELECT id, game_id, teamname, teamcode FROM teams WHERE game_id = ?",
+          [game_id]
+        );
+      } else {
+        [rows] = await pool.query("SELECT id, game_id, teamname, teamcode FROM teams");
+      }
       res.json({ success: true, teams: rows });
     } catch (err) {
       console.error(err);
