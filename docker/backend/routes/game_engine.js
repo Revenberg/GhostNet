@@ -184,7 +184,7 @@ export default function createGameEngineRoutesRouter(pool) {
                         await pool.query(
                             `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status, order_id)
                                VALUES (?, ?, ?, 'todo', ?)`,
-                            [route.game_id, route.team_id, route.point_id, point.order_id]
+                            [route.game_id, route.team_id, route.point_id, route.order_id]
                         );
                }
                 // Send event: you joined game (insert into team_events)
