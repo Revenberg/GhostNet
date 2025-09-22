@@ -3,25 +3,19 @@ import RequireRole from "../../components/RequireRole";
 
 export default function RouteTeamsPage() {
     const [games, setGames] = useState([]);
-    const [selectedGame, setSelectedGame] = useState(() => {
-        if (typeof window !== 'undefined') {
-            const storedId = sessionStorage.getItem('filterGameId');
-            return storedId ? { id: Number(storedId) } : null;
-        }
-        return null;
-    });
+    const [selectedGame, setSelectedGame] = useState(null);
     const [routes, setRoutes] = useState([]);
     const [teams, setTeams] = useState([]);
     const [routeTeams, setRouteTeams] = useState({});
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
+    // Load games and routes on mount
     useEffect(() => {
-        async function fetchGamesTeamsRoutes() {
+        async function fetchGamesAndRoutes() {
             setLoading(true);
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                // Always fetch games and routes, but only fetch teams if a game is selected
                 const [gamesRes, routesRes] = await Promise.all([
                     fetch(`${backendHost}/api/games`),
                     fetch(`${backendHost}/api/game_routes`)
@@ -30,15 +24,29 @@ export default function RouteTeamsPage() {
                 const routesData = await routesRes.json();
                 if (gamesData.success) setGames(gamesData.games);
                 if (routesData.success) setRoutes(routesData.routes);
-                // Na laden games, koppel geselecteerde game object als er een id in sessionStorage staat
-                if (gamesData.success && gamesData.games && typeof window !== 'undefined') {
+                // Set selectedGame from sessionStorage if not already set
+                if (!selectedGame && gamesData.success && gamesData.games && typeof window !== 'undefined') {
                     const storedId = sessionStorage.getItem('filterGameId');
                     if (storedId) {
                         const found = gamesData.games.find(g => String(g.id) === String(storedId));
                         if (found) setSelectedGame(found);
                     }
                 }
-                // Fetch teams for selected game only
+            } catch (err) {
+                setMessage("Fout bij ophalen van data");
+            }
+            setLoading(false);
+        }
+        fetchGamesAndRoutes();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Load teams when selectedGame changes
+    useEffect(() => {
+        async function fetchTeams() {
+            setLoading(true);
+            try {
+                const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
                 if (selectedGame && selectedGame.id) {
                     const teamsRes = await fetch(`${backendHost}/api/teams?game_id=${selectedGame.id}`);
                     const teamsData = await teamsRes.json();
@@ -48,12 +56,12 @@ export default function RouteTeamsPage() {
                     setTeams([]);
                 }
             } catch (err) {
-                setMessage("Fout bij ophalen van data");
+                setMessage("Fout bij ophalen van teams");
                 setTeams([]);
             }
             setLoading(false);
         }
-        fetchGamesTeamsRoutes();
+        fetchTeams();
     }, [selectedGame]);
 
     useEffect(() => {
