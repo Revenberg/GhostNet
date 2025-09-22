@@ -32,7 +32,8 @@ export default function GameEngine() {
     if (!gameId) return;
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/current?game_id=${gameId}`);
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      const res = await fetch(`${backendHost}/api/game_engine/current?game_id=${gameId}`);
       const data = await res.json();
       if (data.success) setTeams(data.teams);
       else setTeams([]);
