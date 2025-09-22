@@ -1,6 +1,59 @@
 import express from "express";
 
 export default function createGameEngineRoutesRouter(pool) {
+    // Get game_engine_ranking for a game
+    router.get("/ranking", async (req, res) => {
+        try {
+            const { game_id } = req.query;
+            if (!game_id) {
+                return res.status(400).json({ error: "game_id required" });
+            }
+            const [ranking] = await pool.query(
+                `SELECT r.id, r.team_id, t.teamname, r.game_route_points_id, grp.description, r.game_points, r.game_bonus_task
+                 FROM game_engine_ranking r
+                 JOIN teams t ON r.team_id = t.id
+                 JOIN game_route_points grp ON r.game_route_points_id = grp.id
+                 WHERE r.game_id = ?
+                 ORDER BY r.game_points DESC, r.id ASC`,
+                [game_id]
+            );
+            res.json({ success: true, ranking });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+        }
+    });
+    // Get all teams and their routepoints (description and status) for a game
+    router.get("/current", async (req, res) => {
+        try {
+            const { game_id } = req.query;
+            if (!game_id) {
+                return res.status(400).json({ error: "game_id required" });
+            }
+            // Get all teams for this game
+            const [teams] = await pool.query(
+                `SELECT id, teamname FROM teams WHERE game_id = ?`,
+                [game_id]
+            );
+            // For each team, get their routepoints (description and status)
+            const results = [];
+            for (const team of teams) {
+                const [points] = await pool.query(
+                    `SELECT gep.point_id, grp.description, gep.status
+                     FROM game_engine_points gep
+                     JOIN game_route_points grp ON gep.point_id = grp.id
+                     WHERE gep.game_id = ? AND gep.team_id = ?
+                     ORDER BY gep.id ASC`,
+                    [game_id, team.id]
+                );
+                results.push({ team_id: team.id, teamname: team.teamname, points });
+            }
+            res.json({ success: true, teams: results });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+        }
+    });
     const router = express.Router();
 
     // Mark a point as completed and advance to next target
@@ -106,7 +159,7 @@ export default function createGameEngineRoutesRouter(pool) {
                     // Insert each point for this team into game_engine_points, status = 'todo'
                     for (const point of points) {
                         await pool.query(
-                            `INSERT INTO game_engine_ranking (game_id, team_id, point_id, status, game_points)
+                            `INSERT INTO game_engine_ranking (game_id, team_id, game_route_points_id, status, game_points)
                VALUES (?, ?, ?, 'todo', 0)`,
                             [game_id, team.id, point.point_id]
                         );
