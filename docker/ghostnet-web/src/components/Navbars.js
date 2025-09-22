@@ -131,8 +131,9 @@ export function NavbarAdmin() {
   // Auto-close timer refs
   const timers = React.useRef({});
 
-  // Set auto-close for a dropdown
+  // Set auto-close for a dropdown, closing others first
   const setDropdownWithTimeout = (setter, key) => {
+    closeAllDropdowns();
     setter(true);
     if (timers.current[key]) clearTimeout(timers.current[key]);
     timers.current[key] = setTimeout(() => setter(false), 15000);
