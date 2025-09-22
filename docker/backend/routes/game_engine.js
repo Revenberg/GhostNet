@@ -151,18 +151,21 @@ export default function createGameEngineRoutesRouter(pool) {
                      ORDER BY o.order_id ASC`,
                     [game_id, team.id]
                 );
-                                
+                    
+                await pool.query(
+                    `DELETE gep FROM game_engine_points gep
+                    JOIN game_route_order o ON gep.game_route_points_id = o.game_route_points_id
+                    WHERE gep.team_id = ? AND gep.game_id = ?`,
+                    [team.id, game_id]
+                );
+
                 for (const route of routes) {
-                    // Delete old game_engine_points for this route and team
-                    await pool.query(
-                        `DELETE gep FROM game_engine_points gep
-                        JOIN game_route_order o ON gep.game_route_points_id = o.game_route_points_id
-                        WHERE o.game_route_id = ? AND gep.team_id = ? AND gep.game_id = ?`,
-                        [route.route_id, team.id, game_id]
-                    );
                     // Select all points for this route, ordered
+                    console.log("Route:", route);
+                    
                     const [points] = await pool.query(
-                        `SELECT p.id as point_id, o.order_id as order_id FROM game_route_order o
+                        `SELECT p.id as point_id, o.order_id as order_id 
+                            FROM game_route_order o
                             JOIN game_route_points p ON o.game_route_points_id = p.id
                             WHERE o.game_route_id = ?
                             ORDER BY o.order_id ASC` ,
