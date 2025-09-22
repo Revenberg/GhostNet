@@ -78,7 +78,8 @@ export default function CreateRoutePage() {
             } catch { }
         }
         fetchGames();
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedGame]);
 
     // Fetch routes for selected game
     useEffect(() => {
