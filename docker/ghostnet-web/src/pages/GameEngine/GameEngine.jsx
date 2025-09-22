@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-
-const API_BASE = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000/api/game_engine";
 const STATUS_OPTIONS = ["", "init", "start", "finished"];
-
 
 export default function GameEngine() {
   const [games, setGames] = useState([]);
