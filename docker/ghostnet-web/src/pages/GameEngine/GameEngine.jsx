@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 
 const API_BASE = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000/api/game_engine";
-const GAMES_API = process.env.REACT_APP_BACKEND_URL?.replace(/\/api.*/, "") || "http://localhost:4000/api/games";
 const STATUS_OPTIONS = ["init", "start", "finished"];
 
 
