@@ -162,7 +162,7 @@ export default function createGameEngineRoutesRouter(pool) {
                     );
                     // Select all points for this route, ordered
                     const [points] = await pool.query(
-                        `SELECT p.id as point_id FROM game_route_order o
+                        `SELECT p.id as point_id, o.order_id as order_id FROM game_route_order o
                             JOIN game_route_points p ON o.game_route_points_id = p.id
                             WHERE o.game_route_id = ?
                             ORDER BY o.order_id ASC` ,
@@ -171,9 +171,9 @@ export default function createGameEngineRoutesRouter(pool) {
                     // Insert each point for this team into game_engine_points
                     for (const point of points) {
                         await pool.query(
-                            `INSERT INTO game_engine_points (game_id, team_id, order_id, game_route_points_id, status)
-                               VALUES (?, ?, ?, ?, 'todo')`,
-                            [game_id, team.id, route.grp_order_id, point.point_id]
+                            `INSERT INTO game_engine_points (game_id, team_id, order_id, game_route_points_id, status, order_id)
+                               VALUES (?, ?, ?, ?, 'todo', ?)`,
+                            [game_id, team.id, route.grp_order_id, point.point_id, point.order_id]
                         );
                     }
                 }
