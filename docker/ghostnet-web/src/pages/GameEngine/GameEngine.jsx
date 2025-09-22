@@ -126,33 +126,47 @@ export default function GameEngine() {
         <table className="w-full border-collapse text-xs md:text-sm">
           <thead>
             <tr>
-              <th className="border-b p-2">Team</th>
-              <th className="border-b p-2">Routepunten</th>
-              <th className="border-b p-2">Status</th>
-              <th className="border-b p-2">Actie</th>
+              <th className="border-b p-2">Routepunt</th>
+              {teams.map(team => (
+                <th key={team.team_id} className="border-b p-2 text-center">{team.teamname}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {teams.map(team => (
-              <React.Fragment key={team.team_id}>
-                {team.points.map((point, idx) => (
-                  <tr key={point.game_route_points_id}>
-                    {idx === 0 && (
-                      <td className="border-b p-2 font-semibold" rowSpan={team.points.length}>{team.teamname}</td>
-                    )}
-                    <td className="border-b p-2">{point.description}</td>
-                    <td className="border-b p-2">{point.status}</td>
-                    <td className="border-b p-2">
-                      {point.status === "target" && (
-                        <button className="btn-primary px-2 py-1" onClick={() => handleTargetDone(team.team_id, point.game_route_points_id)}>
-                          Markeer als gedaan
-                        </button>
-                      )}
+            {/* Find the max number of points for any team */}
+            {(() => {
+              const maxPoints = Math.max(...teams.map(t => t.points.length));
+              const rows = [];
+              for (let i = 0; i < maxPoints; i++) {
+                rows.push(
+                  <tr key={i}>
+                    {/* First column: route point description (from first team that has it) */}
+                    <td className="border-b p-2 font-semibold">
+                      {teams.find(t => t.points[i])?.points[i]?.description || ''}
                     </td>
+                    {teams.map(team => {
+                      const point = team.points[i];
+                      if (!point) return <td key={team.team_id} className="border-b p-2"></td>;
+                      if (point.status === "target") {
+                        return (
+                          <td key={team.team_id} className="border-b p-2 text-center">
+                            <a
+                              href="#"
+                              className="text-blue-600 underline cursor-pointer"
+                              onClick={e => { e.preventDefault(); handleTargetDone(team.team_id, point.game_route_points_id); }}
+                            >
+                              {point.status}
+                            </a>
+                          </td>
+                        );
+                      }
+                      return <td key={team.team_id} className="border-b p-2 text-center">{point.status}</td>;
+                    })}
                   </tr>
-                ))}
-              </React.Fragment>
-            ))}
+                );
+              }
+              return rows;
+            })()}
           </tbody>
         </table>
       )}
