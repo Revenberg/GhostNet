@@ -1,3 +1,24 @@
+  // Update route name
+  router.put("/route/:id/name", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { route_name } = req.body;
+      if (!route_name) {
+        return res.status(400).json({ error: "route_name required" });
+      }
+      const [result] = await pool.query(
+        "UPDATE game_routes SET route_name = ? WHERE id = ?",
+        [route_name, id]
+      );
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Route not found" });
+      }
+      res.json({ success: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
 import express from "express";
 
 export default function createGameRoutesRouter(pool) {
