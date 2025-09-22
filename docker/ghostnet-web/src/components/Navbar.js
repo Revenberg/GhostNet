@@ -12,6 +12,7 @@ export default function Navbar() {
   }
 
   if (role === "admin") return <NavbarAdmin />;
+  if (role === "operator") return <NavbarOperator />;
   if (role === "user") return <NavbarUser />;
 
   return <NavbarGuest />;
