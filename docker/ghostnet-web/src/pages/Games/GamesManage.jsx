@@ -221,4 +221,4 @@ export default function GamesManage() {
       </div>
     </RequireRole>
   );
-
+}
