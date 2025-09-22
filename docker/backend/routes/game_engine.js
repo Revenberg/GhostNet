@@ -168,8 +168,8 @@ export default function createGameEngineRoutesRouter(pool) {
                 }
                 // Insert a row for team/game with game_points = 0 if not exists
                 await pool.query(
-                    `INSERT IGNORE INTO game_engine_ranking (game_id, team_id, status, game_points)
-           VALUES (?, ?, 'summary', 0)`,
+                    `INSERT IGNORE INTO game_engine_ranking (game_id, team_id, game_route_points_id, game_points)
+           VALUES (?, ?, 0, 0)`,
                     [game_id, team.id]
                 );
                 // Send event: you joined game (insert into team_events)
