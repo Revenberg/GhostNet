@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import RequireRole from "../../components/RequireRole";
 
+export default function GamesManage() {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
