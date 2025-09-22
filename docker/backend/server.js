@@ -16,6 +16,7 @@ import usersRouter from "./routes/users.js";
 import teamsRouter from "./routes/teams.js";
 import gamesRouter from "./routes/games.js";
 import gameRoutesRouter from "./routes/game_routes.js";
+import gameEngineRouter from "./routes/game_engine.js";
 import { ensureTables } from "./init-db.js";
 
 const app = express();
@@ -64,6 +65,7 @@ initMySQL()
   app.use("/api/teams", teamsRouter(pool));
   app.use("/api/games", gamesRouter(pool));
   app.use("/api/game_routes", gameRoutesRouter(pool));
+  app.use("/api/game_engine", gameEngineRouter(pool));
     app.listen(PORT, () => {
       console.log(`✅ Backend running on port ${PORT}`);
     });

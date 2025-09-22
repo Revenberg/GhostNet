@@ -195,6 +195,7 @@ export function NavbarAdmin() {
                   <Link to="/games-route-points" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Route punten beheren</Link>
                   <Link to="/games/create-route" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Route aanmaken/beheren</Link>
                   <Link to="/games/route-teams" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Teams per route</Link>
+                  <Link to="/games/all-routes-map" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Kaart: alle routes</Link>
                 </div>
               )}
             </div>
@@ -205,24 +206,8 @@ export function NavbarAdmin() {
       <div className="relative" onClick={e => e.stopPropagation()}>
         <button
           className="hover:underline focus:outline-none"
-          onClick={() => setDropdownWithTimeout(setGamesVoorDropdownOpen, 'gamesVoor')}
-        >
-          Games voorbereiding ▾
-        </button>
-        {gamesVoorDropdownOpen && (
-          <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg z-10">
-            <Link to="/games/all-routes-map" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Kaart: alle routes</Link>
-          </div>
-        )}
-      </div>
-
-      <div className="relative" onClick={e => e.stopPropagation()}>
-        <button
-          className="hover:underline focus:outline-none"
           onClick={() => setDropdownWithTimeout(setGamesDropdownOpen, 'games')}
-        >
-          Games ▾
-        </button>
+        >Games ▾</button>
         {gamesDropdownOpen && (
           <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg z-10">
             <Link to="/games-update" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Game status bijwerken</Link>

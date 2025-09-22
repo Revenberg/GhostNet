@@ -117,6 +117,41 @@ export async function ensureTables(pool) {
         description TEXT
     )
   `);
+
+
+
+
+
+
+
+    await conn.query(`
+    CREATE TABLE IF NOT EXISTS game_engine_ranking (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+        game_id INT,
+        team_id INT,
+        game_route_points_id INT,
+        game_bonus_task INT,
+        game_points INT,
+        FOREIGN KEY (game_id) REFERENCES game(id),
+        FOREIGN KEY (team_id) REFERENCES teams(id)   
+        )
+  `);    
+
+    await conn.query(`
+    CREATE TABLE IF NOT EXISTS game_engine_points (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        game_id INT,
+        team_id INT,
+        game_route_points_id INT,
+        status VARCHAR(64),
+        starttms TIMESTAMP DEFAULT NULL,
+        endtms TIMESTAMP DEFAULT NULL,
+        lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (game_id) REFERENCES game(id),
+        FOREIGN KEY (team_id) REFERENCES teams(id)
+    )
+  `);  
+
   // Toon alle tabellen na aanmaken
   const [tables] = await conn.query('SHOW TABLES');
   console.log('Alle tabellen in de database:');
