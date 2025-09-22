@@ -136,12 +136,17 @@ export async function ensureTables(pool) {
   `);    
 
     await conn.query(`
+      drop table if exists game_engine_points;
+  `);    
+
+    await conn.query(`
     CREATE TABLE IF NOT EXISTS game_engine_points (
         id INT AUTO_INCREMENT PRIMARY KEY,
         game_id INT,
         team_id INT,
         game_route_points_id INT,
         status VARCHAR(64),
+        order_id INT,
         starttms TIMESTAMP DEFAULT NULL,
         endtms TIMESTAMP DEFAULT NULL,
         lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

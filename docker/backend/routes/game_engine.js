@@ -143,7 +143,7 @@ export default function createGameEngineRoutesRouter(pool) {
             for (const team of teams) {
                 // Select all unique routes for this team
                 const [routes] = await pool.query(
-                    `SELECT DISTINCT gr.id as route_id FROM game_routes gr
+                    `SELECT DISTINCT gr.id as route_id, grt.order_id as grp_order_id FROM game_routes gr
                      JOIN game_route_team grt ON grt.game_route_id = gr.id
                      WHERE gr.game_id = ? AND grt.team_id = ?`,
                     [game_id, team.id]
@@ -168,9 +168,9 @@ export default function createGameEngineRoutesRouter(pool) {
                     // Insert each point for this team into game_engine_points
                     for (const point of points) {
                         await pool.query(
-                            `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status)
-                               VALUES (?, ?, ?, 'todo')`,
-                            [game_id, team.id, point.point_id]
+                            `INSERT INTO game_engine_points (game_id, team_id, order_id, game_route_points_id, status)
+                               VALUES (?, ?, ?, ?, 'todo')`,
+                            [game_id, team.id, route.grp_order_id, point.point_id]
                         );
                     }
                 }
@@ -221,7 +221,7 @@ export default function createGameEngineRoutesRouter(pool) {
            FROM game_engine_points gep
            JOIN game_route_points grp ON gep.game_route_points_id = grp.id
            WHERE gep.game_id = ? AND gep.team_id = ? AND gep.status = 'todo'
-           ORDER BY gep.id ASC LIMIT 1`,
+           ORDER BY gep.order_id, gep.id ASC LIMIT 1`,
                     [game_id, team.id]
                 );
                 let targetDescription = null;
