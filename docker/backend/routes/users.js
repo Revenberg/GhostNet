@@ -1,3 +1,58 @@
+  // Update user role, username, or teamname
+  router.put("/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { username, teamname, role } = req.body;
+      if (!username && !teamname && !role) {
+        return res.status(400).json({ error: "At least one field (username, teamname, role) required" });
+      }
+      // Build dynamic query
+      const fields = [];
+      const values = [];
+      if (username) {
+        fields.push("username = ?");
+        values.push(username);
+      }
+      if (teamname) {
+        fields.push("teamname = ?");
+        values.push(teamname);
+      }
+      if (role) {
+        fields.push("role = ?");
+        values.push(role);
+      }
+      if (fields.length === 0) {
+        return res.status(400).json({ error: "No valid fields to update" });
+      }
+      values.push(id);
+      const [result] = await pool.query(
+        `UPDATE users SET ${fields.join(", ")} WHERE id = ?`,
+        values
+      );
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      res.json({ success: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  // Delete user
+  router.delete("/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const [result] = await pool.query("DELETE FROM users WHERE id = ?", [id]);
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      res.json({ success: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
 import express from "express";
 
 // DJB2 hash function for password hashing (matches C++ implementation)
