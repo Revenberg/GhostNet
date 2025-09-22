@@ -1,20 +1,42 @@
 import React, { useEffect, useState } from "react";
 
+
 const API_BASE = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000/api/game_engine";
-const GAME_ID = 2; // You can make this dynamic if needed
+const GAMES_API = process.env.REACT_APP_BACKEND_URL?.replace(/\/api.*/, "") || "http://localhost:4000/api/games";
 const STATUS_OPTIONS = ["init", "start", "finished"];
 
+
 export default function GameEngine() {
+  const [games, setGames] = useState([]);
+  const [selectedGame, setSelectedGame] = useState(null);
   const [status, setStatus] = useState("init");
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Fetch teams and their points
-  const fetchTeams = async () => {
+  // Fetch games
+  useEffect(() => {
+    async function fetchGames() {
+      try {
+        const res = await fetch(GAMES_API);
+        const data = await res.json();
+        if (data.success) {
+          setGames(data.games);
+          if (!selectedGame && data.games.length > 0) setSelectedGame(data.games[0].id);
+        }
+      } catch {
+        setGames([]);
+      }
+    }
+    fetchGames();
+  }, []);
+
+  // Fetch teams and their points for selected game
+  const fetchTeams = async (gameId) => {
+    if (!gameId) return;
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/current?game_id=${GAME_ID}`);
+      const res = await fetch(`${API_BASE}/current?game_id=${gameId}`);
       const data = await res.json();
       if (data.success) setTeams(data.teams);
       else setTeams([]);
@@ -25,26 +47,26 @@ export default function GameEngine() {
   };
 
   useEffect(() => {
-    fetchTeams();
-  }, []);
+    if (selectedGame) fetchTeams(selectedGame);
+  }, [selectedGame]);
 
   // Handle status change
   const handleStatusChange = async (e) => {
     const newStatus = e.target.value;
     setStatus(newStatus);
     setMessage("");
-    if (newStatus === "start") {
+    if (newStatus === "start" && selectedGame) {
       setLoading(true);
       try {
         const res = await fetch(`${API_BASE}/start`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ game_id: GAME_ID })
+          body: JSON.stringify({ game_id: selectedGame })
         });
         const data = await res.json();
         if (data.success) setMessage("Game started!");
         else setMessage("Failed to start game");
-        fetchTeams();
+        fetchTeams(selectedGame);
       } catch {
         setMessage("Failed to start game");
       }
@@ -61,12 +83,12 @@ export default function GameEngine() {
       const res = await fetch(`${API_BASE}/target`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ game_id: GAME_ID, team_id, game_point_id })
+        body: JSON.stringify({ game_id: selectedGame, team_id, game_point_id })
       });
       const data = await res.json();
       if (data.success) setMessage("Target marked as done");
       else setMessage("Failed to update target");
-      fetchTeams();
+      fetchTeams(selectedGame);
     } catch {
       setMessage("Failed to update target");
     }
@@ -76,8 +98,19 @@ export default function GameEngine() {
   return (
     <div className="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow">
       <h2 className="text-xl font-bold mb-4">Game Engine</h2>
-      <div className="mb-4">
-        <label className="font-semibold mr-2">Status:</label>
+      <div className="mb-4 flex items-center gap-4">
+        <label className="font-semibold mr-2">Game:</label>
+        <select
+          className="border px-2 py-1 rounded"
+          value={selectedGame || ""}
+          onChange={e => setSelectedGame(Number(e.target.value))}
+        >
+          <option value="">-- Kies een game --</option>
+          {games.map(game => (
+            <option key={game.id} value={game.id}>{game.id} - {game.name}</option>
+          ))}
+        </select>
+        <label className="font-semibold ml-6 mr-2">Status:</label>
         <select value={status} onChange={handleStatusChange} className="border px-2 py-1 rounded">
           {STATUS_OPTIONS.map(opt => (
             <option key={opt} value={opt}>{opt}</option>
