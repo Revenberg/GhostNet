@@ -1,5 +1,5 @@
 import React from "react";
-import { NavbarGuest, NavbarUser, NavbarAdmin } from "./Navbars";
+import { NavbarGuest, NavbarUser, NavbarAdmin, NavbarOperator } from "./Navbars";
 import { getUserFromCookie } from "../utils/auth";
 
 export default function Navbar() {
