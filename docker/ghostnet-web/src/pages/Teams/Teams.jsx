@@ -6,12 +6,17 @@ function Teams() {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-//  const [showRegister, setShowRegister] = useState(false);
+  // const [showRegister, setShowRegister] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [form, setForm] = useState({ teamname: '', game_id: 0 });
-  const [filterGameId, setFilterGameId] = useState('');
+  const [filterGameId, setFilterGameId] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('filterGameId') || '';
+    }
+    return '';
+  });
 
   // Fetch teams
 
@@ -165,7 +170,12 @@ function Teams() {
               <label className="mr-2">Filter op game:</label>
               <select
                 value={filterGameId}
-                onChange={e => setFilterGameId(e.target.value)}
+                onChange={e => {
+                  setFilterGameId(e.target.value);
+                  if (typeof window !== 'undefined') {
+                    sessionStorage.setItem('filterGameId', e.target.value);
+                  }
+                }}
                 className="border px-3 py-2 rounded"
               >
                 <option value="">Alle games</option>

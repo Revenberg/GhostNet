@@ -9,7 +9,12 @@ function formatDateTime(ts) {
 
 export default function GamesProgressOverview() {
   const [games, setGames] = useState([]);
-  const [selectedGame, setSelectedGame] = useState("");
+  const [selectedGame, setSelectedGame] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('filterGameId') || '';
+    }
+    return '';
+  });
   const [progress, setProgress] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -55,7 +60,12 @@ export default function GamesProgressOverview() {
         <select
           className="w-full border px-3 py-2 rounded mb-4"
           value={selectedGame}
-          onChange={e => setSelectedGame(e.target.value)}
+          onChange={e => {
+            setSelectedGame(e.target.value);
+            if (typeof window !== 'undefined') {
+              sessionStorage.setItem('filterGameId', e.target.value);
+            }
+          }}
         >
           <option value="">Selecteer een game...</option>
           {games.map(game => (

@@ -3,7 +3,13 @@ import RequireRole from "../../components/RequireRole";
 
 export default function RouteTeamsPage() {
     const [games, setGames] = useState([]);
-    const [selectedGame, setSelectedGame] = useState(null);
+    const [selectedGame, setSelectedGame] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const storedId = sessionStorage.getItem('filterGameId');
+            return storedId ? { id: Number(storedId) } : null;
+        }
+        return null;
+    });
     const [routes, setRoutes] = useState([]);
     const [teams, setTeams] = useState([]);
     const [routeTeams, setRouteTeams] = useState({});
@@ -26,6 +32,14 @@ export default function RouteTeamsPage() {
                 if (gamesData.success) setGames(gamesData.games);
                 if (teamsData.success) setTeams(teamsData.teams);
                 if (routesData.success) setRoutes(routesData.routes);
+                // Na laden games, koppel geselecteerde game object als er een id in sessionStorage staat
+                if (gamesData.success && gamesData.games && typeof window !== 'undefined') {
+                    const storedId = sessionStorage.getItem('filterGameId');
+                    if (storedId) {
+                        const found = gamesData.games.find(g => String(g.id) === String(storedId));
+                        if (found) setSelectedGame(found);
+                    }
+                }
             } catch (err) {
                 setMessage("Fout bij ophalen van data");
             }
@@ -95,6 +109,9 @@ export default function RouteTeamsPage() {
                         onChange={e => {
                             const game = games.find(g => g.id === Number(e.target.value));
                             setSelectedGame(game || null);
+                            if (typeof window !== 'undefined') {
+                                sessionStorage.setItem('filterGameId', e.target.value);
+                            }
                         }}
                     >
                         <option value="">-- Kies een game --</option>

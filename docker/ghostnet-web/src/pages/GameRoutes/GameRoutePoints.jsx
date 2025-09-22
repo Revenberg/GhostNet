@@ -103,6 +103,35 @@ export default function GameRoutePoints() {
     return (
         <RequireRole role="admin">
             <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr>
+                            <th className="border-b p-2">Locatie</th>
+                            <th className="border-b p-2">Lat</th>
+                            <th className="border-b p-2">Lon</th>
+                            <th className="border-b p-2">Beschrijving</th>
+                            <th className="border-b p-2">Afbeeldingen</th>
+                            <th className="border-b p-2">Hints</th>
+                            <th className="border-b p-2">Acties</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {points.map(point => (
+                            <tr key={point.id}>
+                                <td className="border-b p-2">{point.location || point.route_location || ""}</td>
+                                <td className="border-b p-2">{point.latitude}</td>
+                                <td className="border-b p-2">{point.longitude}</td>
+                                <td className="border-b p-2">{point.description}</td>
+                                <td className="border-b p-2">{point.images}</td>
+                                <td className="border-b p-2">{point.hints}</td>
+                                <td className="border-b p-2">
+                                    <button className="btn-secondary mr-2" onClick={() => handleEdit(point)}>Bewerk</button>
+                                    <button className="btn-danger" onClick={() => handleDelete(point.id)}>Verwijder</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
                 <h2 className="text-xl font-bold mb-4">Route punten beheren</h2>
                 <div className="mb-4">
                     <label className="font-semibold mr-2">Selecteer game:</label>
@@ -136,35 +165,6 @@ export default function GameRoutePoints() {
                         {message && <div className="text-sm mt-2">{message}</div>}
                     </form>
                 )}
-                <table className="w-full border-collapse">
-                    <thead>
-                        <tr>
-                            <th className="border-b p-2">Locatie</th>
-                            <th className="border-b p-2">Lat</th>
-                            <th className="border-b p-2">Lon</th>
-                            <th className="border-b p-2">Beschrijving</th>
-                            <th className="border-b p-2">Afbeeldingen</th>
-                            <th className="border-b p-2">Hints</th>
-                            <th className="border-b p-2">Acties</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {points.map(point => (
-                            <tr key={point.id}>
-                                <td className="border-b p-2">{point.location || point.route_location || ""}</td>
-                                <td className="border-b p-2">{point.latitude}</td>
-                                <td className="border-b p-2">{point.longitude}</td>
-                                <td className="border-b p-2">{point.description}</td>
-                                <td className="border-b p-2">{point.images}</td>
-                                <td className="border-b p-2">{point.hints}</td>
-                                <td className="border-b p-2">
-                                    <button className="btn-secondary mr-2" onClick={() => handleEdit(point)}>Bewerk</button>
-                                    <button className="btn-danger" onClick={() => handleDelete(point.id)}>Verwijder</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
             </div>
         </RequireRole>
     );

@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import RequireRole from "../../components/RequireRole";
 
 export default function GamesSetStatus() {
-  const [form, setForm] = useState({ game_id: "", team_id: "", status: "" });
+  const [form, setForm] = useState({
+    game_id: (typeof window !== 'undefined' ? sessionStorage.getItem('filterGameId') || '' : ''),
+    team_id: '',
+    status: ''
+  });
   const [games, setGames] = useState([]);
   const [teams, setTeams] = useState([]);
   const [message, setMessage] = useState("");
@@ -24,6 +28,9 @@ export default function GamesSetStatus() {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    if (e.target.name === 'game_id' && typeof window !== 'undefined') {
+      sessionStorage.setItem('filterGameId', e.target.value);
+    }
   };
 
   const handleSubmit = async (e) => {
