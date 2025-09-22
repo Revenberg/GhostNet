@@ -25,7 +25,7 @@ export async function ensureTables(pool) {
     CREATE TABLE IF NOT EXISTS game (
       id INT AUTO_INCREMENT PRIMARY KEY,
       name VARCHAR(64) UNIQUE,
-      status VARCHAR(64),
+      status VARCHAR(64) DEFAULT '',
       lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);  

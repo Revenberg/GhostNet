@@ -129,7 +129,7 @@ export default function createGameEngineRoutesRouter(pool) {
 
             // 1. Set game state to 'initialized' (assuming a 'state' column exists)
             await pool.query(
-                `UPDATE game SET status = 'initialized' WHERE id = ?`,
+                `UPDATE game SET status = 'initialized' WHERE id = ? and status = ''`,
                 [game_id]
             );
 
@@ -199,7 +199,7 @@ export default function createGameEngineRoutesRouter(pool) {
 
             // 1. Set game state to 'started'
             await pool.query(
-                `UPDATE game SET status = 'started' WHERE id = ?`,
+                `UPDATE game SET status = 'started' WHERE id = ? and status = 'initialized'`,
                 [game_id]
             );
 
