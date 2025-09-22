@@ -174,8 +174,8 @@ export default function createGameEngineRoutesRouter(pool) {
                 );
                 // Send event: you joined game (insert into team_events)
                 await pool.query(
-                    `INSERT INTO team_events (team_id, event_type, event_data, created_at)
-           VALUES (?, 'join', JSON_OBJECT('game_id', ?, 'game_name', (SELECT name FROM game WHERE id = ?)), NOW())`,
+                    `INSERT INTO team_events (team_id, event_type, event_message, created_at)
+           VALUES (?, 'message', JSON_OBJECT('game_id', ?, 'game_name', (SELECT name FROM game WHERE id = ?)), NOW())`,
                     [team.id, game_id, game_id]
                 );
             }
