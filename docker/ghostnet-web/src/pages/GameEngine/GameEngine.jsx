@@ -57,14 +57,14 @@ export default function GameEngine() {
         const res = await fetch(`${API_BASE}/start`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ game_id: selectedGame })
+          body: JSON.stringify({ "game_id": selectedGame })
         });
         const data = await res.json();
         if (data.success) setMessage("Game started!");
-        else setMessage("Failed to start game");
+        else setMessage("Failed to start game 1");
         fetchTeams(selectedGame);
       } catch {
-        setMessage("Failed to start game");
+        setMessage("Failed to start game 2");
       }
       setLoading(false);
     }
