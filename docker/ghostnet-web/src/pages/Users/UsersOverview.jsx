@@ -9,21 +9,91 @@ export default function UsersOverview() {
   const [deleteModal, setDeleteModal] = useState({ open: false, id: null, username: "" });
   const [message, setMessage] = useState("");
 
-  const fetchUsers = async () => {
+  // Fetch users from backend
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+        const res = await fetch(`${backendHost}/api/users`);
+        const data = await res.json();
+        if (data.success) {
+          setUsers(data.users);
+        } else {
+          setError(data.error || "Unknown error");
+        }
+      } catch (err) {
+        setError("Server error");
+      }
+      setLoading(false);
+    };
+    fetchUsers();
+  }, []);
+
+  // Handle edit button click
+  const handleEdit = (user) => {
+    setEditModal({ open: true, id: user.id, username: user.username, role: user.role });
+  };
+
+  // Handle delete button click
+  const handleDelete = (user) => {
+    setDeleteModal({ open: true, id: user.id, username: user.username });
+  };
+
+  // Handle edit form submit
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
     setLoading(true);
     setError("");
     try {
       const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-      const res = await fetch(`${backendHost}/api/users`);
+      const res = await fetch(`${backendHost}/api/users/${editModal.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: editModal.username, role: editModal.role })
+      });
       const data = await res.json();
       if (data.success) {
-        setUsers(data.users);
+        setMessage("Gebruiker bijgewerkt.");
+        setEditModal({ open: false, id: null, username: "", role: "user" });
+        // Refresh users
+        const usersRes = await fetch(`${backendHost}/api/users`);
+        const usersData = await usersRes.json();
+        if (usersData.success) setUsers(usersData.users);
       } else {
-        setError(data.error || "Unknown error");
+        setError(data.error || "Onbekende fout");
       }
     } catch (err) {
       setError("Server error");
     }
+    setLoading(false);
+  };
+
+  // Handle delete confirm
+  const handleDeleteConfirm = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+      const res = await fetch(`${backendHost}/api/users/${deleteModal.id}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMessage("Gebruiker verwijderd.");
+        setDeleteModal({ open: false, id: null, username: "" });
+        // Refresh users
+        const usersRes = await fetch(`${backendHost}/api/users`);
+        const usersData = await usersRes.json();
+        if (usersData.success) setUsers(usersData.users);
+      } else {
+        setError(data.error || "Onbekende fout");
+      }
+    } catch (err) {
+      setError("Server error");
+    }
+    setLoading(false);
   };
 
   // ...existing code...
