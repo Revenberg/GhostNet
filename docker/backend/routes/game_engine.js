@@ -41,7 +41,7 @@ export default function createGameEngineRoutesRouter(pool) {
             const results = [];
             for (const team of teams) {
                 const [points] = await pool.query(
-                    `SELECT gep.game_route_points_id, grp.description, gep.status
+                    `SELECT gep.game_route_points_id, gep.order_id, grp.description, gep.status
                      FROM game_engine_points gep
                      JOIN game_route_points grp ON gep.game_route_points_id = grp.id
                      WHERE gep.game_id = ? AND gep.team_id = ?
