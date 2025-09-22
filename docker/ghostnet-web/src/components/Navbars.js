@@ -131,12 +131,12 @@ export function NavbarAdmin() {
   // Auto-close timer refs
   const timers = React.useRef({});
 
-  // Set auto-close for a dropdown, closing others first
-  const setDropdownWithTimeout = (setter, key) => {
-    closeAllDropdowns();
-    setter(true);
-    if (timers.current[key]) clearTimeout(timers.current[key]);
-    timers.current[key] = setTimeout(() => setter(false), 15000);
+    // Set auto-close for a dropdown, closing others first (except for Beheer)
+    const setDropdownWithTimeout = (setter, key, options = {}) => {
+      if (!options.noclose) closeAllDropdowns();
+      setter(true);
+      if (timers.current[key]) clearTimeout(timers.current[key]);
+      timers.current[key] = setTimeout(() => setter(false), 15000);
   };
 
   // Clear all timers on unmount (fix React warning)
@@ -185,7 +185,7 @@ export function NavbarAdmin() {
             <div className="relative">
               <button
                 className="block w-full text-left px-4 py-2 hover:bg-purple-100 focus:outline-none"
-                onClick={e => { e.stopPropagation(); setDropdownWithTimeout(setBeheerDropdownOpen, 'beheer'); }}
+                  onClick={e => { e.stopPropagation(); setDropdownWithTimeout(setBeheerDropdownOpen, 'beheer', { noclose: true }); }}
               >
                 Beheer ▾
               </button>
