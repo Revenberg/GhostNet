@@ -116,15 +116,47 @@ export function NavbarAdmin() {
   const [gamesDropdownOpen, setGamesDropdownOpen] = React.useState(false);
   const [teamDropdownOpen, setTeamDropdownOpen] = React.useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
+
+  // Helper to close all dropdowns
+  const closeAllDropdowns = () => {
+    setUserMgmtDropdownOpen(false);
+    setOrgDropdownOpen(false);
+    setBeheerDropdownOpen(false);
+    setGamesVoorDropdownOpen(false);
+    setGamesDropdownOpen(false);
+    setTeamDropdownOpen(false);
+    setUserDropdownOpen(false);
+  };
+
+  // Auto-close timer refs
+  const timers = React.useRef({});
+
+  // Set auto-close for a dropdown
+  const setDropdownWithTimeout = (setter, key) => {
+    setter(true);
+    if (timers.current[key]) clearTimeout(timers.current[key]);
+    timers.current[key] = setTimeout(() => setter(false), 15000);
+  };
+
+  // Clear all timers on unmount
+  React.useEffect(() => {
+    return () => {
+      Object.values(timers.current).forEach(clearTimeout);
+    };
+  }, []);
+
   return (
-    <nav className="bg-purple-700 text-white p-4 flex items-center justify-center space-x-6">
+    <nav
+      className="bg-purple-700 text-white p-4 flex items-center justify-center space-x-6"
+      onClick={closeAllDropdowns}
+    >
       <Link to="/" className="hover:underline">Home</Link>
       <Link to="/speluitleg" className="hover:underline">Speluitleg</Link>
       <Link to="/contact" className="hover:underline">Contact</Link>
-      <div className="relative">
+      <div className="relative" onClick={e => e.stopPropagation()}>
         <button
           className="hover:underline focus:outline-none"
-          onClick={() => setUserMgmtDropdownOpen((open) => !open)}
+          onClick={() => setDropdownWithTimeout(setUserMgmtDropdownOpen, 'userMgmt')}
         >
           Gebruikersbeheer ▾
         </button>
@@ -136,10 +168,10 @@ export function NavbarAdmin() {
         )}
       </div>
 
-      <div className="relative">
+      <div className="relative" onClick={e => e.stopPropagation()}>
         <button
           className="hover:underline focus:outline-none"
-          onClick={() => setOrgDropdownOpen((open) => !open)}
+          onClick={() => setDropdownWithTimeout(setOrgDropdownOpen, 'org')}
         >
           Organisatie ▾
         </button>
@@ -151,7 +183,7 @@ export function NavbarAdmin() {
             <div className="relative">
               <button
                 className="block w-full text-left px-4 py-2 hover:bg-purple-100 focus:outline-none"
-                onClick={() => setBeheerDropdownOpen((open) => !open)}
+                onClick={e => { e.stopPropagation(); setDropdownWithTimeout(setBeheerDropdownOpen, 'beheer'); }}
               >
                 Beheer ▾
               </button>
@@ -168,10 +200,10 @@ export function NavbarAdmin() {
         )}
       </div>
 
-      <div className="relative">
+      <div className="relative" onClick={e => e.stopPropagation()}>
         <button
           className="hover:underline focus:outline-none"
-          onClick={() => setGamesVoorDropdownOpen((open) => !open)}
+          onClick={() => setDropdownWithTimeout(setGamesVoorDropdownOpen, 'gamesVoor')}
         >
           Games voorbereiding ▾
         </button>
@@ -182,10 +214,10 @@ export function NavbarAdmin() {
         )}
       </div>
 
-      <div className="relative">
+      <div className="relative" onClick={e => e.stopPropagation()}>
         <button
           className="hover:underline focus:outline-none"
-          onClick={() => setGamesDropdownOpen((open) => !open)}
+          onClick={() => setDropdownWithTimeout(setGamesDropdownOpen, 'games')}
         >
           Games ▾
         </button>
@@ -198,10 +230,10 @@ export function NavbarAdmin() {
         )}
       </div>
 
-      <div className="relative">
+      <div className="relative" onClick={e => e.stopPropagation()}>
         <button
           className="hover:underline focus:outline-none"
-          onClick={() => setTeamDropdownOpen((open) => !open)}
+          onClick={() => setDropdownWithTimeout(setTeamDropdownOpen, 'team')}
         >
           Team ▾
         </button>
@@ -213,10 +245,10 @@ export function NavbarAdmin() {
         )}
       </div>
 
-      <div className="relative">
+      <div className="relative" onClick={e => e.stopPropagation()}>
         <button
           className="hover:underline focus:outline-none"
-          onClick={() => setUserDropdownOpen((open) => !open)}
+          onClick={() => setDropdownWithTimeout(setUserDropdownOpen, 'user')}
         >
           {user.username} ▾
         </button>
