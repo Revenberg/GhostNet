@@ -172,7 +172,7 @@ export default function createGameEngineRoutesRouter(pool) {
                     for (const point of points) {
                         await pool.query(
                             `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status, order_id)
-                               VALUES (?, ?, ?, ?, 'todo', ?)`,
+                               VALUES (?, ?, ?, 'todo', ?)`,
                             [game_id, team.id, point.point_id, point.order_id]
                         );
                     }
