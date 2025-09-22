@@ -143,10 +143,11 @@ export default function createGameEngineRoutesRouter(pool) {
             for (const team of teams) {
                 // Select all unique routes for this team
                 const [routes] = await pool.query(
-                    `SELECT DISTINCT gr.id as route_id, o.order_id as order_id, gr.game_id, grt.team_id
+                    `SELECT DISTINCT gr.id as route_id, p.id as point_id, o.order_id as order_id, gr.game_id, grt.team_id
                      FROM game_routes gr
                      JOIN game_route_team grt ON grt.game_route_id = gr.id
                      JOIN game_route_order o ON o.game_route_id = gr.id
+                     JOIN game_route_points p ON o.game_route_points_id = p.id
                      WHERE gr.game_id = ? AND grt.team_id = ?
                      ORDER BY o.order_id ASC`,
                     [game_id, team.id]
@@ -156,7 +157,7 @@ export default function createGameEngineRoutesRouter(pool) {
                     `DELETE gep FROM game_engine_points gep
                     JOIN game_route_order o ON gep.game_route_points_id = o.game_route_points_id
                     WHERE gep.team_id = ? AND gep.game_id = ?`,
-                    [team.id, game_id]
+                      [team.id, game_id]  
                 );
 
                 for (const route of routes) {
