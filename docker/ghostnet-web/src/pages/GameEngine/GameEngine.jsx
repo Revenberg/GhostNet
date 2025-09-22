@@ -53,6 +53,9 @@ export default function GameEngine() {
     if (!status || !selectedGame || STATUS_OPTIONS.length === 0) return;
     if (status === "init" || status === "start") {
       setLoading(true);
+      console.log("Storing status:", status, "for game:", selectedGame);
+      console.log(JSON.stringify({ game_id: selectedGame }));
+
       try {
         const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
         const res = await fetch(`${backendHost}/${status}`, {
