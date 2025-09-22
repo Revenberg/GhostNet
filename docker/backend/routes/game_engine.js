@@ -100,7 +100,7 @@ export default function createGameEngineRoutesRouter(pool) {
 
             // 4. Get game name
             const [[gameRow]] = await pool.query(
-                `SELECT name FROM games WHERE id = ?`,
+                `SELECT name FROM game WHERE id = ?`,
                 [game_id]
             );
             const gameName = gameRow ? gameRow.name : "";
@@ -199,7 +199,7 @@ export default function createGameEngineRoutesRouter(pool) {
 
             // 1. Set game state to 'started'
             await pool.query(
-                `UPDATE games SET state = 'started' WHERE id = ?`,
+                `UPDATE game SET state = 'started' WHERE id = ?`,
                 [game_id]
             );
 
@@ -211,7 +211,7 @@ export default function createGameEngineRoutesRouter(pool) {
 
             // 3. Get game name
             const [[gameRow]] = await pool.query(
-                `SELECT name FROM games WHERE id = ?`,
+                `SELECT name FROM game WHERE id = ?`,
                 [game_id]
             );
             const gameName = gameRow ? gameRow.name : "";
