@@ -41,9 +41,9 @@ export default function createGameEngineRoutesRouter(pool) {
             const results = [];
             for (const team of teams) {
                 const [points] = await pool.query(
-                    `SELECT gep.point_id, grp.description, gep.status
+                    `SELECT gep.game_route_points_id, grp.description, gep.status
                      FROM game_engine_points gep
-                     JOIN game_route_points grp ON gep.point_id = grp.id
+                     JOIN game_route_points grp ON gep.game_route_points_id = grp.id
                      WHERE gep.game_id = ? AND gep.team_id = ?
                      ORDER BY gep.id ASC`,
                     [game_id, team.id]
@@ -75,7 +75,7 @@ export default function createGameEngineRoutesRouter(pool) {
             // 2. Update current point to 'done'
             await pool.query(
                 `UPDATE game_engine_points SET status = 'done', endtms = NOW()
-         WHERE game_id = ? AND team_id = ? AND point_id = ?`,
+         WHERE game_id = ? AND team_id = ? AND game_route_points_id = ?`,
                 [game_id, team_id, game_point_id]
             );
 
@@ -83,7 +83,7 @@ export default function createGameEngineRoutesRouter(pool) {
             const [[nextPoint]] = await pool.query(
                 `SELECT gep.id as gep_id, grp.description
          FROM game_engine_points gep
-         JOIN game_route_points grp ON gep.point_id = grp.id
+         JOIN game_route_points grp ON gep.game_route_points_id = grp.id
          WHERE gep.game_id = ? AND gep.team_id = ? AND gep.status = 'todo'
          ORDER BY gep.id ASC LIMIT 1`,
                 [game_id, team_id]
@@ -221,7 +221,7 @@ export default function createGameEngineRoutesRouter(pool) {
                 const [[firstPoint]] = await pool.query(
                     `SELECT gep.id as gep_id, grp.location, grp.description
            FROM game_engine_points gep
-           JOIN game_route_points grp ON gep.point_id = grp.id
+           JOIN game_route_points grp ON gep.game_route_points_id = grp.id
            WHERE gep.game_id = ? AND gep.team_id = ? AND gep.status = 'todo'
            ORDER BY gep.id ASC LIMIT 1`,
                     [game_id, team.id]
