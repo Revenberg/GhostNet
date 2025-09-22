@@ -1,7 +1,9 @@
 import express from "express";
 
 export default function createGameEngineRoutesRouter(pool) {
-  // Mark a point as completed and advance to next target
+    const router = express.Router();
+
+      // Mark a point as completed and advance to next target
   router.post("/target", async (req, res) => {
     try {
       const { game_id, team_id, game_point_id } = req.body;
@@ -62,8 +64,6 @@ export default function createGameEngineRoutesRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-
-    const router = express.Router();
 
   // Initilize a game: initialize state, assign routes, notify teams
   router.post("/init", async (req, res) => {
