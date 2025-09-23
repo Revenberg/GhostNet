@@ -102,14 +102,11 @@ export default function GameEngine() {
         try {
             const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
             console.log("Marking done:", { game_id: selectedGame, team_id, game_point_id });
-            console.log("Marking done:", { team_id });
-            console.log("Marking done:", { game_point_id });
-            console.log("Marking done:", { game_route_points_id: game_point_id.game_route_points_id });
 
             const res = await fetch(`${backendHost}/api/game_engine/target`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ game_id: selectedGame, team_id: team_id, game_point_id: game_point_id.game_route_points_id })
+                body: JSON.stringify({ game_id: selectedGame, team_id: team_id, game_point_id: team_id.game_route_points_id })
             });
             const data = await res.json();
             if (data.success) setMessage("Target marked as done");
