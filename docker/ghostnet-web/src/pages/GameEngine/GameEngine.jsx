@@ -10,6 +10,30 @@ export default function GameEngine() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  // Extract all routePoints and points from teams for table rendering
+  const routePoints = React.useMemo(() => {
+    // Collect all route points from all teams
+    const allPoints = teams.flatMap(team => team.points || []);
+    // Unique by route_point_id or id
+    const unique = [];
+    const seen = new Set();
+    for (const pt of allPoints) {
+      const key = pt.route_point_id || pt.id;
+      if (!seen.has(key)) {
+        unique.push({
+          id: pt.route_point_id || pt.id,
+          order_id: pt.order_id,
+          description: pt.description
+        });
+        seen.add(key);
+      }
+    }
+    // Sort by order_id if present
+    return unique.sort((a, b) => (a.order_id || 0) - (b.order_id || 0));
+  }, [teams]);
+
+  const points = React.useMemo(() => teams.flatMap(team => team.points || []), [teams]);
+
   useEffect(() => {
     async function fetchGames() {
       try {
