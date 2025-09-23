@@ -139,38 +139,43 @@ export default function GameEngine() {
               const maxPoints = Math.max(...teams.map(t => t.points.length));
               const rows = [];
               for (let i = 0; i < maxPoints; i++) {
-                rows.push(
-                  <tr key={i}>
-                    {/* First column: route point description (from first team that has it) */}
-                    <td className="border-b p-2 font-semibold">
-                      {teams.find(t => t.points[i])?.points[i]?.location || ''}
-                    </td>
-                    <td className="border-b p-2 font-semibold">
-                      {teams.find(t => t.points[i])?.points[i]?.description || ''}
-                    </td>
-                    {teams.map(team => {
-                      const point = team.points[i];
-                      if (!point) return <td key={team.team_id} className="border-b p-2"></td>;
-                      if (point.status === "target") {
+                <tbody>
+                  {routePoints.map((routePoint, rowIdx) => (
+                    <tr key={rowIdx}>
+                      <td className="border px-2 py-1 text-xs font-semibold bg-gray-100">
+                        {routePoint.order_id ? `${routePoint.order_id}. ` : ''}{routePoint.description}
+                      </td>
+                      {teams.map((team, colIdx) => {
+                        // Find all points for this team and routePoint
+                        const matchingPoints = points.filter(
+                          (p) =>
+                            p.team_id === team.id &&
+                            p.route_point_id === routePoint.id
+                        );
+                        if (matchingPoints.length === 0) {
+                          return <td key={colIdx} className="border px-2 py-1 text-xs text-center"></td>;
+                        }
                         return (
-                          <td key={team.team_id} className="border-b p-2 text-center">
-                            <button
-                              type="button"
-                              className="text-blue-600 underline cursor-pointer bg-transparent border-0 p-0 m-0"
-                              style={{ background: "none" }}
-                              onClick={() => handleTargetDone(team.team_id, point.game_route_points_id)}
-                            >
-                              ({point.location} {point.order_id}) {point.status}
-                            </button>
+                          <td key={colIdx} className="border px-2 py-1 text-xs text-center">
+                            {matchingPoints.map((point, idx) => (
+                              <span key={point.id || idx}>
+                                <button
+                                  className={`underline ${point.status === 'done' ? 'text-green-600' : 'text-blue-600'}`}
+                                  onClick={() => handleTargetDone(point)}
+                                  disabled={point.status === 'done'}
+                                  title={point.status === 'done' ? 'Already done' : 'Mark as done'}
+                                >
+                                  {point.order_id ? `${point.order_id}. ` : ''}{point.status}
+                                </button>
+                                {idx < matchingPoints.length - 1 && <span>, </span>}
+                              </span>
+                            ))}
                           </td>
                         );
-                      }
-                      return <td key={team.team_id} className="border-b p-2 text-center">({point.location} {point.order_id}) {point.status}</td>;
-                    })}
-                  </tr>
-                );
-              }
-              return rows;
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
             })()}
           </tbody>
         </table>
