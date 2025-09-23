@@ -67,7 +67,7 @@ export default function createGameEngineRoutesRouter(pool) {
             const points = Array.from(pointMap.values());
             // Attach team names for columns
             const teamList = teams.map(t => ({ team_id: t.id, teamname: t.teamname }));
-            res.json({ success: true, points, teams: teamList });
+            res.json({ success: true, points, allPoints: allPoints, teams: teamList });
         } catch (err) {
             console.error(err);
             res.status(500).json({ error: "Database error" });
