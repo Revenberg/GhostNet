@@ -163,70 +163,68 @@ export default function GameEngine() {
             Opslaan
             {loading ? <div>Laden...</div> : null}
             {/* Table rendering would go here, filtered by selectedTeam if set */}
-            {/* Show table only if a team is selected */}
-            {selectedTeam && (
-                <table className="w-full border-collapse text-xs md:text-sm mt-4">
-                    <thead>
-                        <tr>
-                            <th className="border-b p-2">Point ID - Locatie</th>
-                            <th className="border-b p-2">Omschrijving</th>
+            {/* Always show the points table, for all teams or filtered by selectedTeam */}
+            <table className="w-full border-collapse text-xs md:text-sm mt-4">
+                <thead>
+                    <tr>
+                        <th className="border-b p-2">Point ID - Locatie</th>
+                        <th className="border-b p-2">Omschrijving</th>
+                        {selectedTeam
+                            ? <th className="border-b p-2 text-center">Order &amp; Status</th>
+                            : teams.map(team => (
+                                <th key={team.team_id || team.id} className="border-b p-2 text-center">{team.teamname}</th>
+                            ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {routePoints.map((routePoint) => (
+                        <tr key={routePoint.id}>
+                            <td className="border px-2 py-1 text-xs font-semibold bg-gray-100">
+                                {routePoint.id}
+                            </td>
+                            <td className="border px-2 py-1 text-xs bg-gray-50">
+                                {routePoint.description}
+                            </td>
                             {selectedTeam
-                                ? <th className="border-b p-2 text-center">Order &amp; Status</th>
-                                : teams.map(team => (
-                                    <th key={team.team_id || team.id} className="border-b p-2 text-center">{team.teamname}</th>
-                                ))}
+                                ? (() => {
+                                    const teamObj = teams.find(t => (t.team_id || t.id)?.toString() === selectedTeam);
+                                    const point = (teamObj?.points || []).find(
+                                        (p) => (p.route_point_id || p.id) === routePoint.id
+                                    );
+                                    return (
+                                        <td className="border px-2 py-1 text-xs text-center">
+                                            {point ? (
+                                                <span>
+                                                    {point.order_id ? `${point.order_id}. ` : ''}
+                                                    {point.status || 'pending'}
+                                                </span>
+                                            ) : (
+                                                <span className="text-gray-400">-</span>
+                                            )}
+                                        </td>
+                                    );
+                                })()
+                                : teams.map((team, teamIdx) => {
+                                    const point = (team.points || []).find(
+                                        (p) => (p.route_point_id || p.id) === routePoint.id
+                                    );
+                                    return (
+                                        <td key={String(routePoint.id) + '-' + (team.team_id || team.id) + '-' + teamIdx} className="border px-2 py-1 text-xs text-center">
+                                            {point ? (
+                                                <span>
+                                                    {point.order_id ? `${point.order_id}. ` : ''}
+                                                    {point.status || 'pending'}
+                                                </span>
+                                            ) : (
+                                                <span className="text-gray-400">-</span>
+                                            )}
+                                        </td>
+                                    );
+                                })}
                         </tr>
-                    </thead>
-                    <tbody>
-                        {routePoints.map((routePoint) => (
-                            <tr key={routePoint.id}>
-                                <td className="border px-2 py-1 text-xs font-semibold bg-gray-100">
-                                    {routePoint.id}
-                                </td>
-                                <td className="border px-2 py-1 text-xs bg-gray-50">
-                                    {routePoint.description}
-                                </td>
-                                {selectedTeam
-                                    ? (() => {
-                                        const teamObj = teams.find(t => (t.team_id || t.id)?.toString() === selectedTeam);
-                                        const point = (teamObj?.points || []).find(
-                                            (p) => (p.route_point_id || p.id) === routePoint.id
-                                        );
-                                        return (
-                                            <td className="border px-2 py-1 text-xs text-center">
-                                                {point ? (
-                                                    <span>
-                                                        {point.order_id ? `${point.order_id}. ` : ''}
-                                                        {point.status || 'pending'}
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-gray-400">-</span>
-                                                )}
-                                            </td>
-                                        );
-                                    })()
-                                    : teams.map((team, teamIdx) => {
-                                        const point = (team.points || []).find(
-                                            (p) => (p.route_point_id || p.id) === routePoint.id
-                                        );
-                                        return (
-                                            <td key={String(routePoint.id) + '-' + (team.team_id || team.id) + '-' + teamIdx} className="border px-2 py-1 text-xs text-center">
-                                                {point ? (
-                                                    <span>
-                                                        {point.order_id ? `${point.order_id}. ` : ''}
-                                                        {point.status || 'pending'}
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-gray-400">-</span>
-                                                )}
-                                            </td>
-                                        );
-                                    })}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
+                    ))}
+                </tbody>
+            </table>
             {message && <div className="mt-4 text-sm text-green-700">{message}</div>}
         </div>
     );
