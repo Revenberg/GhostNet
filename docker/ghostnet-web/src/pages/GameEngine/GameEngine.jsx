@@ -7,6 +7,7 @@ export default function GameEngine() {
     const [selectedGame, setSelectedGame] = useState(null);
     const [status, setStatus] = useState("init");
     const [teams, setTeams] = useState([]);
+    const [selectedTeam, setSelectedTeam] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
 
@@ -140,6 +141,17 @@ export default function GameEngine() {
                         <option key={opt} value={opt}>{opt}</option>
                     ))}
                 </select>
+                <label className="font-semibold ml-6 mr-2">Team:</label>
+                <select
+                    className="border px-2 py-1 rounded"
+                    value={selectedTeam}
+                    onChange={e => setSelectedTeam(e.target.value)}
+                >
+                    <option value="">-- Alle teams --</option>
+                    {teams.map(team => (
+                        <option key={team.team_id || team.id} value={team.team_id || team.id}>{team.teamname}</option>
+                    ))}
+                </select>
                 <button
                     className="btn-primary px-4 py-1 ml-2"
                     onClick={handleStoreStatus}
@@ -149,9 +161,8 @@ export default function GameEngine() {
                 </button>
             </div>
             Opslaan
-            {loading ? <div>Laden...</div> : (
-                <div>Opgeslagen!</div>
-            )}
+            {loading ? <div>Laden...</div> : null}
+            {/* Table rendering would go here, filtered by selectedTeam if set */}
             {message && <div className="mt-4 text-sm text-green-700">{message}</div>}
         </div>
     );
