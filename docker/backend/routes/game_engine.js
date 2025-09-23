@@ -39,11 +39,12 @@ export default function createGameEngineRoutesRouter(pool) {
             );
             // Get all points for this game, with all teams' status/order for each point
             const [allPoints] = await pool.query(
-                `SELECT gep.* FROM game_engine_points gep order by game_route_points_id, team_id`,
+                `SELECT gep.*, grp.location, grp.description FROM game_engine_points gep JOIN game_route_points grp ON gep.game_route_points_id = grp.id WHERE gep.game_id = 2 ORDER BY gep.game_route_points_id, gep.team_id`,
                 [game_id]
             );
 
-            res.json({ success: true, points: allPoints, teams: teamList });
+            
+            res.json({ success: true, points: allPoints, teams: teams });
         } catch (err) {
             console.error(err);
             res.status(500).json({ error: "Database error" });
