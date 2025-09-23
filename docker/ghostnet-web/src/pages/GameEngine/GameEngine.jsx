@@ -205,12 +205,12 @@ export default function GameEngine() {
                                             </td>
                                         );
                                     })()
-                                    : teams.map(team => {
+                                    : teams.map((team, teamIdx) => {
                                         const point = (team.points || []).find(
                                             (p) => (p.route_point_id || p.id) === routePoint.id
                                         );
                                         return (
-                                            <td key={team.team_id || team.id} className="border px-2 py-1 text-xs text-center">
+                                            <td key={String(routePoint.id) + '-' + (team.team_id || team.id) + '-' + teamIdx} className="border px-2 py-1 text-xs text-center">
                                                 {point ? (
                                                     <span>
                                                         {point.order_id ? `${point.order_id}. ` : ''}
