@@ -160,12 +160,12 @@ export default function GameEngine() {
                               style={{ background: "none" }}
                               onClick={() => handleTargetDone(team.team_id, point.game_route_points_id)}
                             >
-                              ({point.id}) {point.status}
+                              ({point.location}) {point.status}
                             </button>
                           </td>
                         );
                       }
-                      return <td key={team.team_id} className="border-b p-2 text-center">({point.id}) {point.status}</td>;
+                      return <td key={team.team_id} className="border-b p-2 text-center">({point.location}) {point.status}</td>;
                     })}
                   </tr>
                 );
