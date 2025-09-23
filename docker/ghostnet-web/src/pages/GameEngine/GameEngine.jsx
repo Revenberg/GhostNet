@@ -102,6 +102,7 @@ export default function GameEngine() {
         try {
             const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
             console.log("Marking done:", { game_id: selectedGame, team_id, game_point_id });
+            console.log("Marking done:", { team_id });
 
             const res = await fetch(`${backendHost}/api/game_engine/target`, {
                 method: "POST",
@@ -149,50 +150,7 @@ export default function GameEngine() {
             </div>
             Opslaan
             {loading ? <div>Laden...</div> : (
-                <table className="w-full border-collapse text-xs md:text-sm">
-                    <thead>
-                        <tr>
-                            <th className="border-b p-2">Point naam</th>
-                            <th className="border-b p-2">Omschrijving</th>
-                            {teams.map(team => (
-                                <th key={team.team_id} className="border-b p-2 text-center">{team.teamname}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {routePoints.map((routePoint, rowIdx) => (
-                            <tr key={rowIdx}>
-                                <td className="border px-2 py-1 text-xs font-semibold bg-gray-100">
-                                    {routePoint.name || routePoint.description}
-                                </td>
-                                <td className="border px-2 py-1 text-xs bg-gray-50">
-                                    {routePoint.description}
-                                </td>
-                                {teams.map((team, colIdx) => {
-                                    // Find the point for this team and routePoint
-                                    const point = (team.points || []).find(
-                                        (p) =>
-                                            (p.route_point_id || p.id) === routePoint.id
-                                    );
-                                    return (
-                                        <td key={colIdx} className="border px-2 py-1 text-xs text-center">
-                                            {point ? (
-                                                <button
-                                                    className={`underline ${point.status === 'done' ? 'text-green-600' : 'text-blue-600'}`}
-                                                    onClick={() => handleTargetDone(point)}
-                                                    disabled={point.status === 'done'}
-                                                    title={point.status === 'done' ? 'Already done' : 'Mark as done'}
-                                                >
-                                                    {point.order_id ? `${point.order_id}. ` : ''}{point.status || point.order_id}
-                                                </button>
-                                            ) : null}
-                                        </td>
-                                    );
-                                })}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <div>Opgeslagen!</div>
             )}
             {message && <div className="mt-4 text-sm text-green-700">{message}</div>}
         </div>
