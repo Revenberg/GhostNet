@@ -150,7 +150,7 @@ export default function GameEngine() {
         <table className="w-full border-collapse text-xs md:text-sm">
           <thead>
             <tr>
-              <th className="border-b p-2">Routepunt</th>
+              <th className="border-b p-2">Point naam</th>
               <th className="border-b p-2">Omschrijving</th>
               {teams.map(team => (
                 <th key={team.team_id} className="border-b p-2 text-center">{team.teamname}</th>
@@ -161,38 +161,36 @@ export default function GameEngine() {
             {routePoints.map((routePoint, rowIdx) => (
               <tr key={rowIdx}>
                 <td className="border px-2 py-1 text-xs font-semibold bg-gray-100">
-                  {routePoint.order_id ? `${routePoint.order_id}. ` : ''}{routePoint.description}
+                  {routePoint.name || routePoint.description}
+                </td>
+                <td className="border px-2 py-1 text-xs bg-gray-50">
+                  {routePoint.description}
                 </td>
                 {teams.map((team, colIdx) => {
-                  // Find all points for this team and routePoint
-                  const matchingPoints = points.filter(
+                  // Find the point for this team and routePoint
+                  const point = (team.points || []).find(
                     (p) =>
-                      p.team_id === team.id &&
-                      p.route_point_id === routePoint.id
+                      (p.route_point_id || p.id) === routePoint.id
                   );
                   return (
                     <td key={colIdx} className="border px-2 py-1 text-xs text-center">
-                      {matchingPoints.length === 0 ? null : matchingPoints.map((point, idx) => (
-                        <span key={point.id || idx}>
-                          <button
-                            className={`underline ${point.status === 'done' ? 'text-green-600' : 'text-blue-600'}`}
-                            onClick={() => handleTargetDone(point)}
-                            disabled={point.status === 'done'}
-                            title={point.status === 'done' ? 'Already done' : 'Mark as done'}
-                          >
-                            {point.order_id ? `${point.order_id}. ` : ''}{point.status}
-                          </button>
-                          {idx < matchingPoints.length - 1 && <span>, </span>}
-                        </span>
-                      ))}
+                      {point ? (
+                        <button
+                          className={`underline ${point.status === 'done' ? 'text-green-600' : 'text-blue-600'}`}
+                          onClick={() => handleTargetDone(point)}
+                          disabled={point.status === 'done'}
+                          title={point.status === 'done' ? 'Already done' : 'Mark as done'}
+                        >
+                          {point.order_id ? `${point.order_id}. ` : ''}{point.status || point.order_id}
+                        </button>
+                      ) : null}
                     </td>
                   );
                 })}
               </tr>
             ))}
-
           </tbody>
-        </table>
+  </table>
       )}
       {message && <div className="mt-4 text-sm text-green-700">{message}</div>}
     </div>
