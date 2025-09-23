@@ -152,12 +152,9 @@ export default function GameEngine() {
                             p.team_id === team.id &&
                             p.route_point_id === routePoint.id
                         );
-                        if (matchingPoints.length === 0) {
-                          return <td key={colIdx} className="border px-2 py-1 text-xs text-center"></td>;
-                        }
                         return (
                           <td key={colIdx} className="border px-2 py-1 text-xs text-center">
-                            {matchingPoints.map((point, idx) => (
+                            {matchingPoints.length === 0 ? null : matchingPoints.map((point, idx) => (
                               <span key={point.id || idx}>
                                 <button
                                   className={`underline ${point.status === 'done' ? 'text-green-600' : 'text-blue-600'}`}
@@ -176,8 +173,6 @@ export default function GameEngine() {
                     </tr>
                   ))}
                 </tbody>
-            })()}
-          </tbody>
         </table>
       )}
       {message && <div className="mt-4 text-sm text-green-700">{message}</div>}
