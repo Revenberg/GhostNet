@@ -7,33 +7,13 @@ export default function GameEngine() {
     const [selectedGame, setSelectedGame] = useState(null);
     const [status, setStatus] = useState("init");
     const [teams, setTeams] = useState([]);
+    const [points, setPoints] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
 
     // Extract all routePoints and points from teams for table rendering
-    const routePoints = React.useMemo(() => {
-        // Collect all route points from all teams
-        const allPoints = teams.flatMap(team => team.points || []);
-        // Unique by route_point_id or id
-        const unique = [];
-        const seen = new Set();
-        for (const pt of allPoints) {
-            const key = pt.route_point_id || pt.id;
-            if (!seen.has(key)) {
-                unique.push({
-                    id: pt.route_point_id || pt.id,
-                    order_id: pt.order_id,
-                    description: pt.description
-                });
-                seen.add(key);
-            }
-        }
-        // Sort by order_id if present
-        return unique.sort((a, b) => (a.order_id || 0) - (b.order_id || 0));
-    }, [teams]);
 
-    const points = React.useMemo(() => teams.flatMap(team => team.points || []), [teams]);
 
     useEffect(() => {
         async function fetchGames() {
@@ -55,12 +35,18 @@ export default function GameEngine() {
         setLoading(true);
         try {
             const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-            const res = await fetch(`${backendHost}/api/game_engine/current?game_id=${gameId}`);
+            const res = await fetch(`${backendHost}/api/game_engine/pointsstatus?game_id=${gameId}`);
             const data = await res.json();
-            if (data.success) setTeams(data.teams);
-            else setTeams([]);
+            if (data.success) {
+                setTeams(data.teams);
+                setPoints(data.points);
+            } else {
+                setTeams([]);
+                setPoints([]);
+            }
         } catch {
             setTeams([]);
+            setPoints([]);
         }
         setLoading(false);
     };
@@ -169,27 +155,25 @@ export default function GameEngine() {
                     <tr>
                         <th className="border-b p-2">Locatie &amp; Omschrijving</th>
                         {teams.map(team => (
-                            <th key={team.team_id || team.id} className="border-b p-2 text-center">{team.teamname}</th>
+                            <th key={team.team_id} className="border-b p-2 text-center">{team.teamname}</th>
                         ))}
                     </tr>
                 </thead>
                 <tbody>
-                    {routePoints.map((routePoint) => (
-                        <tr key={routePoint.id}>
+                    {points.map((point) => (
+                        <tr key={point.id}>
                             <td className="border px-2 py-1 text-xs font-semibold bg-gray-100">
-                                <div><span className="font-bold">{routePoint.id}</span></div>
-                                <div>{routePoint.description}</div>
+                                <div><span className="font-bold">{point.location}</span></div>
+                                <div>{point.description}</div>
                             </td>
                             {teams.map((team, teamIdx) => {
-                                const point = (team.points || []).find(
-                                    (p) => (p.route_point_id || p.id) === routePoint.id
-                                );
+                                const teamStatus = point.teams.find(t => t.team_id === team.team_id);
                                 return (
-                                    <td key={String(routePoint.id) + '-' + (team.team_id || team.id) + '-' + teamIdx} className="border px-2 py-1 text-xs text-center">
-                                        {point ? (
+                                    <td key={String(point.id) + '-' + team.team_id + '-' + teamIdx} className="border px-2 py-1 text-xs text-center">
+                                        {teamStatus ? (
                                             <span>
-                                                {point.order_id ? `${point.order_id}. ` : ''}
-                                                {point.status || 'pending'}
+                                                {teamStatus.order_id ? `${teamStatus.order_id}. ` : ''}
+                                                {teamStatus.status || 'pending'}
                                             </span>
                                         ) : (
                                             <span className="text-gray-400">-</span>
