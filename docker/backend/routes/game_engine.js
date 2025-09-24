@@ -1,49 +1,8 @@
-    // Get ranking summary per team: count of ranking, count and sum of bonus points
-    router.get("/ranking_summary", async (req, res) => {
-        try {
-            const { game_id } = req.query;
-            if (!game_id) {
-                return res.status(400).json({ error: "game_id required" });
-            }
-            // Get all teams for this game
-            const [teams] = await pool.query(
-                `SELECT id, teamname FROM teams WHERE game_id = ?`,
-                [game_id]
-            );
-            // For each team, get ranking count, bonus count, and bonus sum
-            const [rows] = await pool.query(
-                `SELECT r.team_id, t.teamname,
-                        COUNT(r.id) as ranking_count,
-                        SUM(CASE WHEN r.game_bonus_task IS NOT NULL THEN 1 ELSE 0 END) as bonus_count,
-                        COALESCE(SUM(r.game_bonus_task),0) as bonus_total
-                 FROM game_engine_ranking r
-                 JOIN teams t ON r.team_id = t.id
-                 WHERE r.game_id = ?
-                 GROUP BY r.team_id, t.teamname`,
-                [game_id]
-            );
-            // Merge with teams to ensure all teams are present
-            const summary = teams.map(team => {
-                const found = rows.find(r => r.team_id === team.id);
-                return {
-                    team_id: team.id,
-                    teamname: team.teamname,
-                    ranking_count: found ? found.ranking_count : 0,
-                    bonus_count: found ? found.bonus_count : 0,
-                    bonus_total: found ? found.bonus_total : 0
-                };
-            });
-            res.json({ success: true, summary });
-        } catch (err) {
-            console.error(err);
-            res.status(500).json({ error: "Database error" });
-        }
-    });
 import express from "express";
 
 export default function createGameEngineRoutesRouter(pool) {
     const router = express.Router();
-    
+
     // Get game_engine_ranking for a game
     router.get("/ranking", async (req, res) => {
         try {
@@ -328,6 +287,48 @@ export default function createGameEngineRoutesRouter(pool) {
         }
     });
 
+
+    // Get ranking summary per team: count of ranking, count and sum of bonus points
+    router.get("/ranking_summary", async (req, res) => {
+        try {
+            const { game_id } = req.query;
+            if (!game_id) {
+                return res.status(400).json({ error: "game_id required" });
+            }
+            // Get all teams for this game
+            const [teams] = await pool.query(
+                `SELECT id, teamname FROM teams WHERE game_id = ?`,
+                [game_id]
+            );
+            // For each team, get ranking count, bonus count, and bonus sum
+            const [rows] = await pool.query(
+                `SELECT r.team_id, t.teamname,
+                        COUNT(r.id) as ranking_count,
+                        SUM(CASE WHEN r.game_bonus_task IS NOT NULL THEN 1 ELSE 0 END) as bonus_count,
+                        COALESCE(SUM(r.game_bonus_task),0) as bonus_total
+                 FROM game_engine_ranking r
+                 JOIN teams t ON r.team_id = t.id
+                 WHERE r.game_id = ?
+                 GROUP BY r.team_id, t.teamname`,
+                [game_id]
+            );
+            // Merge with teams to ensure all teams are present
+            const summary = teams.map(team => {
+                const found = rows.find(r => r.team_id === team.id);
+                return {
+                    team_id: team.id,
+                    teamname: team.teamname,
+                    ranking_count: found ? found.ranking_count : 0,
+                    bonus_count: found ? found.bonus_count : 0,
+                    bonus_total: found ? found.bonus_total : 0
+                };
+            });
+            res.json({ success: true, summary });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+        }
+    });
 
     return router;
 }
