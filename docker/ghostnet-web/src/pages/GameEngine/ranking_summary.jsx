@@ -92,7 +92,7 @@ export default function RankingSummary() {
                                 <td className="border px-2 py-1 text-center">{team.bonus_count}</td>
                                 <td className="border px-2 py-1 text-center">{team.bonus_total}</td>
                                 <td className="border px-2 py-1 text-center">{team.game_penalty}</td>
-                                <td className="border px-2 py-1 text-center">{team.ranking_count * 100 + team.bonus_total - team.game_penalty}</td>
+                                <td className="border px-2 py-1 text-center">{(team.ranking_count * 100) + team.bonus_total - team.game_penalty}</td>
                             </tr>
                         ))}
                     </tbody>
