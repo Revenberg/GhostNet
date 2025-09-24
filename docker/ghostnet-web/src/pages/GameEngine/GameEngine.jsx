@@ -78,7 +78,7 @@ export default function GameEngine() {
     // Store status when button is clicked
     const handleStoreStatus = async () => {
         setMessage("");
-        if (!status || !selectedGame || STATUS_OPTIONS.length === 0) return;
+        if (!status || !selectedGame ) return;
         if (status === "init" || status === "start") {
             setLoading(true);
 
