@@ -165,10 +165,19 @@ export default function GameEngine() {
                             </td>
                             {teams.map((team, teamIdx) => {
                                 const teamStatus = point.teams.find(t => t.team_id === team.team_id);
+                                let cellClass = "border px-2 py-1 text-xs text-center";
+                                let textStyle = {};
+                                if (teamStatus) {
+                                    if (teamStatus.status === "target") {
+                                        textStyle.fontWeight = "bold";
+                                    } else if (teamStatus.status === "done") {
+                                        textStyle.color = "#b0b0b0"; // light gray
+                                    }
+                                }
                                 return (
-                                    <td key={String(point.id) + '-' + team.team_id + '-' + teamIdx} className="border px-2 py-1 text-xs text-center">
+                                    <td key={String(point.id) + '-' + team.team_id + '-' + teamIdx} className={cellClass}>
                                         {teamStatus ? (
-                                            <span>
+                                            <span style={textStyle}>
                                                 {teamStatus.order_id ? `${teamStatus.order_id}. ` : ''}
                                                 {teamStatus.status || 'pending'}
                                             </span>
