@@ -181,7 +181,7 @@ export default function createGameEngineRoutesRouter(pool) {
                      JOIN game_route_order o ON o.game_route_id = gr.id
                      JOIN game_route_points p ON o.game_route_points_id = p.id
                      WHERE gr.game_id = ? AND grt.team_id = ?
-                     ORDER BY o.order_id ASC`,
+                     ORDER BY grt.team_id, o.order_id ASC`,
                     [game_id, team.id]
                 );
                     
@@ -191,32 +191,16 @@ export default function createGameEngineRoutesRouter(pool) {
                     WHERE gep.team_id = ? AND gep.game_id = ?`,
                       [team.id, game_id]  
                 );
-
+                let order_counter = 0;
                 for (const route of routes) {
                     // Select all points for this route, ordered
+                    order_counter ++;
                     
-/*                    const [points] = await pool.query(
-                        `SELECT p.id as point_id, o.order_id as order_id 
-                            FROM game_route_order o
-                            JOIN game_route_points p ON o.game_route_points_id = p.id
-                            WHERE o.game_route_id = ?
-                            ORDER BY o.order_id ASC` ,
-                        [route.route_id]
+                    await pool.query(
+                        `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status, order_id)
+                            VALUES (?, ?, ?, 'todo', ?)`,
+                        [route.game_id, route.team_id, route.point_id, order_counter]
                     );
-                    // Insert each point for this team into game_engine_points
-                    for (const point of points) {
-                        await pool.query(
-                            `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status, order_id)
-                               VALUES (?, ?, ?, 'todo', ?)`,
-                            [game_id, team.id, point.point_id, point.order_id]
-                        );
-                    }
-   */
-                        await pool.query(
-                            `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status, order_id)
-                               VALUES (?, ?, ?, 'todo', ?)`,
-                            [route.game_id, route.team_id, route.point_id, route.order_id]
-                        );
                }
                 // Send event: you joined game (insert into team_events)
                 await pool.query(
