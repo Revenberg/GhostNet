@@ -292,7 +292,7 @@ export default function createGameEngineRoutesRouter(pool) {
     });
 
 
-    // Get ranking summary per team: count of ranking, count and sum of bonus points
+    // Get Ranking Overzicht per team: count of ranking, count and sum of bonus points
     router.get("/ranking_summary", async (req, res) => {
         try {
             const { game_id } = req.query;

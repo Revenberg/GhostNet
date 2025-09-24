@@ -51,7 +51,7 @@ export default function RankingSummary() {
 
     return (
         <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
-            <h2 className="text-xl font-bold mb-4">Ranking Summary</h2>
+            <h2 className="text-xl font-bold mb-4">Ranking Overzicht</h2>
             <div className="mb-4 flex items-center gap-4">
                 <label className="font-semibold mr-2">Game:</label>
                 <select
@@ -81,7 +81,10 @@ export default function RankingSummary() {
                         </tr>
                     </thead>
                     <tbody>
-                        {summary.map(team => (
+                        {summary
+                          .slice()
+                          .sort((a, b) => (b.ranking_count * 100 + b.bonus_total - b.game_penalty) - (a.ranking_count * 100 + a.bonus_total - a.game_penalty))
+                          .map(team => (
                             <tr key={team.team_id}>
                                 <td className="border px-2 py-1">{team.teamname}</td>
                                 <td className="border px-2 py-1 text-center">{team.ranking_count}</td>
