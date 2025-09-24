@@ -1,6 +1,4 @@
 import React from "react";
-import GameEngine from "./pages/GameEngine/GameEngine";
-import RankingSummary from "./pages/GameEngine/ranking_summary";
 import UpdatePassword from "./pages/Users/UpdatePassword";
 import { Routes, Route } from "react-router-dom";
 
@@ -26,6 +24,9 @@ import GameRoutePoints from './pages/GameRoutes/GameRoutePoints';
 import CreateRoutePage from './pages/GameRoutes/CreateRoutePage';
 import AllRoutesMap from './pages/GameRoutes/AllRoutesMap';
 import RouteTeamsPage from './pages/GameRoutes/RouteTeamsPage';
+
+import GameEngine from "./pages/GameEngine/GameEngine";
+import RankingSummary from "./pages/GameEngine/ranking_summary";
 
 export default function App() {
   return (
