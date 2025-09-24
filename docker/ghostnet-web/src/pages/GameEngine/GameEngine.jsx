@@ -64,7 +64,6 @@ export default function GameEngine() {
     useEffect(() => {
         if (selectedGame) {
             fetchTeams(selectedGame);
-            console.log("fetchTeams called for game:", selectedGame);
         }
     }, [selectedGame]);
 

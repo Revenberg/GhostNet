@@ -177,17 +177,6 @@ export default function createGamesRouter(pool) {
     }
   });
 
-  // List all games
-  router.get("/", async (req, res) => {
-    try {
-      const [rows] = await pool.query("SELECT * FROM game order by lastupdate DESC");
-      res.json({ success: true, games: rows });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-    }
-  });
-
   // Get all team_events for a team, sorted by event_timestamp
   router.get("/events/:team_id", async (req, res) => {
     try {
@@ -224,13 +213,20 @@ export default function createGamesRouter(pool) {
 // Example: Get all games
   router.get("/", async (req, res) => {
     try {
-      const [rows] = await pool.query("SELECT * FROM games order by lastupdate DESC");
-      res.json({ success: true, games: rows });
+      const { game_id } = req.body;
+      if (game_id) {
+        const [rows] = await pool.query("SELECT * FROM game where id = ?", [game_id]);
+        res.json({ success: true, games: rows });
+      } else {
+        const [rows] = await pool.query("SELECT * FROM game order by lastupdate DESC");
+        res.json({ success: true, games: rows });
+      }
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });
     }
-  });   
+  });
+
 
   return router;
 }
