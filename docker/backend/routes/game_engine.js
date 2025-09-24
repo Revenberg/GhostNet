@@ -185,6 +185,11 @@ export default function createGameEngineRoutesRouter(pool) {
                 [game_id]
             );
 
+            await pool.query(
+                `DELETE FROM game_engine_ranking WHERE game_id = ?`,
+                [game_id]
+            );
+
             // 2. Select all teams for this game
             const [teams] = await pool.query(
                 `SELECT t.* FROM teams t WHERE t.game_id = ?`,

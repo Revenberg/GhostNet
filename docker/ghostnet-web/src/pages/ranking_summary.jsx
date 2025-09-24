@@ -70,9 +70,11 @@ export default function RankingSummary() {
                     <thead>
                         <tr>
                             <th className="border-b p-2 text-left">Team</th>
-                            <th className="border-b p-2 text-center">Ranking Count</th>
+                            <th className="border-b p-2 text-center">Bereikte doelen</th>
+                            <th />
                             <th className="border-b p-2 text-center">Bonus Count</th>
                             <th className="border-b p-2 text-center">Bonus Total</th>
+                            <th className="border-b p-2 text-center">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,8 +82,10 @@ export default function RankingSummary() {
                             <tr key={team.team_id}>
                                 <td className="border px-2 py-1">{team.teamname}</td>
                                 <td className="border px-2 py-1 text-center">{team.ranking_count}</td>
+                                <td className="border px-2 py-1 text-center">{team.ranking_count} * 100</td>
                                 <td className="border px-2 py-1 text-center">{team.bonus_count}</td>
                                 <td className="border px-2 py-1 text-center">{team.bonus_total}</td>
+                                <td className="border px-2 py-1 text-center">{team.ranking_count * 100 + team.bonus_total}</td>
                             </tr>
                         ))}
                     </tbody>
