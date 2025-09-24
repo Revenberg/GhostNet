@@ -167,9 +167,11 @@ export default function GameEngine() {
                                 const teamStatus = point.teams.find(t => t.team_id === team.team_id);
                                 let cellClass = "border px-2 py-1 text-xs text-center";
                                 let textStyle = {};
+                                let showLink = false;
                                 if (teamStatus) {
                                     if (teamStatus.status === "target") {
                                         textStyle.fontWeight = "bold";
+                                        showLink = true;
                                     } else if (teamStatus.status === "done") {
                                         textStyle.color = "#b0b0b0"; // light gray
                                     }
@@ -180,6 +182,21 @@ export default function GameEngine() {
                                             <span style={textStyle}>
                                                 {teamStatus.order_id ? `${teamStatus.order_id}. ` : ''}
                                                 {teamStatus.status || 'pending'}
+                                                {showLink && (
+                                                    <>
+                                                        {' '}
+                                                        <a
+                                                            href="#"
+                                                            style={{ color: '#2563eb', textDecoration: 'underline', marginLeft: 4, fontWeight: 'normal' }}
+                                                            onClick={e => {
+                                                                e.preventDefault();
+                                                                handleTargetDone(team.team_id, point.id);
+                                                            }}
+                                                        >
+                                                            Mark done
+                                                        </a>
+                                                    </>
+                                                )}
                                             </span>
                                         ) : (
                                             <span className="text-gray-400">-</span>
