@@ -45,7 +45,7 @@ export default function GameEngine() {
                 setPoints([]);
             }
             // Fetch game status
-            const resGame = await fetch(`${backendHost}/api/games?game_id=${gameId}`);
+            const resGame = await fetch(`${backendHost}/api/games?${gameId}`);
             const dataGame = await resGame.json();
             if (resGame.ok && dataGame.success && dataGame.games && dataGame.games.length > 0) {
                 console.log("Game status:", dataGame.games[0].status);

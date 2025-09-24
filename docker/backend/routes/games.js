@@ -25,25 +25,25 @@ export default function createGamesRouter(pool) {
     }
   });
   */
- /*
-  // Create a new game_progress entry
-  router.post("/progress", async (req, res) => {
-    try {
-      const { game_id, team_id, status } = req.body;
-      if (!game_id || !team_id || !status) {
-        return res.status(400).json({ error: "game_id, team_id, and status required" });
-      }
-      const [result] = await pool.query(
-        "INSERT INTO game_progress (game_id, team_id, status) VALUES (?, ?, ?)",
-        [game_id, team_id, status]
-      );
-      res.json({ success: true, id: result.insertId });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-    }
-  });
-*/
+  /*
+   // Create a new game_progress entry
+   router.post("/progress", async (req, res) => {
+     try {
+       const { game_id, team_id, status } = req.body;
+       if (!game_id || !team_id || !status) {
+         return res.status(400).json({ error: "game_id, team_id, and status required" });
+       }
+       const [result] = await pool.query(
+         "INSERT INTO game_progress (game_id, team_id, status) VALUES (?, ?, ?)",
+         [game_id, team_id, status]
+       );
+       res.json({ success: true, id: result.insertId });
+     } catch (err) {
+       console.error(err);
+       res.status(500).json({ error: "Database error" });
+     }
+   });
+ */
   // Update status for a game_progress entry
   router.put("/progress/:id/status", async (req, res) => {
     try {
@@ -65,38 +65,38 @@ export default function createGamesRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-/*
-  // List all game_progress for a game
-  router.get("/progress/by-game/:game_id", async (req, res) => {
-    try {
-      const { game_id } = req.params;
-      const [rows] = await pool.query(
-        "SELECT * FROM game_progress WHERE game_id = ? order by team_id, lastupdate DESC",
-        [game_id]
-      );
-      res.json({ success: true, progress: rows });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-    }
-  });
+  /*
+    // List all game_progress for a game
+    router.get("/progress/by-game/:game_id", async (req, res) => {
+      try {
+        const { game_id } = req.params;
+        const [rows] = await pool.query(
+          "SELECT * FROM game_progress WHERE game_id = ? order by team_id, lastupdate DESC",
+          [game_id]
+        );
+        res.json({ success: true, progress: rows });
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+      }
+    });
+    */
+  /*
+    // List all game_progress for a team
+    router.get("/progress/by-team/:team_id", async (req, res) => {
+      try {
+        const { team_id } = req.params;
+        const [rows] = await pool.query(
+          "SELECT * FROM game_progress WHERE team_id = ? order by game_id, lastupdate DESC",
+          [team_id]
+        );
+        res.json({ success: true, progress: rows });
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+      }
+    });
   */
-/*
-  // List all game_progress for a team
-  router.get("/progress/by-team/:team_id", async (req, res) => {
-    try {
-      const { team_id } = req.params;
-      const [rows] = await pool.query(
-        "SELECT * FROM game_progress WHERE team_id = ? order by game_id, lastupdate DESC",
-        [team_id]
-      );
-      res.json({ success: true, progress: rows });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-    }
-  });
-*/
   // Create a new game (status = 'new')
   router.post("/", async (req, res) => {
     try {
@@ -210,18 +210,26 @@ export default function createGamesRouter(pool) {
     }
   });
 
-// Example: Get all games
+  // Example: Get all games
   router.get("/:game_id", async (req, res) => {
     try {
       const { game_id } = req.params;
-      console.log("Fetching games with game_id:", game_id);
-      if (game_id) {
-        const [rows] = await pool.query("SELECT * FROM game where id = ?", [game_id]);
-        res.json({ success: true, games: rows });
-      } else {
-        const [rows] = await pool.query("SELECT * FROM game order by lastupdate DESC");
-        res.json({ success: true, games: rows });
+      if (!game_id) {
+        return res.status(400).json({ error: "game_id required" });
       }
+      const [rows] = await pool.query("SELECT * FROM game where id = ?", [game_id]);
+      res.json({ success: true, games: rows });
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
+  router.get("/", async (req, res) => {
+    try {
+      const [rows] = await pool.query("SELECT * FROM game");
+      res.json({ success: true, games: rows });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Database error" });
