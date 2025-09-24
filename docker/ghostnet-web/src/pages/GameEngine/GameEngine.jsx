@@ -102,21 +102,23 @@ export default function GameEngine() {
                 body: JSON.stringify({ game_id: selectedGame, team_id: team_id, game_point_id: team_id.game_route_points_id })
             });            
             const data = await res.json();
-            if (data.success) setMessage("Target marked as done");
-            else setMessage("Failed to update target");
+            if (!data.success) 
+                setMessage("Failed to update target");
+            else {
+                setMessage("Target marked as done");
             
-            console.log("Response from marking target done:", data);
+                console.log("Response from marking target done:", data);
 
-            
-            const res2 = await fetch(`${backendHost}/api/game_engine/sendTeamTargetPoint`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ game_id: selectedGame, team_id: team_id})
-            });            
-            const data2 = await res2.json();
-            if (data2.success) setMessage("Message send to team(" + team_id + "): " + (data2.message || ""));
-            else setMessage("Failed to update target");
 
+                const res2 = await fetch(`${backendHost}/api/game_engine/sendTeamTargetPoint`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ game_id: selectedGame, team_id: team_id})
+                });            
+                const data2 = await res2.json();
+                if (data2.success) setMessage("Message send to team(" + team_id + "): " + (data2.message || ""));
+                else setMessage("Failed to send message to team(" + team_id + ")");
+            }
             fetchTeams(selectedGame);
         } catch {
             setMessage("Failed to update target");
