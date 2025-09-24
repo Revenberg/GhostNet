@@ -139,13 +139,12 @@ export default function createGameEngineRoutesRouter(pool) {
             if (!game_id || !team_id) {
                 return res.status(400).json({ error: "game_id and team_id are required" });
             }
-
                    
             const [[nextPointRow]] = await pool.query(
                 `SELECT grp.* FROM game_engine_points as gep, game_route_points as grp 
                 WHERE  gep.game_route_points_id = grp.id
                 and gep.game_id = ? AND gep.team_id = ? AND gep.status = 'target'`,
-                [game_id, team_id, pointRow.order_id + 1]
+                [game_id, team_id]
             );
             nextDescription = nextPointRow ? nextPointRow.description : "Onbekend";
 
