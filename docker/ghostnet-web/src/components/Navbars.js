@@ -18,6 +18,10 @@ export function NavbarUser() {
   const user = getUserFromCookie();
   const [teamDropdownOpen, setTeamDropdownOpen] = React.useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
+  const closeAllDropdowns = () => {
+    setTeamDropdownOpen(false);
+    setUserDropdownOpen(false);
+  };
   return (
     <nav className="bg-purple-700 text-white p-4 flex items-center justify-center space-x-6">
       <Link to="/" className="hover:underline">Home</Link>
@@ -32,8 +36,8 @@ export function NavbarUser() {
         </button>
         {teamDropdownOpen && (
           <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-10">
-            <Link to={`/team-details/${user.teamId}`} className="block px-4 py-2 hover:bg-purple-100">Mijn Team</Link>
-            <Link to="/team-send-event" className="block px-4 py-2 hover:bg-purple-100">Stuur bericht</Link>
+            <Link to={`/team-details/${user.teamId}`} className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Mijn Team</Link>
+            <Link to="/team-send-event" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Stuur bericht</Link>
             <Link to="/ranking-summary" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Ranking overzicht</Link>
         </div>
         )}
