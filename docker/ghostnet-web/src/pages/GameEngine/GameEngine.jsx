@@ -181,10 +181,9 @@ export default function GameEngine() {
                                         {teamStatus ? (
                                             <span style={textStyle}>
                                                 {teamStatus.order_id ? `${teamStatus.order_id}. ` : ''}
-                                                {teamStatus.status || 'pending'}
+                                                {!showLink && (teamStatus.status || 'pending')}
                                                 {showLink && (
                                                     <>
-                                                        {' '}
                                                         <a
                                                             href="#"
                                                             style={{ color: '#2563eb', textDecoration: 'underline', marginLeft: 4, fontWeight: 'normal' }}
@@ -193,7 +192,7 @@ export default function GameEngine() {
                                                                 handleTargetDone(team.team_id, point.id);
                                                             }}
                                                         >
-                                                            Mark done
+                                                            Zet op gedaan
                                                         </a>
                                                     </>
                                                 )}
