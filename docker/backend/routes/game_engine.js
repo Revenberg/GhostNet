@@ -229,7 +229,7 @@ export default function createGameEngineRoutesRouter(pool) {
                 `UPDATE game SET status = 'started' WHERE id = ? and status = 'initialized'`,
                 [game_id]
             );
-
+/*
             const [teams] = await pool.query(
                 `SELECT t.* FROM teams t WHERE t.game_id = ?`,
                 [game_id]
@@ -269,8 +269,13 @@ export default function createGameEngineRoutesRouter(pool) {
                 );
                 results.push({ team_id: team.id, teamname: team.teamname, target: targetDescription });
             }
-
             res.json({ success: true, teams: results });
+*/
+                    await pool.query(
+                        `UPDATE game_engine_points SET status = 'target' WHERE order_id = 1 and game_id = ?`,
+                        [game_id]
+                    );
+            res.json({ success: true });
         } catch (err) {
             console.error(err);
             res.status(500).json({ error: "Database error" });
