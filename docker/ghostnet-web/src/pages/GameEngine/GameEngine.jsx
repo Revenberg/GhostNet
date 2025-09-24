@@ -4,7 +4,9 @@ const STATUS_OPTIONS = ["", "init", "start", "finished"];
 
 export default function GameEngine() {
     const [games, setGames] = useState([]);
-    const [selectedGame, setSelectedGame] = useState(null);
+    const [selectedGame, setSelectedGame] = useState(
+        typeof window !== 'undefined' ? sessionStorage.getItem('filterGameId') || '' : ''
+    );
     const [status, setStatus] = useState("init");
     const [teams, setTeams] = useState([]);
     const [points, setPoints] = useState([]);
