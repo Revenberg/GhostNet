@@ -48,9 +48,6 @@ export default function GameEngine() {
             const resGame = await fetch(`${backendHost}/api/games/${gameId}`);
             const dataGame = await resGame.json();
             if (resGame.ok && dataGame.success && dataGame.games && dataGame.games.length > 0) {
-                console.log("game ID: ", gameId)
-                console.log("Game status:", dataGame);
-                console.log("Game status:", dataGame.games[0].status);
                 setGameStatus(dataGame.games[0].status || "");
             } else {
                 setGameStatus("");
@@ -74,12 +71,18 @@ export default function GameEngine() {
     const handleStoreStatus = async () => {
         setMessage("");
         if (!gameStatus || !selectedGame ) return;
-        if (gameStatus === "init" || gameStatus === "started") {
-            setLoading(true);
+        
+        setLoading(true);
 
-            try {
+        try {
+            let newStatus = "";
+
+            if (gameStatus === "new") newStatus = "init";
+            if (gameStatus === "init") newStatus = "started";
+            if (gameStatus === "started") newStatus = "finish";
+            if (!newStatus) {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                const res = await fetch(`${backendHost}/api/game_engine/${gameStatus}`, {
+                const res = await fetch(`${backendHost}/api/game_engine/${newStatus}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ game_id: selectedGame })
@@ -88,11 +91,11 @@ export default function GameEngine() {
                 if (data.success) setMessage(`Game ${gameStatus} !`);
                 else setMessage("Failed to change game status: " + (data.error || "Unknown error"));
                 fetchTeams(selectedGame);
-            } catch (err) {
-                setMessage("Failed to change game status: " + (err?.message || "Unknown error"));
             }
-            setLoading(false);
+        } catch (err) {
+            setMessage("Failed to change game status: " + (err?.message || "Unknown error"));
         }
+        setLoading(false);
         // Add logic for other statuses if needed
     };
 
@@ -144,8 +147,6 @@ export default function GameEngine() {
                         <option key={game.id} value={game.id}>{game.id} - {game.name}</option>
                     ))}
                 </select>
-                <label className="font-semibold ml-6 mr-2">Status:</label>
-                <span className="px-2 py-1 border rounded bg-gray-100 text-gray-700">{gameStatus || '-'}</span>
                 <button
                     type="button"
                     className="ml-2 px-2 py-1 border rounded bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500"
