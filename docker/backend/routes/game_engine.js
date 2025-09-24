@@ -126,14 +126,28 @@ export default function createGameEngineRoutesRouter(pool) {
                 WHERE game_id = ? AND team_id = ? AND order_id = ?`,
                 [game_id, team_id, pointRow.order_id + 1]
             );
+            res.json({ success: true, team_id });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+        }
+    });
+ 
+    router.post("/sendTeamTargetPoint", async (req, res) => {
+    try {
+            const { game_id, team_id } = req.body;
+            if (!game_id || !team_id) {
+                return res.status(400).json({ error: "game_id and team_id are required" });
+            }
 
+                   
             const [[nextPointRow]] = await pool.query(
                 `SELECT grp.* FROM game_engine_points as gep, game_route_points as grp 
                 WHERE  gep.game_route_points_id = grp.id
-                and gep.game_id = ? AND gep.team_id = ? AND gep.order_id = ?`,
+                and gep.game_id = ? AND gep.team_id = ? AND gep.status = 'target'`,
                 [game_id, team_id, pointRow.order_id + 1]
             );
-            nextDescription = nextPointRow ? nextPointRow.description : null;
+            nextDescription = nextPointRow ? nextPointRow.description : "Onbekend";
 
             // 4. Get game name
             const [[gameRow]] = await pool.query(
@@ -142,14 +156,15 @@ export default function createGameEngineRoutesRouter(pool) {
             );
             const gameName = gameRow ? gameRow.name : "";
 
+            let message = `Game '${gameName}': next target is ${nextDescription || 'none'}`;
+
             // 5. Send event to team
             await pool.query(
                 `INSERT INTO team_events (team_id, event_type, event_message)
          VALUES (?, 'next_target', ?)`,
-                [team_id, `Game '${gameName}': next target is ${nextDescription || 'none'}`]
+                [team_id, message]
             );
-
-            res.json({ success: true, team_id, next_target: nextDescription });
+            res.json({ success: true, team_id, message: message });
         } catch (err) {
             console.error(err);
             res.status(500).json({ error: "Database error" });
