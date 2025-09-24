@@ -292,7 +292,7 @@ export default function createGameEngineRoutesRouter(pool) {
             res.json({ success: true, teams: results });
 */
                     await pool.query(
-                        `UPDATE game_engine_points SET status = 'target' WHERE order_id = 1 and game_id = ?`,
+                        `UPDATE game_engine_points SET status = 'target', starttms = NOW() WHERE order_id = 1 and game_id = ?`,
                         [game_id]
                     );
             res.json({ success: true });
