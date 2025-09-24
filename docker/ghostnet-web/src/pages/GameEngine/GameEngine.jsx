@@ -48,6 +48,7 @@ export default function GameEngine() {
             const resGame = await fetch(`${backendHost}/api/games?game_id=${gameId}`);
             const dataGame = await resGame.json();
             if (resGame.ok && dataGame.success && dataGame.games && dataGame.games.length > 0) {
+                console.log("Game status:", dataGame.games[0].status);
                 setGameStatus(dataGame.games[0].status || "");
             } else {
                 setGameStatus("");
@@ -72,7 +73,7 @@ export default function GameEngine() {
     const handleStoreStatus = async () => {
         setMessage("");
         if (!gameStatus || !selectedGame ) return;
-        if (gameStatus === "init" || gameStatus === "start") {
+        if (gameStatus === "init" || gameStatus === "started") {
             setLoading(true);
 
             try {
@@ -148,7 +149,7 @@ export default function GameEngine() {
                     type="button"
                     className="ml-2 px-2 py-1 border rounded bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500"
                     onClick={handleStoreStatus}
-                    disabled={!selectedGame || !gameStatus || loading || (gameStatus !== 'init' && gameStatus !== 'start')}
+                    disabled={!selectedGame || !gameStatus || loading || (gameStatus !== 'init' && gameStatus !== 'started')}
                 >
                     Status wijzigen
                 </button>
