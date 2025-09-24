@@ -1,7 +1,7 @@
-import GameEngine from "./pages/GameEngine/GameEngine";
-import RankingSummary from "./pages/ranking_summary";
-import UpdatePassword from "./pages/Users/UpdatePassword";
 import React from "react";
+import GameEngine from "./pages/GameEngine/GameEngine";
+import RankingSummary from "./pages/GameEngine/ranking_summary";
+import UpdatePassword from "./pages/Users/UpdatePassword";
 import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
