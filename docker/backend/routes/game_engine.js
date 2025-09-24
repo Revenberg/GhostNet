@@ -225,12 +225,11 @@ export default function createGameEngineRoutesRouter(pool) {
                     
                 await pool.query(
                     `DELETE gep FROM game_engine_points gep
-                    JOIN game_route_order o ON gep.game_route_points_id = o.game_route_points_id
                     WHERE gep.team_id = ? AND gep.game_id = ?`,
                       [team.id, game_id]  
                 );
 
-                let order_counter = 0;
+                let order_counter = 1;
                 await pool.query(
                     `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status, order_id)
                         VALUES (?, ?, ?, 'todo', ?)`,
@@ -251,7 +250,7 @@ export default function createGameEngineRoutesRouter(pool) {
                 await pool.query(
                     `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status, order_id)
                         VALUES (?, ?, ?, 'todo', ?)`,
-                    [game_id, team.id, startId, order_counter]
+                    [game_id, team.id, finishId, order_counter]
                 );
 
                 // Send event: you joined game (insert into team_events)

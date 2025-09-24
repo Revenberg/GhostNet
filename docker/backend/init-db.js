@@ -115,13 +115,8 @@ export async function ensureTables(pool) {
         description TEXT
     )
   `);
-/*
-    await conn.query(`
-        DROP TABLE IF EXISTS game_engine_ranking
-  `);
-*/
 
-    await conn.query(`
+  await conn.query(`
     CREATE TABLE IF NOT EXISTS game_engine_ranking (
        id INT AUTO_INCREMENT PRIMARY KEY,
         game_id INT,
