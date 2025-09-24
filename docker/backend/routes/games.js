@@ -211,7 +211,7 @@ export default function createGamesRouter(pool) {
   });
 
 // Example: Get all games
-  router.get("/", async (req, res) => {
+  router.get("/:game_id", async (req, res) => {
     try {
       const { game_id } = req.params;
       console.log("Fetching games with game_id:", game_id);
