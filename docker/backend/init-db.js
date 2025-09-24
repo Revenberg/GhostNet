@@ -116,12 +116,10 @@ export async function ensureTables(pool) {
     )
   `);
 
-/*
     await conn.query(`
     CREATE TABLE IF NOT EXISTS game_engine_ranking (
-        DROP TABLE IF EXISTS game_engine_ranking;
+        DROP TABLE IF EXISTS game_engine_ranking
   `);
-  */
 
 
 
