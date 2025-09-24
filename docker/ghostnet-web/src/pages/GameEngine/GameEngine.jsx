@@ -182,6 +182,7 @@ export default function GameEngine() {
                                         showLink = true;
                                     } else if (teamStatus.status === "done") {
                                         textStyle.color = "#b0b0b0"; // light gray
+                                        teamStatus.status = "✅ Gedaan";
                                     }
                                 }
                                 return (
