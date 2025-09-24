@@ -154,8 +154,8 @@ export default function GameEngine() {
                     disabled={!selectedGame || !gameStatus || loading || (gameStatus !== 'new' && gameStatus !== 'init' && gameStatus !== 'started')}
                 >
                     {gameStatus === 'new' && 'Voorbereiden'}
-                    {gameStatus === 'init' && 'Start'}
-                    {gameStatus === 'started' && 'Afgerond'}
+                    {gameStatus === 'init' && 'Starten'}
+                    {gameStatus === 'started' && 'Afronden'}
                     {(!['new','init','started'].includes(gameStatus)) && 'Status wijzigen'}
                 </button>
             </div>
