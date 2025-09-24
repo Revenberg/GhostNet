@@ -73,7 +73,7 @@ export default function RankingSummary() {
                         <tr>
                             <th className="border-b p-2 text-left">Team</th>
                             <th className="border-b p-2 text-center">Bereikte doelen</th>
-                            <th />
+                            <th className="border-b p-2 text-center"> </th>
                             <th className="border-b p-2 text-center">Bonus Count</th>
                             <th className="border-b p-2 text-center">Bonus Total</th>
                             <th className="border-b p-2 text-center">Strafpunten</th>
