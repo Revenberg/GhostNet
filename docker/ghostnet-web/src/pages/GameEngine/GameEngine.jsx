@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-const STATUS_OPTIONS = ["", "init", "start", "finished"];
+
+// Define allowed status transitions
+const STATUS_TRANSITIONS = {
+    '': ['init'],
+    'init': ['start'],
+    'start': ['finished'],
+    'finished': []
+};
 
 export default function GameEngine() {
     const [games, setGames] = useState([]);
@@ -8,6 +15,7 @@ export default function GameEngine() {
         typeof window !== 'undefined' ? sessionStorage.getItem('filterGameId') || '' : ''
     );
     const [status, setStatus] = useState("init");
+    const [gameStatus, setGameStatus] = useState("");
     const [teams, setTeams] = useState([]);
     const [points, setPoints] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -36,6 +44,7 @@ export default function GameEngine() {
         setLoading(true);
         try {
             const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+            // Fetch points/teams
             const res = await fetch(`${backendHost}/api/game_engine/pointsstatus?game_id=${gameId}`);
             const data = await res.json();
             if (data.success) {
@@ -45,9 +54,18 @@ export default function GameEngine() {
                 setTeams([]);
                 setPoints([]);
             }
+            // Fetch game status
+            const resGame = await fetch(`${backendHost}/api/games?game_id=${gameId}`);
+            const dataGame = await resGame.json();
+            if (resGame.ok && dataGame.success && dataGame.games && dataGame.games.length > 0) {
+                setGameStatus(dataGame.games[0].status || "");
+            } else {
+                setGameStatus("");
+            }
         } catch {
             setTeams([]);
             setPoints([]);
+            setGameStatus("");
         }
         setLoading(false);
     };
@@ -132,18 +150,7 @@ export default function GameEngine() {
                     ))}
                 </select>
                 <label className="font-semibold ml-6 mr-2">Status:</label>
-                <select value={status} onChange={e => setStatus(e.target.value)} className="border px-2 py-1 rounded">
-                    {STATUS_OPTIONS.map(opt => (
-                        <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                </select>
-                <button
-                    className="btn-primary px-4 py-1 ml-2"
-                    onClick={handleStoreStatus}
-                    disabled={!status || !selectedGame || STATUS_OPTIONS.length === 0}
-                >
-                    Opslaan
-                </button>
+                <span className="px-2 py-1 border rounded bg-gray-100 text-gray-700">{gameStatus || '-'}</span>
             </div>
             Opslaan
             {loading ? <div>Laden...</div> : null}
