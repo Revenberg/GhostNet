@@ -97,6 +97,15 @@ export default function createGameEngineRoutesRouter(pool) {
                 return res.status(400).json({ error: "game_id, team_id, and game_point_id required" });
             }
 
+            // 0. check if status = target, if not error
+            const [[pointRow]] = await pool.query(
+                `SELECT status, order_id FROM game_engine_points WHERE game_id = ? AND team_id = ? AND game_route_points_id = ?`,
+                [game_id, team_id, game_point_id]
+            );
+            if (!pointRow || pointRow.status !== 'target') {
+                return res.status(400).json({ error: "Point is not the current target for this team." });
+            }
+
             // 1. Add entry to game_engine_ranking
             await pool.query(
                 `INSERT INTO game_engine_ranking (game_id, team_id, game_route_points_id, game_points)
@@ -111,24 +120,20 @@ export default function createGameEngineRoutesRouter(pool) {
                 [game_id, team_id, game_point_id]
             );
 
-            // 3. Find the next point for this team (the next 'todo' with the lowest id)
-            const [[nextPoint]] = await pool.query(
-                `SELECT gep.id as gep_id, grp.description
-         FROM game_engine_points gep
-         JOIN game_route_points grp ON gep.game_route_points_id = grp.id
-         WHERE gep.game_id = ? AND gep.team_id = ? AND gep.status = 'todo'
-         ORDER BY gep.id ASC LIMIT 1`,
-                [game_id, team_id]
+            // Set next point to 'target'
+            await pool.query(
+                `UPDATE game_engine_points SET status = 'target', starttms = NOW() 
+                WHERE game_id = ? AND team_id = ? AND order_id = ?`,
+                [game_id, team_id, pointRow.order_id + 1]
             );
-            let nextDescription = null;
-            if (nextPoint) {
-                // Set next point to 'target'
-                await pool.query(
-                    `UPDATE game_engine_points SET status = 'target' WHERE id = ?`,
-                    [nextPoint.gep_id]
-                );
-                nextDescription = nextPoint.description;
-            }
+
+            const [[nextPointRow]] = await pool.query(
+                `SELECT grp.* FROM game_engine_points as gep, game_route_points as grp 
+                WHERE  gep.game_route_points_id = grp.id
+                and gep.game_id = ? AND gep.team_id = ? AND gep.order_id = ?`,
+                [game_id, team_id, pointRow.order_id + 1]
+            );
+            nextDescription = nextPointRow ? nextPointRow.description : null;
 
             // 4. Get game name
             const [[gameRow]] = await pool.query(
