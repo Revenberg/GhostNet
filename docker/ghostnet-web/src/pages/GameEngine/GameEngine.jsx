@@ -89,6 +89,9 @@ export default function GameEngine() {
             // Only one log for debugging, remove duplicate and excessive logs
             console.log("Marking target done for team_id:", team_id, "game_point_id:", game_point_id);
 
+            console.log(JSON.stringify({ game_id: selectedGame, team_id: team_id, 
+                game_point_id: team_id.game_route_points_id }));
+
             const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
             const res = await fetch(`${backendHost}/api/game_engine/target`, {
                 method: "POST",
