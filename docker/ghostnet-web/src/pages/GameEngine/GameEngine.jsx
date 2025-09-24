@@ -86,9 +86,16 @@ export default function GameEngine() {
         setLoading(true);
         setMessage("");
         try {
+            console.log("Marking target done for team_id:", team_id, "game_point_id:", game_point_id);
+
             const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-            console.log("Marking done:", { game_id: selectedGame, team_id, game_point_id });
             
+            console.log("Marking target done for team_id:", team_id, "game_point_id:", game_point_id);
+            console.log("Using backendHost:", backendHost);
+            console.log("Selected game:", selectedGame);
+            console.log("Team ID:", team_id);
+            console.log("Game Point ID:", game_point_id);
+
             const res = await fetch(`${backendHost}/api/game_engine/target`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -98,10 +105,13 @@ export default function GameEngine() {
             if (data.success) setMessage("Target marked as done");
             else setMessage("Failed to update target");
             
+            console.log("Response from marking target done:", data);
+
+            
             const res2 = await fetch(`${backendHost}/api/game_engine/sendTeamTargetPoint`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ game_id: selectedGame, team_id: team_id  })
+                body: JSON.stringify({ game_id: selectedGame, team_id: team_id})
             });            
             const data2 = await res2.json();
             if (data2.success) setMessage("Message send to team(" + team_id + "): " + (data2.message || ""));

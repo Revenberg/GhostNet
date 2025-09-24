@@ -140,13 +140,13 @@ export default function createGameEngineRoutesRouter(pool) {
                 return res.status(400).json({ error: "game_id and team_id are required" });
             }
                    
-            const [[nextPointRow]] = await pool.query(
+            const [[currentPointRow]] = await pool.query(
                 `SELECT grp.* FROM game_engine_points as gep, game_route_points as grp 
                 WHERE  gep.game_route_points_id = grp.id
                 and gep.game_id = ? AND gep.team_id = ? AND gep.status = 'target'`,
                 [game_id, team_id]
             );
-            nextDescription = nextPointRow ? nextPointRow.description : "Onbekend";
+            const currentDescription = currentPointRow ? currentPointRow.description : "Onbekend";
 
             // 4. Get game name
             const [[gameRow]] = await pool.query(
@@ -154,8 +154,8 @@ export default function createGameEngineRoutesRouter(pool) {
                 [game_id]
             );
             const gameName = gameRow ? gameRow.name : "";
-
-            let message = `Game '${gameName}': next target is ${nextDescription || 'none'}`;
+            
+            let message = `Game '${gameName}': next target is ${currentDescription || 'none'}`;
 
             // 5. Send event to team
             await pool.query(
