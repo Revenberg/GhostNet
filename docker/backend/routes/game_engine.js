@@ -310,7 +310,8 @@ export default function createGameEngineRoutesRouter(pool) {
                 `SELECT r.team_id, t.teamname,
                         COUNT(r.id) as ranking_count,
                         SUM(CASE WHEN r.game_bonus_task IS NOT NULL THEN 1 ELSE 0 END) as bonus_count,
-                        COALESCE(SUM(r.game_bonus_task),0) as bonus_total
+                        COALESCE(SUM(r.game_bonus_task),0) as bonus_total,
+                        SUM(CASE WHEN r.game_penalty IS NOT NULL THEN 1 ELSE 0 END) as game_penalty
                  FROM game_engine_ranking r
                  JOIN teams t ON r.team_id = t.id
                  WHERE r.game_id = ?
@@ -325,7 +326,8 @@ export default function createGameEngineRoutesRouter(pool) {
                     teamname: team.teamname,
                     ranking_count: found ? found.ranking_count : 0,
                     bonus_count: found ? found.bonus_count : 0,
-                    bonus_total: found ? found.bonus_total : 0
+                    bonus_total: found ? found.bonus_total : 0,
+                    game_penalty: found ? found.game_penalty : 0
                 };
             });
             res.json({ success: true, summary });

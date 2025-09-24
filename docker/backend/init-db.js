@@ -117,7 +117,10 @@ export async function ensureTables(pool) {
   `);
 
 
-
+    await conn.query(`
+    CREATE TABLE IF NOT EXISTS game_engine_ranking (
+        DROP TABLE IF EXISTS game_engine_ranking;
+  `);
 
 
 
@@ -130,6 +133,9 @@ export async function ensureTables(pool) {
         game_route_points_id INT,
         game_bonus_task INT,
         game_points INT,
+        game_penalty INT,
+        game_penalty_reason VARCHAR(255),
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (game_id) REFERENCES game(id),
         FOREIGN KEY (team_id) REFERENCES teams(id)   
         )
