@@ -48,7 +48,7 @@ export async function ensureTables(pool) {
         FOREIGN KEY (team_id) REFERENCES teams(id)
     )
   `);  
-  await conn.query(`
+/*  await conn.query(`
     CREATE TABLE IF NOT EXISTS game_progress (
         id INT AUTO_INCREMENT PRIMARY KEY,
         game_id INT,
@@ -59,7 +59,7 @@ export async function ensureTables(pool) {
         lastupdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
-  await conn.query(`
+*/  await conn.query(`
     CREATE TABLE IF NOT EXISTS game_route_points (
         id INT AUTO_INCREMENT PRIMARY KEY,
         game_id INT,

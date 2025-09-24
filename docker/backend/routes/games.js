@@ -2,7 +2,7 @@ import express from "express";
 
 export default function createGamesRouter(pool) {
   const router = express.Router();
-  
+  /*
   router.get("/progress/by-game-latest/:game_id", async (req, res) => {
     try {
       const { game_id } = req.params;
@@ -24,6 +24,8 @@ export default function createGamesRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
+  */
+ /*
   // Create a new game_progress entry
   router.post("/progress", async (req, res) => {
     try {
@@ -41,7 +43,7 @@ export default function createGamesRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-
+*/
   // Update status for a game_progress entry
   router.put("/progress/:id/status", async (req, res) => {
     try {
@@ -63,7 +65,7 @@ export default function createGamesRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-
+/*
   // List all game_progress for a game
   router.get("/progress/by-game/:game_id", async (req, res) => {
     try {
@@ -78,7 +80,8 @@ export default function createGamesRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-
+  */
+/*
   // List all game_progress for a team
   router.get("/progress/by-team/:team_id", async (req, res) => {
     try {
@@ -93,7 +96,7 @@ export default function createGamesRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-
+*/
   // Create a new game (status = 'new')
   router.post("/", async (req, res) => {
     try {
