@@ -291,6 +291,43 @@ export default function createGameEngineRoutesRouter(pool) {
         }
     });
 
+    // Finish a game: finalize state, notify teams
+    router.post("/finish", async (req, res) => {
+        try {
+            const { game_id } = req.body;
+            if (!game_id) {
+                return res.status(400).json({ error: "game_id required" });
+            }
+
+            await pool.query(
+                `UPDATE game SET status = 'finished' WHERE id = ?`,
+                [game_id]
+            );
+            res.json({ success: true });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+        }
+    });
+
+    // Restart a game: reset state, notify teams
+    router.post("/restart", async (req, res) => {
+        try {
+            const { game_id } = req.body;
+            if (!game_id) {
+                return res.status(400).json({ error: "game_id required" });
+            }
+
+            await pool.query(
+                `UPDATE game SET status = 'started' WHERE id = ?`,
+                [game_id]
+            );
+            res.json({ success: true });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+        }
+    });
 
     // Get Ranking Overzicht per team: count of ranking, count and sum of bonus points
     router.get("/ranking_summary", async (req, res) => {

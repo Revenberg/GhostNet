@@ -78,8 +78,10 @@ export default function GameEngine() {
             let newStatus = "";
 
             if (gameStatus === "new") newStatus = "init";
-            if (gameStatus === "init") newStatus = "started";
+            if (gameStatus === "init") newStatus = "start";
             if (gameStatus === "started") newStatus = "finish";
+            if (gameStatus === "finished") newStatus = "restart";
+
             if (!newStatus) {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
                 const res = await fetch(`${backendHost}/api/game_engine/${newStatus}`, {
@@ -156,6 +158,7 @@ export default function GameEngine() {
                     {gameStatus === 'new' && 'Voorbereiden'}
                     {gameStatus === 'init' && 'Starten'}
                     {gameStatus === 'started' && 'Afronden'}
+                    {gameStatus === 'closed' && 'Herstarten'}
                     {(!['new','init','started'].includes(gameStatus)) && 'Status wijzigen'}
                 </button>
             </div>
