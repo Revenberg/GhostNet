@@ -196,16 +196,16 @@ export default function GameEngine() {
                                                 {!showLink && (teamStatus.status || 'pending')}
                                                 {showLink && (
                                                     <>
-                                                        <a
-                                                            href="#"
-                                                            style={{ color: '#2563eb', textDecoration: 'underline', marginLeft: 4, fontWeight: 'normal' }}
+                                                        <button
+                                                            type="button"
+                                                            style={{ color: '#2563eb', textDecoration: 'underline', marginLeft: 4, fontWeight: 'normal', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
                                                             onClick={e => {
                                                                 e.preventDefault();
                                                                 handleTargetDone(team.team_id, point.id);
                                                             }}
                                                         >
                                                             Zet op gedaan
-                                                        </a>
+                                                        </button>
                                                     </>
                                                 )}
                                             </span>
