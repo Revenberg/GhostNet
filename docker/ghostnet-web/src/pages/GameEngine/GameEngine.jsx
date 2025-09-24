@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-
-// Define allowed status transitions
-const STATUS_TRANSITIONS = {
-    '': ['init'],
-    'init': ['start'],
-    'start': ['finished'],
-    'finished': []
-};
-
 export default function GameEngine() {
     const [games, setGames] = useState([]);
     const [selectedGame, setSelectedGame] = useState(
@@ -92,7 +83,7 @@ export default function GameEngine() {
                     body: JSON.stringify({ game_id: selectedGame })
                 });
                 const data = await res.json();
-                if (data.success) setMessage(`Game ${status} !`);
+                if (data.success) setMessage(`Game ${gameStatus} !`);
                 else setMessage("Failed to change game status: " + (data.error || "Unknown error"));
                 fetchTeams(selectedGame);
             } catch (err) {
