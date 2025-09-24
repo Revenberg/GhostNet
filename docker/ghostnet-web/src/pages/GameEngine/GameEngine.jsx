@@ -175,6 +175,8 @@ export default function GameEngine() {
                                     } else if (teamStatus.status === "done") {
                                         textStyle.color = "#b0b0b0"; // light gray
                                         teamStatus.status = "✅ Gedaan";
+                                    }else if (teamStatus.status === "todo") {
+                                        teamStatus.status = "";
                                     }
                                 }
                                 return (

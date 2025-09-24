@@ -190,6 +190,19 @@ export default function createGameEngineRoutesRouter(pool) {
                 [game_id]
             );
 
+            const [startResult] = await pool.query(
+                `INSERT INTO game_route_points (game_id, location, latitude, longitude, description, images, hints)
+                VALUES (?, "Start", 0, 0, "Game start", "", "")`,
+                    [game_id]
+            );
+            const [FinishResult] = await pool.query(
+                `INSERT INTO game_route_points (game_id, location, latitude, longitude, description, images, hints)
+                VALUES (?, "Finish", 0, 0, "Game finish", "", "")`,
+                    [game_id]
+            );
+            let startId = startResult.insertId;
+            let finishId = FinishResult.insertId;
+
             // 3. For each team, assign route and insert into game_engine_points
             for (const team of teams) {
                 // Select all unique routes for this team
@@ -210,7 +223,14 @@ export default function createGameEngineRoutesRouter(pool) {
                     WHERE gep.team_id = ? AND gep.game_id = ?`,
                       [team.id, game_id]  
                 );
+
                 let order_counter = 0;
+                await pool.query(
+                    `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status, order_id)
+                        VALUES (?, ?, ?, 'todo', ?)`,
+                    [route.game_id, route.team_id, startId, order_counter]
+                );
+
                 for (const route of routes) {
                     // Select all points for this route, ordered
                     order_counter ++;
@@ -220,7 +240,14 @@ export default function createGameEngineRoutesRouter(pool) {
                             VALUES (?, ?, ?, 'todo', ?)`,
                         [route.game_id, route.team_id, route.point_id, order_counter]
                     );
-               }
+                }
+                order_counter ++;
+                await pool.query(
+                    `INSERT INTO game_engine_points (game_id, team_id, game_route_points_id, status, order_id)
+                        VALUES (?, ?, ?, 'todo', ?)`,
+                    [route.game_id, route.team_id, finishId, order_counter]
+                );
+
                 // Send event: you joined game (insert into team_events)
                 await pool.query(
                     `INSERT INTO team_events (team_id, event_type, event_message)
@@ -248,48 +275,6 @@ export default function createGameEngineRoutesRouter(pool) {
                 `UPDATE game SET status = 'started' WHERE id = ? and status = 'initialized'`,
                 [game_id]
             );
-/*
-            const [teams] = await pool.query(
-                `SELECT t.* FROM teams t WHERE t.game_id = ?`,
-                [game_id]
-            );
-
-            const [[gameRow]] = await pool.query(
-                `SELECT name FROM game WHERE id = ?`,
-                [game_id]
-            );
-            const gameName = gameRow ? gameRow.name : "";
-
-            const results = [];
-            for (const team of teams) {
-                // Find the first point for this team (lowest order_id)
-                const [[firstPoint]] = await pool.query(
-                    `SELECT gep.id as gep_id, grp.location, grp.description
-           FROM game_engine_points gep
-           JOIN game_route_points grp ON gep.game_route_points_id = grp.id
-           WHERE gep.game_id = ? AND gep.team_id = ? AND gep.status = 'todo'
-           ORDER BY gep.order_id, gep.id ASC LIMIT 1`,
-                    [game_id, team.id]
-                );
-                let targetDescription = null;
-                if (firstPoint) {
-                    // Update status to 'target'
-                    await pool.query(
-                        `UPDATE game_engine_points SET status = 'target' WHERE id = ?`,
-                        [firstPoint.gep_id]
-                    );
-                    targetDescription = firstPoint.description;
-                }
-                // Send event: game started, first target
-                await pool.query(
-                    `INSERT INTO team_events (team_id, event_type, event_message)
-           VALUES (?, 'game_start', ?)`,
-                    [team.id, `Game '${gameName}' started. First target: ${targetDescription || 'none'}`]
-                );
-                results.push({ team_id: team.id, teamname: team.teamname, target: targetDescription });
-            }
-            res.json({ success: true, teams: results });
-*/
                     await pool.query(
                         `UPDATE game_engine_points SET status = 'target', starttms = NOW() WHERE order_id = 1 and game_id = ?`,
                         [game_id]
