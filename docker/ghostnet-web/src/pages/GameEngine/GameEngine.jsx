@@ -14,8 +14,7 @@ export default function GameEngine() {
     const [selectedGame, setSelectedGame] = useState(
         typeof window !== 'undefined' ? sessionStorage.getItem('filterGameId') || '' : ''
     );
-    const [status, setStatus] = useState("init");
-    const [gameStatus, setGameStatus] = useState("");
+    const [gameStatus, setGameStatus] = useState("init");
     const [teams, setTeams] = useState([]);
     const [points, setPoints] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -71,20 +70,23 @@ export default function GameEngine() {
     };
 
     useEffect(() => {
-        if (selectedGame) fetchTeams(selectedGame);
+        if (selectedGame) {
+            fetchTeams(selectedGame);
+            console.log("fetchTeams called for game:", selectedGame);
+        }
     }, [selectedGame]);
 
 
     // Store status when button is clicked
     const handleStoreStatus = async () => {
         setMessage("");
-        if (!status || !selectedGame ) return;
-        if (status === "init" || status === "start") {
+        if (!gameStatus || !selectedGame ) return;
+        if (gameStatus === "init" || gameStatus === "start") {
             setLoading(true);
 
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                const res = await fetch(`${backendHost}/api/game_engine/${status}`, {
+                const res = await fetch(`${backendHost}/api/game_engine/${gameStatus}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ game_id: selectedGame })
@@ -151,8 +153,15 @@ export default function GameEngine() {
                 </select>
                 <label className="font-semibold ml-6 mr-2">Status:</label>
                 <span className="px-2 py-1 border rounded bg-gray-100 text-gray-700">{gameStatus || '-'}</span>
+                <button
+                    type="button"
+                    className="ml-2 px-2 py-1 border rounded bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500"
+                    onClick={handleStoreStatus}
+                    disabled={!selectedGame || !gameStatus || loading || (gameStatus !== 'init' && gameStatus !== 'start')}
+                >
+                    Status wijzigen
+                </button>
             </div>
-            Opslaan
             {loading ? <div>Laden...</div> : null}
             {/* Table rendering would go here */}
             {/* Always show the points table */}
