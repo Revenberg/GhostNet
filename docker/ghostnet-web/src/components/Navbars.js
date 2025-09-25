@@ -38,8 +38,8 @@ export function NavbarUser() {
           <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-10">
             <Link to={`/team-details/${user.teamId}`} className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Mijn Team</Link>
             <Link to="/team-send-event" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Stuur bericht</Link>
-            <Link to="/ranking-summary" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Ranking overzicht</Link>
-        </div>
+            <Link to="/team-ranking-summary" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Ranking overzicht</Link>
+           </div>
         )}
       </div>
       <div className="relative">

@@ -24,6 +24,7 @@ import GameRoutePoints from './pages/GameRoutes/GameRoutePoints';
 import CreateRoutePage from './pages/GameRoutes/CreateRoutePage';
 import AllRoutesMap from './pages/GameRoutes/AllRoutesMap';
 import RouteTeamsPage from './pages/GameRoutes/RouteTeamsPage';
+import TeamRankingSummary from './pages/Team/team-ranking-summary';
 
 import GameEngine from "./pages/GameEngine/GameEngine";
 import RankingSummary from "./pages/GameEngine/ranking_summary";
@@ -47,6 +48,7 @@ export default function App() {
               <Route path="/teams" element={<Teams />} />
               <Route path="/team-details/:teamId" element={<TeamDetails />} />
               <Route path="/team-send-event" element={<TeamSendEvent />} />
+              <Route path="/team-ranking-summary" element={<TeamRankingSummary />} />
               <Route path="/games-manage" element={<GamesManage />} />
               <Route path="/games-update" element={<GamesUpdate />} />
               <Route path="/games-progress-overview" element={<GamesProgressOverview />} />
