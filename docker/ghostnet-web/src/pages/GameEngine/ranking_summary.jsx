@@ -59,7 +59,6 @@ export default function RankingSummary() {
     }, [selectedGame]);
 
     return (
-        <RequireRole role="user">
         <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
             <h2 className="text-xl font-bold mb-4">Ranking Overzicht</h2>
             <RequireRole role="operator">
@@ -119,6 +118,5 @@ export default function RankingSummary() {
                 <div className="text-gray-500 mt-4">No ranking data for this game.</div>
             )}
         </div>
-        </RequireRole>
     );
 }
