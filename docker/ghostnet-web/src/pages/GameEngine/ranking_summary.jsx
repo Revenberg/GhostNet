@@ -61,7 +61,7 @@ export default function RankingSummary() {
     return (
         <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
             <h2 className="text-xl font-bold mb-4">Ranking Overzicht</h2>
-            <RequireRole role="operator">
+            
             <div className="mb-4 flex items-center gap-4">
                 <label className="font-semibold mr-2">Game:</label>
                 <select
@@ -75,8 +75,7 @@ export default function RankingSummary() {
                     ))}
                 </select>
             </div>
-            </RequireRole>
-
+            
             {loading && <div>Loading...</div>}
             {error && <div className="text-red-600">{error}</div>}
             {summary.length > 0 && (
