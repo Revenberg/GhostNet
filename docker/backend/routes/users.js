@@ -90,10 +90,18 @@ export default function createUsersRouter(pool) {
   // Register
   router.post("/", async (req, res) => {
     try {
-      const { username, teamname, password } = req.body;
-      if (!username || !password) {
-        return res.status(400).json({ error: "Username and password required" });
+      const { username, teamcode, password } = req.body;
+      if (!username || !teamcode || !password) {
+        return res.status(400).json({ error: "Username, teamcode and password required" });
       }
+
+      // Verify teamcode
+      const [teamRows] = await pool.query("SELECT teamname FROM teams WHERE teamcode = ?", [teamcode]);
+      if (teamRows.length === 0) {
+        return res.status(400).json({ error: "Invalid teamcode" });
+      }
+      const teamname = teamRows[0].teamname;
+      
       const password_hash = hashPassword(password);
       function simpleToken(length = 50) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

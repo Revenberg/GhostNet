@@ -50,7 +50,7 @@ export default function UsersRegister() {
       const res = await fetch(`${backendHost}/api/users/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, teamname: form.teamcode }),
+        body: JSON.stringify({ ...form, teamcode: form.teamcode }),
       });
       const data = await res.json();
       if (res.ok) {
