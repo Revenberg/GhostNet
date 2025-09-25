@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import RequireRole from "../../components/RequireRole";
 
 export default function GameEngine() {
     const [games, setGames] = useState([]);
@@ -135,6 +136,7 @@ export default function GameEngine() {
     };
 
     return (
+        <RequireRole role="admin">
         <div className="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow">
             <h2 className="text-xl font-bold mb-4">Game Engine</h2>
             <div className="mb-4 flex items-center gap-4">
@@ -230,5 +232,6 @@ export default function GameEngine() {
             </table>
             {message && <div className="mt-4 text-sm text-green-700">{message}</div>}
         </div>
+        </RequireRole>
     );
 }

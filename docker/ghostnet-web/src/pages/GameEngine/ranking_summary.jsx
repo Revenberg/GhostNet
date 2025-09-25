@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
+import RequireRole from "../../components/RequireRole";
+import { getUserFromCookie } from "../../utils/auth";
 
 export default function RankingSummary() {
+    const user = typeof window !== 'undefined' ? getUserFromCookie() : null;
     const [games, setGames] = useState([]);
     const [selectedGame, setSelectedGame] = useState(
         typeof window !== 'undefined' ? sessionStorage.getItem('filterGameId') || '' : ''
@@ -13,17 +16,23 @@ export default function RankingSummary() {
         async function fetchGames() {
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                const res = await fetch(`${backendHost}/api/games`);
-                const data = await res.json();
-                if (res.ok && data.success) {
-                    setGames(data.games);
+                // Only fetch games for the user's team and not status 'new'
+                if (user && user.team_id) {
+                    const res = await fetch(`${backendHost}/api/games?team_id=${user.team_id}`);
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        // Filter out games with status 'new'
+                        setGames(data.games.filter(g => g.status !== 'new'));
+                    }
+                } else {
+                    setGames([]);
                 }
             } catch {
                 setGames([]);
             }
         }
         fetchGames();
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         if (!selectedGame) return;
@@ -50,8 +59,10 @@ export default function RankingSummary() {
     }, [selectedGame]);
 
     return (
+        <RequireRole role="user">
         <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
             <h2 className="text-xl font-bold mb-4">Ranking Overzicht</h2>
+            <RequireRole role="operator">
             <div className="mb-4 flex items-center gap-4">
                 <label className="font-semibold mr-2">Game:</label>
                 <select
@@ -65,6 +76,8 @@ export default function RankingSummary() {
                     ))}
                 </select>
             </div>
+            </RequireRole>
+
             {loading && <div>Loading...</div>}
             {error && <div className="text-red-600">{error}</div>}
             {summary.length > 0 && (
@@ -106,5 +119,6 @@ export default function RankingSummary() {
                 <div className="text-gray-500 mt-4">No ranking data for this game.</div>
             )}
         </div>
+        </RequireRole>
     );
 }
