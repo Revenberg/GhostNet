@@ -89,13 +89,7 @@ export default function GameEngine() {
 
             console.log("New status to set:", newStatus);
 
-            if (!newStatus) {
-                console.log("No valid new status to set, exiting.");
-            } else {
-                console.log("valid new status to set, exiting.");
-            }
-
-            if (!newStatus) {
+            if (newStatus) {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
                 console.log("Changing to new status.");
                 const res = await fetch(`${backendHost}/api/game_engine/${newStatus}`, {
