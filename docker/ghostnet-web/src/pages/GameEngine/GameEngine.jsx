@@ -75,6 +75,7 @@ export default function GameEngine() {
         console.log("Selected game:", selectedGame);
 
         if (!gameStatus || !selectedGame ) return;
+        console.log("Changing game status from", gameStatus, "for game", selectedGame);
         
         setLoading(true);
 
@@ -86,6 +87,8 @@ export default function GameEngine() {
             if (gameStatus === "started") newStatus = "finish";
             if (gameStatus === "finished") newStatus = "restart";
 
+            console.log("New status to set:", newStatus);
+
             if (!newStatus) {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
                 console.log("Changing to new status.");
@@ -95,7 +98,7 @@ export default function GameEngine() {
                     body: JSON.stringify({ game_id: selectedGame })
                 });
                 console.log("Response received for status change:", res);
-                
+
                 const data = await res.json();
                 if (data.success) setMessage(`Game ${gameStatus} !`);
                 else setMessage("Failed to change game status: " + (data.error || "Unknown error"));
