@@ -3,7 +3,7 @@ import express from "express";
 export default function createGameEngineRoutesRouter(pool) {
     const router = express.Router();
 
-    async function createGameRoute(game_id, team_id, startId, finishId) {
+    async function createGameRoute(game_id, team, startId, finishId) {
                 // Select all unique routes for this team
                 const [routes] = await pool.query(
                     `SELECT DISTINCT gr.id as route_id, p.id as point_id, o.order_id as order_id, gr.game_id, grt.team_id
@@ -13,7 +13,7 @@ export default function createGameEngineRoutesRouter(pool) {
                      JOIN game_route_points p ON o.game_route_points_id = p.id
                      WHERE gr.game_id = ? AND grt.team_id = ?
                      ORDER BY grt.team_id, o.order_id ASC`,
-                    [game_id, team_id]
+                    [game_id, team.id]
                 );
                     
                 await pool.query(
@@ -262,7 +262,7 @@ export default function createGameEngineRoutesRouter(pool) {
 
             // 3. For each team, assign route and insert into game_engine_points
             for (const team of teams) {
-                await createGameRoute(game_id, team.id, startId, finishId);
+                await createGameRoute(game_id, team, startId, finishId);
             }
 
             res.json({ success: true, teams });
@@ -345,7 +345,7 @@ export default function createGameEngineRoutesRouter(pool) {
 
             // 3. For each team, assign route and insert into game_engine_points
             for (const team of teams) {
-                await createGameRoute(game_id, team.id, startId, finishId);
+                await createGameRoute(game_id, team, startId, finishId);
             }
             
             await pool.query(
