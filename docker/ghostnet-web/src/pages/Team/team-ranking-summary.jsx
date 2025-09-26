@@ -19,7 +19,7 @@ export default function RankingSummary() {
                 const team_id = user && user.team_id ? user.team_id : '';
                 console.log("Fetching games for team_id:", team_id);
                 if (team_id) {
-                    const res = await fetch(`${backendHost}/games/api/actual/${team_id}`);
+                    const res = await fetch(`${backendHost}/games/api/actual?${team_id}`);
                     const data = await res.json();
                     console.log(data);
                     if (data.success) {

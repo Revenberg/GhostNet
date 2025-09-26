@@ -161,7 +161,7 @@ export default function GameEngine() {
                     {gameStatus === 'init' && 'Starten'}
                     {gameStatus === 'started' && 'Afronden'}
                     {gameStatus === 'closed' && 'Herstarten'}
-                    {(!['new','init','started'].includes(gameStatus)) && 'Status wijzigen'}
+                    {(!['new','init','started', 'closed'].includes(gameStatus)) && 'Status wijzigen'}
                 </button>
             </div>
             {loading ? <div>Laden...</div> : null}
