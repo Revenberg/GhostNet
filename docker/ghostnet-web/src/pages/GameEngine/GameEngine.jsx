@@ -164,7 +164,7 @@ export default function GameEngine() {
                     type="button"
                     className="ml-2 px-2 py-1 border rounded bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500"
                     onClick={handleStoreStatus}
-                    disabled={!selectedGame || !gameStatus || loading || (gameStatus !== 'new' && gameStatus !== 'init' && gameStatus !== 'started')}
+                    disabled={!selectedGame || !gameStatus || loading || (gameStatus !== 'new' && gameStatus !== 'init' && gameStatus !== 'started' && gameStatus !== 'finished')}
                 >
                     {gameStatus === 'new' && 'Voorbereiden'}
                     {gameStatus === 'init' && 'Starten'}
