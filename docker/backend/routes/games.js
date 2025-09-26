@@ -210,6 +210,21 @@ export default function createGamesRouter(pool) {
     }
   });
 
+   // Get all team_events for a team, sorted by event_timestamp
+  router.get("/actual/:team_id", async (req, res) => {
+    try {
+      const { team_id } = req.params;
+      const [rows] = await pool.query(
+        'SELECT game.* from game, teams where teams.id = ? and teams.game_id = game.id and status <> "new"',
+        [team_id]
+      );
+      res.json({ success: true, games: rows });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+
   // Example: Get all games
   router.get("/:game_id", async (req, res) => {
     try {
@@ -235,7 +250,6 @@ export default function createGamesRouter(pool) {
       res.status(500).json({ error: "Database error" });
     }
   });
-
 
   return router;
 }

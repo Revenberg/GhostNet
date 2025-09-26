@@ -13,10 +13,16 @@ export default function RankingSummary() {
         async function fetchGames() {
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                const res = await fetch(`${backendHost}/api/games`);
-                const data = await res.json();
-                if (res.ok && data.success) {
-                    setGames(data.games);
+                // You need to get the actual team_id from user context, session, or props
+                const user = typeof window !== 'undefined' ? JSON.parse(decodeURIComponent((document.cookie.split('; ').find(row => row.startsWith('user=')) || '').split('=')[1] || 'null')) : null;
+                const team_id = user && user.team_id ? user.team_id : '';
+                if (team_id) {
+                    const res = await fetch(`${backendHost}/games/api/actual/${team_id}`);
+                    const data = await res.json();
+                    console.log(data);
+                    if (data.success) {
+                        setGames(data[0].game_id);
+                    }
                 }
             } catch {
                 setGames([]);
