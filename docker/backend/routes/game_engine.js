@@ -266,6 +266,15 @@ export default function createGameEngineRoutesRouter(pool) {
                 return res.status(400).json({ error: "game_id required" });
             }
 
+            const [checkTeams] = await pool.query(
+                `SELECT t.id AS team_id, t.teamname, COUNT(grt.id) AS route_count FROM teams t LEFT JOIN game_route_team grt ON grt.team_id = t.id LEFT JOIN game_routes gr ON grt.game_route_id = gr.id AND gr.game_id = ? WHERE t.game_id = ? GROUP BY t.id, t.teamname HAVING route_count = 0`,
+                [game_id, game_id]
+            );
+
+            if (checkTeams.length > 0) {
+                return res.status(400).json({ error: "Niet alle teams hebben routes toegewezen", teams: checkTeams });
+            }
+
             // 1. Set game state to 'initialized' (assuming a 'state' column exists)
             await pool.query(
                 `UPDATE game SET status = 'initialized' WHERE id = ? and status = ''`,
@@ -343,6 +352,10 @@ export default function createGameEngineRoutesRouter(pool) {
             const { game_id } = req.body;
             if (!game_id) {
                 return res.status(400).json({ error: "game_id required" });
+            }
+
+                        if (checkTeams.length > 0) {
+                return res.status(400).json({ error: "Niet alle teams hebben routes toegewezen", teams: checkTeams });
             }
 
             // SQL: Select teams for a game (game_id = 2) that have no entries in game_engine_points
