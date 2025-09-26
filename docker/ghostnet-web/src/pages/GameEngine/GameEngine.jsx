@@ -71,6 +71,9 @@ export default function GameEngine() {
     // Store status when button is clicked
     const handleStoreStatus = async () => {
         setMessage("");
+        console.log("Current gameStatus:", gameStatus);
+        console.log("Selected game:", selectedGame);
+
         if (!gameStatus || !selectedGame ) return;
         
         setLoading(true);
@@ -85,11 +88,14 @@ export default function GameEngine() {
 
             if (!newStatus) {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+                console.log("Changing to new status.");
                 const res = await fetch(`${backendHost}/api/game_engine/${newStatus}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ game_id: selectedGame })
                 });
+                console.log("Response received for status change:", res);
+                
                 const data = await res.json();
                 if (data.success) setMessage(`Game ${gameStatus} !`);
                 else setMessage("Failed to change game status: " + (data.error || "Unknown error"));
