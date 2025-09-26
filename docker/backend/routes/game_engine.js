@@ -1,6 +1,9 @@
 import express from "express";
 
-async function createGameRoute(game_id, team_id, startId, finishId) {
+export default function createGameEngineRoutesRouter(pool) {
+    const router = express.Router();
+
+    async function createGameRoute(game_id, team_id, startId, finishId) {
                 // Select all unique routes for this team
                 const [routes] = await pool.query(
                     `SELECT DISTINCT gr.id as route_id, p.id as point_id, o.order_id as order_id, gr.game_id, grt.team_id
@@ -50,9 +53,6 @@ async function createGameRoute(game_id, team_id, startId, finishId) {
                     [team.id, game_id, game_id]
                 );
     }
-
-export default function createGameEngineRoutesRouter(pool) {
-    const router = express.Router();
 
     // Get game_engine_ranking for a game
     router.get("/ranking", async (req, res) => {
