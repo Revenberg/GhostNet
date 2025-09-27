@@ -33,6 +33,7 @@ export default function RankingSummary() {
 
     useEffect(() => {
         if (!selectedGame) return;
+                const [nextTarget, setNextTarget] = useState(null);
         setLoading(true);
         setError("");
         async function fetchSummary() {
@@ -54,9 +55,31 @@ export default function RankingSummary() {
         }
         fetchSummary();
     }, [selectedGame]);
+                useEffect(() => {
+                    async function fetchNextTarget() {
+                        if (!selectedGame || !myTeamId) {
+                            setNextTarget(null);
+                            return;
+                        }
+                        try {
+                            const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+                            const res = await fetch(`${backendHost}/api/game_engine/getTeamTargetPoint?game_id=${selectedGame}&team_id=${myTeamId}`);
+                            const data = await res.json();
+                            if (data.success && data.point && data.point.length > 0) {
+                                setNextTarget(data.point[0]);
+                            } else {
+                                setNextTarget(null);
+                            }
+                        } catch {
+                            setNextTarget(null);
+                        }
+                    }
+                    fetchNextTarget();
+                }, [selectedGame, myTeamId]);
 
     return (
         <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
+            
             <h2 className="text-xl font-bold mb-4">Game overzicht</h2>
             {loading && <div>Loading...</div>}
             {error && <div className="text-red-600">{error}</div>}
@@ -80,6 +103,16 @@ export default function RankingSummary() {
                           .map(team => (
                             <tr key={team.team_id} className={myTeamId && team.team_id === Number(myTeamId) ? 'bg-yellow-200 font-bold' : ''}>
                                 <td className="border px-2 py-1">{team.teamname}</td>
+                        {nextTarget && (
+                            <div className="mb-4 p-3 rounded bg-blue-100 border border-blue-300 text-blue-900">
+                                <strong>Volgende target:</strong> {nextTarget.description}
+                                {nextTarget.images && (
+                                    <div className="mt-2">
+                                        <img src={nextTarget.images} alt="Target" style={{ maxWidth: '100%', maxHeight: 200 }} />
+                                    </div>
+                                )}
+                            </div>
+                        )}
                                 <td className="border px-2 py-1 text-center">{team.ranking_count}</td>
                                 <td className="border px-2 py-1 text-center">{team.ranking_count} * 100</td>
                                 <td className="border px-2 py-1 text-center">{team.bonus_count}</td>
