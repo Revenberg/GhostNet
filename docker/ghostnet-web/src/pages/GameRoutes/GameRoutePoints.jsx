@@ -78,11 +78,10 @@ export default function GameRoutePoints() {
 
     const handleEdit = point => {
         setEditingId(point.id);
-        // route_id niet meer in formulier
         const { route_id, ...rest } = point;
         setForm({
             ...rest,
-            location: point.location || point.route_location || ""
+            location: (typeof point.location !== 'undefined' ? point.location : (point.route_location || ""))
         });
     };
 
