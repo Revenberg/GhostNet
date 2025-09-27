@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 export default function RankingSummary() {
-    const [games, setGames] = useState([]);
-    const [selectedGame, setSelectedGame] = useState(
+    const [selectedGame, setGame] = useState(
         typeof window !== 'undefined' ? sessionStorage.getItem('filterGameId') || '' : ''
     );
     const [summary, setSummary] = useState([]);
@@ -10,7 +9,7 @@ export default function RankingSummary() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        async function fetchGames() {
+        async function fetchGame() {
             try {
                 const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
                 // You need to get the actual team_id from user context, session, or props
@@ -19,19 +18,15 @@ export default function RankingSummary() {
                 if (team_id) {
                     const res = await fetch(`${backendHost}/api/games/by-team/${team_id}`);
                     const data = await res.json();
-                    console.log(data);
                     if (data.success) {
-                        console.log(data);
-                        console.log(data.games[0]);
-                        console.log(data.games[0].id);
-                        setGames(data.games[0].id);
+                        setGame(data.games[0].id);
                     }
                 }
             } catch {
-                setGames([]);
+                setGame(0);
             }
         }
-        fetchGames();
+        fetchGame();
     }, []);
 
     useEffect(() => {
