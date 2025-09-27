@@ -9,6 +9,7 @@ export default function RankingSummary() {
     const [summary, setSummary] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [nextTarget, setNextTarget] = useState(null);
 
     useEffect(() => {
         async function fetchGame() {
@@ -33,7 +34,6 @@ export default function RankingSummary() {
 
     useEffect(() => {
         if (!selectedGame) return;
-                const [nextTarget, setNextTarget] = useState(null);
         setLoading(true);
         setError("");
         async function fetchSummary() {
