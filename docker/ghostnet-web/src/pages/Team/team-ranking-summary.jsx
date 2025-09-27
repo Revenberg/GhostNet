@@ -4,6 +4,8 @@ export default function RankingSummary() {
     const [selectedGame, setGame] = useState(
         typeof window !== 'undefined' ? sessionStorage.getItem('filterGameId') || '' : ''
     );
+    const user = typeof window !== 'undefined' ? JSON.parse(decodeURIComponent((document.cookie.split('; ').find(row => row.startsWith('user=')) || '').split('=')[1] || 'null')) : null;
+    const myTeamId = user && (user.teamId || user.team_id) ? (user.teamId || user.team_id) : null;
     const [summary, setSummary] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -55,7 +57,7 @@ export default function RankingSummary() {
 
     return (
         <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
-            <h2 className="text-xl font-bold mb-4">Ranking Overzicht</h2>
+            <h2 className="text-xl font-bold mb-4">Game overzicht</h2>
             {loading && <div>Loading...</div>}
             {error && <div className="text-red-600">{error}</div>}
             {summary.length > 0 && (
@@ -76,18 +78,18 @@ export default function RankingSummary() {
                           .slice()
                           .sort((a, b) => (b.ranking_count * 100 + b.bonus_total - b.game_penalty) - (a.ranking_count * 100 + a.bonus_total - a.game_penalty))
                           .map(team => (
-                            <tr key={team.team_id}>
+                            <tr key={team.team_id} className={myTeamId && team.team_id === Number(myTeamId) ? 'bg-yellow-200 font-bold' : ''}>
                                 <td className="border px-2 py-1">{team.teamname}</td>
                                 <td className="border px-2 py-1 text-center">{team.ranking_count}</td>
                                 <td className="border px-2 py-1 text-center">{team.ranking_count} * 100</td>
                                 <td className="border px-2 py-1 text-center">{team.bonus_count}</td>
                                 <td className="border px-2 py-1 text-center">{team.bonus_total}</td>
                                 <td className="border px-2 py-1 text-center">{team.game_penalty}</td>
-                                                                <td className="border px-2 py-1 text-center">{
-                                                                    (Number(team.ranking_count) * 100)
-                                                                    + Number(team.bonus_total)
-                                                                    - Number(team.game_penalty)
-                                                                }</td>
+                                <td className="border px-2 py-1 text-center">{
+                                    (Number(team.ranking_count) * 100)
+                                    + Number(team.bonus_total)
+                                    - Number(team.game_penalty)
+                                }</td>
                             </tr>
                         ))}
                     </tbody>
