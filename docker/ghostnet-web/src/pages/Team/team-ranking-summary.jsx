@@ -16,7 +16,7 @@ export default function RankingSummary() {
                 // You need to get the actual team_id from user context, session, or props
                 const user = typeof window !== 'undefined' ? JSON.parse(decodeURIComponent((document.cookie.split('; ').find(row => row.startsWith('user=')) || '').split('=')[1] || 'null')) : null;
                 console.log("User from cookie:", user);
-                const team_id = user && user.team_id ? user.team_id : '';
+                const team_id = user && user.teamId ? user.teamId : '';
                 console.log("Fetching games for team_id:", team_id);
                 if (team_id) {
                     const res = await fetch(`${backendHost}/api/games/by-team/${team_id}`);
