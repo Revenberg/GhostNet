@@ -55,27 +55,30 @@ export default function RankingSummary() {
         }
         fetchSummary();
     }, [selectedGame]);
-                useEffect(() => {
-                    async function fetchNextTarget() {
-                        if (!selectedGame || !myTeamId) {
-                            setNextTarget(null);
-                            return;
-                        }
-                        try {
-                            const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-                            const res = await fetch(`${backendHost}/api/game_engine/getTeamTargetPoint?game_id=${selectedGame}&team_id=${myTeamId}`);
-                            const data = await res.json();
-                            if (data.success && data.point && data.point.length > 0) {
-                                setNextTarget(data.point[0]);
-                            } else {
-                                setNextTarget(null);
-                            }
-                        } catch {
-                            setNextTarget(null);
-                        }
-                    }
-                    fetchNextTarget();
-                }, [selectedGame, myTeamId]);
+    useEffect(() => {
+        async function fetchNextTarget() {
+            console.log("Fetching next target for game:", selectedGame, "and team:", myTeamId);
+
+            if (!selectedGame || !myTeamId) {
+                setNextTarget(null);
+                return;
+            }
+            try {
+                const backendHost = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+                const res = await fetch(`${backendHost}/api/game_engine/getTeamTargetPoint?game_id=${selectedGame}&team_id=${myTeamId}`);
+                const data = await res.json();
+                console.log("Next target data:", data);
+                if (data.success && data.point && data.point.length > 0) {
+                    setNextTarget(data.point[0]);
+                } else {
+                    setNextTarget(null);
+                }
+            } catch {
+                setNextTarget(null);
+            }
+        }
+        fetchNextTarget();
+    }, [selectedGame, myTeamId]);
 
     return (
         <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
@@ -109,23 +112,23 @@ export default function RankingSummary() {
                     </thead>
                     <tbody>
                         {summary
-                          .slice()
-                          .sort((a, b) => (b.ranking_count * 100 + b.bonus_total - b.game_penalty) - (a.ranking_count * 100 + a.bonus_total - a.game_penalty))
-                          .map(team => (
-                            <tr key={team.team_id} className={myTeamId && team.team_id === Number(myTeamId) ? 'bg-yellow-200 font-bold' : ''}>
-                                <td className="border px-2 py-1">{team.teamname}</td>
-                                <td className="border px-2 py-1 text-center">{team.ranking_count}</td>
-                                <td className="border px-2 py-1 text-center">{team.ranking_count} * 100</td>
-                                <td className="border px-2 py-1 text-center">{team.bonus_count}</td>
-                                <td className="border px-2 py-1 text-center">{team.bonus_total}</td>
-                                <td className="border px-2 py-1 text-center">{team.game_penalty}</td>
-                                <td className="border px-2 py-1 text-center">{
-                                    (Number(team.ranking_count) * 100)
-                                    + Number(team.bonus_total)
-                                    - Number(team.game_penalty)
-                                }</td>
-                            </tr>
-                        ))}
+                            .slice()
+                            .sort((a, b) => (b.ranking_count * 100 + b.bonus_total - b.game_penalty) - (a.ranking_count * 100 + a.bonus_total - a.game_penalty))
+                            .map(team => (
+                                <tr key={team.team_id} className={myTeamId && team.team_id === Number(myTeamId) ? 'bg-yellow-200 font-bold' : ''}>
+                                    <td className="border px-2 py-1">{team.teamname}</td>
+                                    <td className="border px-2 py-1 text-center">{team.ranking_count}</td>
+                                    <td className="border px-2 py-1 text-center">{team.ranking_count} * 100</td>
+                                    <td className="border px-2 py-1 text-center">{team.bonus_count}</td>
+                                    <td className="border px-2 py-1 text-center">{team.bonus_total}</td>
+                                    <td className="border px-2 py-1 text-center">{team.game_penalty}</td>
+                                    <td className="border px-2 py-1 text-center">{
+                                        (Number(team.ranking_count) * 100)
+                                        + Number(team.bonus_total)
+                                        - Number(team.game_penalty)
+                                    }</td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             )}
