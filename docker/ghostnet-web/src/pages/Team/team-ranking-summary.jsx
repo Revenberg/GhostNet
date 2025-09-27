@@ -79,10 +79,21 @@ export default function RankingSummary() {
 
     return (
         <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow">
-            
             <h2 className="text-xl font-bold mb-4">Game overzicht</h2>
             {loading && <div>Loading...</div>}
             {error && <div className="text-red-600">{error}</div>}
+
+            {nextTarget && (
+                <div className="mb-4 p-3 rounded bg-blue-100 border border-blue-300 text-blue-900">
+                    <strong>Volgende target:</strong> {nextTarget.description}
+                    {nextTarget.images && (
+                        <div className="mt-2">
+                            <img src={nextTarget.images} alt="Target" style={{ maxWidth: '100%', maxHeight: 200 }} />
+                        </div>
+                    )}
+                </div>
+            )}
+
             {summary.length > 0 && (
                 <table className="w-full border-collapse text-xs md:text-sm mt-4">
                     <thead>
@@ -103,16 +114,6 @@ export default function RankingSummary() {
                           .map(team => (
                             <tr key={team.team_id} className={myTeamId && team.team_id === Number(myTeamId) ? 'bg-yellow-200 font-bold' : ''}>
                                 <td className="border px-2 py-1">{team.teamname}</td>
-                        {nextTarget && (
-                            <div className="mb-4 p-3 rounded bg-blue-100 border border-blue-300 text-blue-900">
-                                <strong>Volgende target:</strong> {nextTarget.description}
-                                {nextTarget.images && (
-                                    <div className="mt-2">
-                                        <img src={nextTarget.images} alt="Target" style={{ maxWidth: '100%', maxHeight: 200 }} />
-                                    </div>
-                                )}
-                            </div>
-                        )}
                                 <td className="border px-2 py-1 text-center">{team.ranking_count}</td>
                                 <td className="border px-2 py-1 text-center">{team.ranking_count} * 100</td>
                                 <td className="border px-2 py-1 text-center">{team.bonus_count}</td>
