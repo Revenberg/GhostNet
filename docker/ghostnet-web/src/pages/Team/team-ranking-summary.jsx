@@ -21,6 +21,9 @@ export default function RankingSummary() {
                     const data = await res.json();
                     console.log(data);
                     if (data.success) {
+                        console.log(data);
+                        console.log(data[0]);
+                        console.log(data.id);
                         setGames(data[0].id);
                     }
                 }
