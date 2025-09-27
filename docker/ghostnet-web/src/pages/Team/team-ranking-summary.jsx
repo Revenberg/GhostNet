@@ -22,9 +22,9 @@ export default function RankingSummary() {
                     console.log(data);
                     if (data.success) {
                         console.log(data);
-                        console.log(data[0]);
-                        console.log(data.id);
-                        setGames(data[0].id);
+                        console.log(data.games[0]);
+                        console.log(data.games[0].id);
+                        setGames(data.games[0].id);
                     }
                 }
             } catch {
