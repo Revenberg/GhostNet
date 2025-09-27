@@ -90,6 +90,25 @@ export default function createGameEngineRoutesRouter(pool) {
         );
     }
 
+    router.get("/getTeamTargetPoint", async (req, res) => {
+        try {
+            const { game_id, team_id } = req.query;
+            if (!game_id || !team_id) {
+                return res.status(400).json({ error: "game_id and team_id required" });
+            }
+            const [point] = await pool.query(
+                  `SELECT grp.description, grp.images 
+                   FROM game_engine_points as gep, game_route_points as grp 
+                   WHERE gep.game_route_points_id = grp.id and gep.game_id = ? AND gep.team_id = ? AND gep.status = "target"`,
+                   [game_id, team_id]
+            );
+            res.json({ success: true, point });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+        }
+    });   
+
     // Get game_engine_ranking for a game
     router.get("/ranking", async (req, res) => {
         try {
@@ -219,7 +238,6 @@ export default function createGameEngineRoutesRouter(pool) {
             res.status(500).json({ error: "Database error" });
         }
     });
-
 
     router.post("/sendTeamTargetPoint", async (req, res) => {
         try {
