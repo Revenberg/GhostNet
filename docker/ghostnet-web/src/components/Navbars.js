@@ -18,19 +18,51 @@ export function NavbarUser() {
   const user = getUserFromCookie();
   const [teamDropdownOpen, setTeamDropdownOpen] = React.useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
+  // Timer refs for auto-close
+  const timers = React.useRef({});
+
+  // Helper to close all dropdowns
   const closeAllDropdowns = () => {
     setTeamDropdownOpen(false);
     setUserDropdownOpen(false);
   };
+
+  // Set auto-close for a dropdown, closing others first
+  const setDropdownWithTimeout = (setter, key) => {
+    closeAllDropdowns();
+    setter(true);
+    if (timers.current[key]) clearTimeout(timers.current[key]);
+    timers.current[key] = setTimeout(() => setter(false), 15000);
+  };
+
+  // Clear all timers on unmount
+  React.useEffect(() => {
+    const timersCopy = timers.current;
+    return () => {
+      Object.values(timersCopy).forEach(clearTimeout);
+    };
+  }, []);
+
+  // Close dropdowns on click outside
+  React.useEffect(() => {
+    const handleClick = (e) => {
+      if (!e.target.closest('.navbar-user-dropdown')) {
+        closeAllDropdowns();
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
   return (
     <nav className="bg-purple-700 text-white p-4 flex items-center justify-center space-x-6">
       <Link to="/" className="hover:underline" onClick={closeAllDropdowns}>Home</Link>
       <Link to="/speluitleg" className="hover:underline" onClick={closeAllDropdowns}>Speluitleg</Link>
       <Link to="/contact" className="hover:underline" onClick={closeAllDropdowns}>Contact</Link>
-      <div className="relative">
+      <div className="relative navbar-user-dropdown">
         <button
           className="hover:underline focus:outline-none"
-          onClick={() => setTeamDropdownOpen((open) => !open)}
+          onClick={() => setDropdownWithTimeout(setTeamDropdownOpen, 'team')}
         >
           {user.teamname} ▾
         </button>
@@ -39,13 +71,13 @@ export function NavbarUser() {
             <Link to={`/team-details/${user.teamId}`} className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Mijn Team</Link>
             <Link to="/team-send-event" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Stuur bericht</Link>
             <Link to="/team-ranking-summary" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Ranking overzicht</Link>
-           </div>
+          </div>
         )}
       </div>
-      <div className="relative">
+      <div className="relative navbar-user-dropdown">
         <button
           className="hover:underline focus:outline-none"
-          onClick={() => setUserDropdownOpen((open) => !open)}
+          onClick={() => setDropdownWithTimeout(setUserDropdownOpen, 'user')}
         >
           {user.username} ▾
         </button>
@@ -63,29 +95,71 @@ export function NavbarUser() {
 export function NavbarOperator() {
   const user = getUserFromCookie();
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
+  const [teamDropdownOpen, setTeamDropdownOpen] = React.useState(false);
+  const [gamesVoorDropdownOpen, setGamesVoorDropdownOpen] = React.useState(false);
+  const [gamesDropdownOpen, setGamesDropdownOpen] = React.useState(false);
+  // Timer refs for auto-close
+  const timers = React.useRef({});
 
-// Helper to close all dropdowns
+  // Helper to close all dropdowns
   const closeAllDropdowns = () => {
     setUserDropdownOpen(false);
+    setTeamDropdownOpen(false);
+    setGamesVoorDropdownOpen(false);
+    setGamesDropdownOpen(false);
   };
+
+  // Set auto-close for a dropdown, closing others first
+  const setDropdownWithTimeout = (setter, key) => {
+    closeAllDropdowns();
+    setter(true);
+    if (timers.current[key]) clearTimeout(timers.current[key]);
+    timers.current[key] = setTimeout(() => setter(false), 15000);
+  };
+
+  // Clear all timers on unmount
+  React.useEffect(() => {
+    const timersCopy = timers.current;
+    return () => {
+      Object.values(timersCopy).forEach(clearTimeout);
+    };
+  }, []);
+
+  // Close dropdowns on click outside
+  React.useEffect(() => {
+    const handleClick = (e) => {
+      if (!e.target.closest('.navbar-operator-dropdown')) {
+        closeAllDropdowns();
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
   return (
     <nav className="bg-purple-700 text-white p-4 flex items-center justify-center space-x-6">
       <Link to="/" className="hover:underline" onClick={closeAllDropdowns}>Home</Link>
       <Link to="/speluitleg" className="hover:underline" onClick={closeAllDropdowns}>Speluitleg</Link>
       <Link to="/contact" className="hover:underline" onClick={closeAllDropdowns}>Contact</Link>
-      <div className="relative group">
-        <button className="hover:underline focus:outline-none">{user.teamname} ▾</button>
-        <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
-          <Link to={`/team-details/${user.teamId}`} className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Mijn Team</Link>
-          <Link to="/team-send-event" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Stuur bericht</Link>
-        </div>
-      </div>
-      
-      <div className="relative">
+      <div className="relative navbar-operator-dropdown">
         <button
           className="hover:underline focus:outline-none"
-          onClick={() => setUserDropdownOpen((open) => !open)}
+          onClick={() => setDropdownWithTimeout(setTeamDropdownOpen, 'team')}
+        >
+          {user.teamname} ▾
+        </button>
+        {teamDropdownOpen && (
+          <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-10">
+            <Link to={`/team-details/${user.teamId}`} className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Mijn Team</Link>
+            <Link to="/team-send-event" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Stuur bericht</Link>
+          </div>
+        )}
+      </div>
+
+      <div className="relative navbar-operator-dropdown">
+        <button
+          className="hover:underline focus:outline-none"
+          onClick={() => setDropdownWithTimeout(setUserDropdownOpen, 'user')}
         >
           {user.username} ▾
         </button>
@@ -97,21 +171,31 @@ export function NavbarOperator() {
         )}
       </div>
 
-      <div className="relative group">
-        <button className="hover:underline focus:outline-none">Games voorbereiding ▾</button>
-        <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
-          <Link to="/games/all-routes-map" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Kaart: alle routes</Link>
-          <Link to="/ranking-summary" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Ranking overzicht</Link>
-       </div>
+      <div className="relative navbar-operator-dropdown">
+        <button
+          className="hover:underline focus:outline-none"
+          onClick={() => setDropdownWithTimeout(setGamesVoorDropdownOpen, 'gamesVoor')}
+        >Games voorbereiding ▾</button>
+        {gamesVoorDropdownOpen && (
+          <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg z-10">
+            <Link to="/games/all-routes-map" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Kaart: alle routes</Link>
+            <Link to="/ranking-summary" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Ranking overzicht</Link>
+         </div>
+        )}
       </div>
 
-      <div className="relative group">
-        <button className="hover:underline focus:outline-none">Games ▾</button>
-        <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity z-10">
-          <Link to="/games-update" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Game status bijwerken</Link>
-          <Link to="/games-set-status" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Status instellen (per team)</Link>
-          <Link to="/games-progress-overview" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Voortgang overzicht</Link>
-        </div>
+      <div className="relative navbar-operator-dropdown">
+        <button
+          className="hover:underline focus:outline-none"
+          onClick={() => setDropdownWithTimeout(setGamesDropdownOpen, 'games')}
+        >Games ▾</button>
+        {gamesDropdownOpen && (
+          <div className="absolute left-0 mt-2 w-56 bg-white text-black rounded shadow-lg z-10">
+            <Link to="/games-update" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Game status bijwerken</Link>
+            <Link to="/games-set-status" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Status instellen (per team)</Link>
+            <Link to="/games-progress-overview" className="block px-4 py-2 hover:bg-purple-100" onClick={closeAllDropdowns}>Voortgang overzicht</Link>
+          </div>
+        )}
       </div>
 
     </nav>
